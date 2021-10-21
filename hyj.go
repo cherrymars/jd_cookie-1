@@ -22,7 +22,7 @@ func init() {
 				inviteId := "ZXASTT0225KkcRBgdpFaDJU6hx6QDJwFjRWn6u7zB55awQ"
 				inviteIds := []string{}
 				for _, env := range envs {
-					req := httplib.Post("https://api.m.jd.comhttps://api.m.jd.com/client.action?functionId=travel_getHomeData")
+					req := httplib.Post("https://api.m.jd.com/client.action?functionId=travel_getHomeData")
 					req.Header("Host", "api.m.jd.com")
 					req.Header("Cookie", env.Value)
 					req.Header("Content-Type", "application/x-www-form-urlencoded")
