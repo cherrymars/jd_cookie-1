@@ -409,7 +409,7 @@ func LimitJdCookie(cks []JdCookie, a string) []JdCookie {
 	number := len(ncks)
 	if s := strings.Split(a, "-"); len(s) == 2 {
 		for i := range cks {
-			if i+1 >= Int(s[0])/(number+1) && i+1 <= Int(s[1])/(number+1) {
+			if i+1 >= Int(s[0])%(number+1) && i+1 <= Int(s[1])%(number+1) {
 				ncks = append(ncks, cks[i])
 			}
 		}
