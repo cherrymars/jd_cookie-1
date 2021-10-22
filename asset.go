@@ -406,7 +406,7 @@ func init() {
 
 func LimitJdCookie(cks []JdCookie, a string) []JdCookie {
 	ncks := []JdCookie{}
-	number := len(ncks)
+	number := len(cks)
 	if s := strings.Split(a, "-"); len(s) == 2 {
 		for i := range cks {
 			if i+1 >= Int(s[0])%(number+1) && i+1 <= Int(s[1])%(number+1) {
