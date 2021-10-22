@@ -22,6 +22,9 @@ func init() {
 				inviteId := "ZXASTT0225KkcRBgdpFaDJU6hx6QDJwFjRWn6u7zB55awQ"
 				inviteIds := []string{}
 				for _, env := range envs {
+					if env.Status != 0 {
+						continue
+					}
 					req := httplib.Post("https://api.m.jd.com/client.action?functionId=travel_getHomeData")
 					req.Header("Host", "api.m.jd.com")
 					req.Header("Cookie", env.Value)

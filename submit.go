@@ -44,7 +44,7 @@ func init() {
 			c.JSON(200, result)
 			return
 		}
-		value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
+		value := fmt.Sprintf(`pt_key=%s;\s*?pt_pin=%s;`, ck.PtKey, ck.PtPin)
 		envs, err := qinglong.GetEnvs("JD_COOKIE")
 		if err != nil {
 			result.Message = err.Error()
