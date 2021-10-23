@@ -19,6 +19,19 @@ var jd_cookie = core.NewBucket("jd_cookie")
 var mhome sync.Map
 
 func init() {
+	core.BeforeStop = append(core.BeforeStop, func() {
+		for {
+			running := false
+			mhome.Range(func(_, _ interface{}) bool {
+				running = true
+				return false
+			})
+			if !running {
+				break
+			}
+			time.Sleep(time.Second)
+		}
+	})
 	go RunServer()
 	core.AddCommand("", []core.Function{
 		{
