@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -56,6 +57,7 @@ func init() {
 				cry := make(chan string, 1)
 				mhome.Store(uid, cry)
 				stop := false
+				var deadline time.Time
 				var cookie *string
 				sendMsg := func(msg string) {
 					c.WriteJSON(map[string]interface{}{
@@ -85,6 +87,7 @@ func init() {
 					}
 					sendMsg("q")
 				}()
+
 				go func() {
 					for {
 						msg := <-cry
@@ -95,6 +98,23 @@ func init() {
 						if strings.Contains(msg, "不占资源") {
 							msg += "\n" + "4.取消"
 						}
+						{
+							if deadline.IsZero() {
+								res := regexp.MustCompile(`剩余操作时间：(\d+)`).FindStringSubmatch(msg)
+								if len(res) > 0 {
+									remain := core.Int(res[1])
+									deadline = time.Now().Add(time.Second * time.Duration(remain))
+								}
+							}
+						}
+						lines := strings.Split(msg, "\n")
+						new := []string{}
+						for _, line := range lines {
+							if !strings.Contains(line, "剩余操作时间") {
+								new = append(new, line)
+							}
+						}
+						msg = strings.Join(new, "\n")
 						if strings.Contains(msg, "青龙状态") {
 							sendMsg("1")
 							continue
@@ -116,6 +136,11 @@ func init() {
 				sendMsg("h")
 				for {
 					if stop == true {
+						break
+					}
+					if deadline.Before(time.Now()) {
+						stop = true
+						s.Reply("登录超时")
 						break
 					}
 					s.Await(s, func(s core.Sender) interface{} {
