@@ -92,7 +92,6 @@ func init() {
 							stop = true
 							s.SetContent("q")
 							core.Senders <- s
-							break
 						}
 						s.Reply(msg)
 					}
