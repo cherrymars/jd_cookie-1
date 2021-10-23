@@ -86,8 +86,8 @@ func init() {
 							defer func() {
 								core.Senders <- s
 							}()
-							stop = true
-							break
+							// stop = true
+							// break
 						}
 						s.Reply(msg)
 					}
