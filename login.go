@@ -73,7 +73,6 @@ func init() {
 						if msg == "stop" {
 							break
 						}
-						msg = strings.Replace(msg, "登陆方式", "", -1)
 						msg = strings.Replace(msg, "登陆", "登录", -1)
 						if strings.Contains(msg, "不占资源") {
 							msg += "\n" + "4.取消"
