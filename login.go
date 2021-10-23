@@ -106,7 +106,9 @@ func init() {
 						msg := s.GetContent()
 						if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" {
 							stop = true
-							s.Reply("已退出")
+							if cookie == nil {
+								s.Reply("已退出")
+							}
 						}
 						sendMsg(s.GetContent())
 						return nil
