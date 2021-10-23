@@ -83,12 +83,11 @@ func init() {
 						}
 						if strings.Contains(msg, "pt_key") {
 							s.SetContent(msg)
-							// s.Reply(s.GetContent())
 							defer func() {
 								core.Senders <- s
 							}()
-							// stop = true
-							// break
+							stop = true
+							break
 						}
 						s.Reply(msg)
 					}
