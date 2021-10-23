@@ -57,7 +57,7 @@ func init() {
 				cry := make(chan string, 1)
 				mhome.Store(uid, cry)
 				stop := false
-				var deadline time.Time
+				var deadline = time.Now().Add(time.Second * time.Duration(200))
 				var cookie *string
 				sendMsg := func(msg string) {
 					c.WriteJSON(map[string]interface{}{
@@ -138,7 +138,7 @@ func init() {
 					if stop == true {
 						break
 					}
-					if deadline.Before(time.Now()) {
+					if !deadline.IsZero() && deadline.Before(time.Now()) {
 						stop = true
 						s.Reply("登录超时")
 						break
