@@ -66,11 +66,12 @@ func init() {
 				defer func() {
 					cry <- "stop"
 					mhome.Delete(uid)
-					sendMsg("q")
 					if cookie != nil {
+						fmt.Println("++++", *cookie)
 						s.SetContent(*cookie)
 						core.Senders <- s
 					}
+					sendMsg("q")
 				}()
 				go func() {
 					for {
