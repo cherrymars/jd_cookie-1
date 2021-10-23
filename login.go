@@ -67,7 +67,6 @@ func init() {
 					cry <- "stop"
 					mhome.Delete(uid)
 					if cookie != nil {
-						fmt.Println("++++", *cookie)
 						s.SetContent(*cookie)
 						core.Senders <- s
 					}
@@ -93,7 +92,9 @@ func init() {
 							s.SetContent("q")
 							core.Senders <- s
 						}
-						s.Reply(msg)
+						if cookie == nil {
+							s.Reply(msg)
+						}
 					}
 				}()
 				sendMsg("h")
