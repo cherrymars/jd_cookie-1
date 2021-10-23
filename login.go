@@ -75,6 +75,9 @@ func init() {
 						}
 						msg = strings.Replace(msg, "登陆方式", "", -1)
 						msg = strings.Replace(msg, "登陆", "登录", -1)
+						if strings.Contains(msg, "不占资源") {
+							msg += "\n" + "4.取消"
+						}
 						if strings.Contains(msg, "青龙状态") {
 							sendMsg("1")
 							continue
@@ -89,7 +92,7 @@ func init() {
 					}
 					s.Await(s, func(s core.Sender) interface{} {
 						msg := s.GetContent()
-						if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" {
+						if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" {
 							stop = true
 							msg = "q"
 							s.Reply("已退出")
