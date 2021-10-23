@@ -24,7 +24,6 @@ func init() {
 		{
 			Rules: []string{`raw ^登录$`, `raw ^登陆$`, `raw ^h$`},
 			Handle: func(s core.Sender) interface{} {
-
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
 					return nil
 				}
@@ -43,10 +42,6 @@ func init() {
 				uid := time.Now().UnixNano()
 				cry := make(chan string, 1)
 				mhome.Store(uid, cry)
-				defer func() {
-					cry <- "stop"
-					mhome.Delete(uid)
-				}()
 				stop := false
 				sendMsg := func(msg string) {
 					c.WriteJSON(map[string]interface{}{
@@ -67,6 +62,11 @@ func init() {
 						},
 					})
 				}
+				defer func() {
+					cry <- "stop"
+					mhome.Delete(uid)
+					sendMsg("q")
+				}()
 				go func() {
 					for {
 						msg := <-cry
@@ -81,6 +81,12 @@ func init() {
 							sendMsg("1")
 							continue
 						}
+						if strings.Contains(msg, "pt_key") {
+							s.SetContent(msg)
+							core.Senders <- s
+							stop = true
+							break
+						}
 						s.Reply(msg)
 					}
 				}()
@@ -93,7 +99,6 @@ func init() {
 						msg := s.GetContent()
 						if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" {
 							stop = true
-							msg = "q"
 							s.Reply("已退出")
 						}
 						sendMsg(s.GetContent())
