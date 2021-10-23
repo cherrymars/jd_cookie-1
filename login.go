@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 	"sync"
 	"time"
@@ -93,7 +94,11 @@ func init() {
 							core.Senders <- s
 						}
 						if cookie == nil {
-							s.Reply(msg)
+							if strings.Contains(msg, "已点击登录") {
+								continue
+							}
+
+							s.Reply(regexp.MustCompile(".*").FindString(msg))
 						}
 					}
 				}()
