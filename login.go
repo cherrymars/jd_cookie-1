@@ -43,6 +43,7 @@ func init() {
 				cry := make(chan string, 1)
 				mhome.Store(uid, cry)
 				stop := false
+				cookie := ""
 				sendMsg := func(msg string) {
 					c.WriteJSON(map[string]interface{}{
 						"time":         time.Now().Unix(),
@@ -66,6 +67,10 @@ func init() {
 					cry <- "stop"
 					mhome.Delete(uid)
 					sendMsg("q")
+					if cookie != "" {
+						s.SetContent(cookie)
+						core.Senders <- s
+					}
 				}()
 				go func() {
 					for {
@@ -82,12 +87,11 @@ func init() {
 							continue
 						}
 						if strings.Contains(msg, "pt_key") {
-							s.SetContent(msg)
-							defer func() {
-								core.Senders <- s
-							}()
-							// stop = true
-							// break
+							cookie = msg
+							stop = true
+							s.SetContent("q")
+							core.Senders <- s
+							break
 						}
 						s.Reply(msg)
 					}
