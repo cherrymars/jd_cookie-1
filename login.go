@@ -99,12 +99,10 @@ func init() {
 							msg += "\n" + "4.取消"
 						}
 						{
-							if deadline.IsZero() {
-								res := regexp.MustCompile(`剩余操作时间：(\d+)`).FindStringSubmatch(msg)
-								if len(res) > 0 {
-									remain := core.Int(res[1])
-									deadline = time.Now().Add(time.Second * time.Duration(remain))
-								}
+							res := regexp.MustCompile(`剩余操作时间：(\d+)`).FindStringSubmatch(msg)
+							if len(res) > 0 {
+								remain := core.Int(res[1])
+								deadline = time.Now().Add(time.Second * time.Duration(remain))
 							}
 						}
 						lines := strings.Split(msg, "\n")
@@ -138,7 +136,7 @@ func init() {
 					if stop == true {
 						break
 					}
-					if !deadline.IsZero() && deadline.Before(time.Now()) {
+					if deadline.Before(time.Now()) {
 						stop = true
 						s.Reply("登录超时")
 						break
