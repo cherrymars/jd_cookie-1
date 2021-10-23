@@ -85,19 +85,23 @@ func init() {
 					}
 					s.Await(s, func(s core.Sender) interface{} {
 						msg := s.GetContent()
-						if regexp.MustCompile(`\d{11}`).FindString(msg) == "" || regexp.MustCompile(`\d{6}`).FindString(msg) == "" {
-							s.Reply("正在登录是否退出？[Y/n]")
-							s.Await(s, func(s core.Sender) interface{} {
-								msg := s.GetContent()
-								if strings.ToLower(msg) == "y" || strings.ToLower(msg) == "yes" {
-									stop = true
-								} else {
-									s.Reply("请继续登录。")
-								}
-								return nil
-							})
+						if strings.Contains(msg, "exit") {
+							stop = true
 							return nil
 						}
+						// if regexp.MustCompile(`\d{11}`).FindString(msg) == "" || regexp.MustCompile(`\d{6}`).FindString(msg) == "" {
+						// 	s.Reply("正在登录是否退出？[Y/n]")
+						// 	s.Await(s, func(s core.Sender) interface{} {
+						// 		msg := s.GetContent()
+						// 		if strings.ToLower(msg) == "y" || strings.ToLower(msg) == "yes" {
+						// 			stop = true
+						// 		} else {
+						// 			s.Reply("请继续登录。")
+						// 		}
+						// 		return nil
+						// 	})
+						// 	return nil
+						// }
 						sendMsg(s.GetContent())
 						return nil
 					}, `[\s\S]+`)
