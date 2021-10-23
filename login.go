@@ -48,16 +48,6 @@ func init() {
 					mhome.Delete(uid)
 				}()
 				stop := false
-				go func() {
-					for {
-						msg := <-cry
-						if msg == "stop" {
-							break
-						}
-						s.Reply(msg)
-					}
-				}()
-
 				sendMsg := func(msg string) {
 					c.WriteJSON(map[string]interface{}{
 						"time":         time.Now().Unix(),
@@ -77,6 +67,19 @@ func init() {
 						},
 					})
 				}
+				go func() {
+					for {
+						msg := <-cry
+						if msg == "stop" {
+							break
+						}
+						if strings.Contains(msg, "青龙状态") {
+							sendMsg("1")
+							continue
+						}
+						s.Reply(msg)
+					}
+				}()
 				sendMsg("h")
 				for {
 					if stop == true {
