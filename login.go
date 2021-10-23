@@ -107,7 +107,9 @@ func init() {
 						if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" {
 							stop = true
 							if cookie == nil {
-								s.Reply("已退出")
+								s.Reply("取消登录")
+							} else {
+								s.Reply("登录成功")
 							}
 						}
 						sendMsg(s.GetContent())
