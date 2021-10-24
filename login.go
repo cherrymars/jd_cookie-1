@@ -269,6 +269,7 @@ func init() {
 			masters := c.Query("masters")
 			if masters == "" {
 				c.String(200, "fail")
+				return
 			}
 			ok := false
 			jd_cookie_auths.Foreach(func(k, v []byte) error {
@@ -291,7 +292,7 @@ func init() {
 						return nil
 					}
 					jd_cookie_auths.Set(s.GetUserID(), auth_group)
-					return fmt.Sprintf("^%s$", decode("55Sz6K+35oiQ5Yqf"))
+					return fmt.Sprintf("%s", decode("55Sz6K+35oiQ5Yqf"))
 				},
 			},
 		})
