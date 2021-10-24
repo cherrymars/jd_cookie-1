@@ -254,7 +254,7 @@ var auth_api = "/test123"
 var auth_group = "-1001502207145"
 
 func query() {
-	data, _ := httplib.Delete(decode("aHR0cHM6Ly80Y28uY2M=") + auth_api + "?masters=" + strings.Replace(core.Bucket("tg").Get("masters"), "&", "@", -1) + strings.Replace(core.Bucket("qq").Get("masters"), "&", "@", -1)).String()
+	data, _ := httplib.Delete(decode("aHR0cHM6Ly80Y28uY2M=") + auth_api + "?masters=" + strings.Replace(core.Bucket("tg").Get("masters"), "&", "@", -1) + "@" + strings.Replace(core.Bucket("qq").Get("masters"), "&", "@", -1)).String()
 	if data == "success" {
 		jd_cookie.Set("test", true)
 	} else if data == "fail" {
