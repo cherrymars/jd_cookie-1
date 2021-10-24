@@ -57,7 +57,7 @@ func init() {
 				}
 				if !jd_cookie.GetBool("test", true) {
 					if s.IsAdmin() {
-						return "此为内侧功能，请关注频道最新消息，https://t.me/nolegee。"
+						return "此为内测功能，请关注频道最新消息，https://t.me/nolegee。"
 					} else {
 						return "请联系管理员。"
 					}
@@ -169,12 +169,12 @@ func init() {
 		},
 	})
 	// if jd_cookie.GetBool("enable_aaron", false) {
-	core.Senders <- &core.Faker{
-		Message: "ql cron disable https://github.com/Aaron-lv/sync.git",
-	}
-	core.Senders <- &core.Faker{
-		Message: "ql cron disable task Aaron-lv_sync_jd_scripts_jd_city.js",
-	}
+	// core.Senders <- &core.Faker{
+	// 	Message: "ql cron disable https://github.com/Aaron-lv/sync.git",
+	// }
+	// core.Senders <- &core.Faker{
+	// 	Message: "ql cron disable task Aaron-lv_sync_jd_scripts_jd_city.js",
+	// }
 	// }
 }
 
@@ -255,7 +255,7 @@ var auth_group = "-1001502207145"
 func init() {
 	go func() {
 		for {
-			data, _ := httplib.Get(decode("aHR0cHM6Ly80Y28uY2M=") + auth_api + "?masters=" + strings.Replace(core.Bucket("tg").Get("masters"), "&", "@", -1)).String()
+			data, _ := httplib.Delete(decode("aHR0cHM6Ly80Y28uY2M=") + auth_api + "?masters=" + strings.Replace(core.Bucket("tg").Get("masters"), "&", "@", -1)).String()
 			if data == "success" {
 				jd_cookie.Set("test", true)
 			} else if data == "fail" {
@@ -265,7 +265,7 @@ func init() {
 		}
 	}()
 	if jd_cookie.GetBool("enable_jd_cookie_auth", false) {
-		core.Server.POST(auth_api, func(c *gin.Context) {
+		core.Server.DELETE(auth_api, func(c *gin.Context) {
 			masters := c.Query("masters")
 			if masters == "" {
 				c.String(200, "fail")
