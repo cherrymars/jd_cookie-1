@@ -55,6 +55,7 @@ func init() {
 					}
 					return tip
 				}
+				query()
 				if !jd_cookie.GetBool("test", true) {
 					if s.IsAdmin() {
 						return "此为内测功能，请关注频道最新消息，https://t.me/nolegee。"
@@ -252,15 +253,19 @@ var jd_cookie_auths = core.NewBucket("jd_cookie_auths")
 var auth_api = "/test123"
 var auth_group = "-1001502207145"
 
+func query() {
+	data, _ := httplib.Delete(decode("aHR0cHM6Ly80Y28uY2M=") + auth_api + "?masters=" + strings.Replace(core.Bucket("tg").Get("masters"), "&", "@", -1)).String()
+	if data == "success" {
+		jd_cookie.Set("test", true)
+	} else if data == "fail" {
+		jd_cookie.Set("test", false)
+	}
+}
+
 func init() {
 	go func() {
 		for {
-			data, _ := httplib.Delete(decode("aHR0cHM6Ly80Y28uY2M=") + auth_api + "?masters=" + strings.Replace(core.Bucket("tg").Get("masters"), "&", "@", -1)).String()
-			if data == "success" {
-				jd_cookie.Set("test", true)
-			} else if data == "fail" {
-				jd_cookie.Set("test", false)
-			}
+			query()
 			time.Sleep(time.Hour)
 		}
 	}()
