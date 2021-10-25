@@ -167,31 +167,6 @@ func init() {
 								sendMsg("1")
 								continue
 							}
-							if phone != "" && (strings.Contains(msg, "请注意查收") || strings.Contains(msg, "验证码格式有误")) {
-								ok := false
-								for {
-									if stop {
-										break
-									}
-									if ok {
-										break
-									}
-									s.Await(s, func(s core.Sender) interface{} {
-										code := s.GetContent()
-										if code == "退出" {
-											stop = true
-											return "取消登录"
-										}
-										if regexp.MustCompile(`^\d{6}$`).FindString(code) == "" {
-											return "请输入格式正确的验证码，或者对我说“退出”。"
-										}
-										ok = true
-										sendMsg(code)
-										return "十之八九登录成功啦～，60秒后使用“查询”指令确认是否登录成功。"
-									})
-								}
-								continue
-							}
 							if phone != "" && (strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号")) {
 								sendMsg(phone)
 								continue
@@ -225,9 +200,16 @@ func init() {
 							if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" {
 								stop = true
 								if cookie == nil {
-									s.Reply("取消登录")
+									return "取消登录"
 								} else {
-									s.Reply("登录成功")
+									return "登录成功"
+								}
+							}
+							if phone != "" {
+								if regexp.MustCompile(`^\d{6}$`).FindString(msg) == "" {
+									return "请输入格式正确的验证码，或者对我说“退出”。"
+								} else {
+									s.Reply("八九不离十登录成功啦，60秒后对我说“查询”已确认登录成功。")
 								}
 							}
 							sendMsg(s.GetContent())
