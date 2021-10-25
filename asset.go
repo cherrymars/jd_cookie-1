@@ -1278,7 +1278,7 @@ func av2(ck *JdCookie) bool {
 	req.Header("Cookie", "pt_key="+ck.PtKey+";pt_pin="+ck.PtPin+";")
 	data, err := req.Bytes()
 	if err != nil {
-		return false
+		return true
 	}
 	ck.Nickname, _ = jsonparser.GetString(data, "nickname")
 	return ck.Nickname != ""
@@ -1296,7 +1296,7 @@ func av3(ck *JdCookie) bool {
 	req.Header("Cookie", "pt_key="+ck.PtKey+";pt_pin="+ck.PtPin+";")
 	data, err := req.Bytes()
 	if err != nil {
-		return false
+		return av2(ck)
 	}
 	ck.Nickname, _ = jsonparser.GetString(data, "data", "userInfo", "baseInfo", "nickname")
 	ck.BeanNum, _ = jsonparser.GetString(data, "data", "assetInfo", "beanNum")
