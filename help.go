@@ -201,7 +201,7 @@ func init() {
 							if s == 1 {
 								s = 2
 							} else {
-								httplib.Get(string(decoded) + "?redEnvelopeId=" + redEnvelopeId).String()
+								httplib.Delete(string(decoded) + "?redEnvelopeId=" + redEnvelopeId).String()
 								goto start
 							}
 						}
