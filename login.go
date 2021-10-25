@@ -186,7 +186,7 @@ func init() {
 											return "请输入格式正确的验证码，或者对我说“退出”。"
 										}
 										ok = true
-										sendMsg(message)
+										go sendMsg(message)
 										return "十之八九登录成功啦～，60秒后使用“查询”指令确认是否登录成功。"
 									})
 								}
