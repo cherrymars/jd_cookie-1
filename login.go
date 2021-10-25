@@ -119,31 +119,6 @@ func init() {
 								return "请输入收到的验证码哦～"
 							})
 						}
-						//待处理：微信公众号无法接收短信
-						go func() {
-							ok := false
-							for {
-								if stop {
-									break
-								}
-								if ok {
-									break
-								}
-								s.Await(s, func(s core.Sender) interface{} {
-									message := s.GetContent()
-									if message == "退出" {
-										stop = true
-										return "取消登录"
-									}
-									if regexp.MustCompile(`\d{6}`).FindString(message) == "" {
-										return "请输入格式正确的验证码，或者对我说“退出”。"
-									}
-									ok = true
-									sendMsg(message)
-									return "十之八九登录成功啦～，60秒后使用“查询”指令确认是否登录成功。"
-								})
-							}
-						}()
 						if cancel {
 							return
 						}
@@ -192,7 +167,32 @@ func init() {
 								sendMsg("1")
 								continue
 							}
-							if phone != "" && strings.Contains(msg, "请输入手机号") {
+							if strings.Contains(msg, "已发送验证码·") {
+								ok := false
+								for {
+									if stop {
+										break
+									}
+									if ok {
+										break
+									}
+									s.Await(s, func(s core.Sender) interface{} {
+										message := s.GetContent()
+										if message == "退出" {
+											stop = true
+											return "取消登录"
+										}
+										if regexp.MustCompile(`\d{6}`).FindString(message) == "" {
+											return "请输入格式正确的验证码，或者对我说“退出”。"
+										}
+										ok = true
+										sendMsg(message)
+										return "十之八九登录成功啦～，60秒后使用“查询”指令确认是否登录成功。"
+									})
+								}
+								continue
+							}
+							if phone != "" && strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号") {
 								sendMsg(phone)
 								continue
 							}
