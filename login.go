@@ -37,7 +37,7 @@ func init() {
 		}
 	})
 	go RunServer()
-	core.AddCommand("", []core.Function{ ////
+	core.AddCommand("", []core.Function{
 		{
 			Rules: []string{`raw ^登录$`, `raw ^登陆$`, `raw ^h$`},
 			Handle: func(s core.Sender) interface{} {
@@ -119,6 +119,7 @@ func init() {
 								return "请输入收到的验证码哦～"
 							})
 						}
+						//待处理：微信公众号无法接收短信
 						go func() {
 							ok := false
 							for {
