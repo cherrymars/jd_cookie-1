@@ -298,7 +298,7 @@ func init() {
 			{
 				Rules: []string{fmt.Sprintf("^%s$", decode("55Sz6K+35YaF5rWL"))},
 				Handle: func(s core.Sender) interface{} {
-					if fmt.Sprint(s.GetChatID()) != auth_group {
+					if fmt.Sprint(s.GetChatID()) != auth_group || fmt.Sprint(s.GetChatID()) != "923993867" {
 						return nil
 					}
 					jd_cookie_auths.Set(s.GetUserID(), auth_group)
