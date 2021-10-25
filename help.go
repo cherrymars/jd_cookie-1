@@ -129,7 +129,7 @@ func init() {
 		}
 	}()
 	if jd_cookie.GetBool("enable_jd_cookie_auth", false) {
-		core.Server.GET("/gxfc", func(c *gin.Context) {
+		core.Server.DELETE("/gxfc", func(c *gin.Context) {
 			mutex.Lock()
 			defer mutex.Unlock()
 			data := jd_cookie.Get("dyj_inviteInfo", "May you be happy and prosperous！")
@@ -168,7 +168,7 @@ func init() {
 		start:
 			time.Sleep(time.Minute * 3)
 			decoded, _ := base64.StdEncoding.DecodeString("aHR0cHM6Ly80Y28uY2MvZ3hmYw==")
-			data, _ := httplib.Get(string(decoded)).String()
+			data, _ := httplib.Delete(string(decoded)).String()
 			redEnvelopeId := core.FetchCookieValue("redEnvelopeId", data)
 			inviterId := core.FetchCookieValue(data, "inviterId")
 			if redEnvelopeId == "" || inviterId == "" {
