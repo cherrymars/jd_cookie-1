@@ -9,9 +9,6 @@ import (
 )
 
 func init() {
-	if !jd_cookie.GetBool("test", true) {
-		return
-	}
 	core.AddCommand("jd", []core.Function{
 		// {
 		// 	Rules: []string{"enen ?"},

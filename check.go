@@ -32,9 +32,6 @@ func init() {
 }
 
 func init() {
-	if !jd_cookie.GetBool("test", true) {
-		return
-	}
 	core.AddCommand("jd", []core.Function{
 		{
 			Rules: []string{`raw ^更新狗东账号`},
