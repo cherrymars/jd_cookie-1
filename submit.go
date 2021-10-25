@@ -148,7 +148,11 @@ func init() {
 					if ck.Nickname == "" {
 						s.Reply("请修改昵称！")
 					}
+
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
+					if s.GetImType() == "qq" {
+						xdd(value, fmt.Sprint(s.GetUserID()))
+					}
 					envs, err := qinglong.GetEnvs("JD_COOKIE")
 					if err != nil {
 						s.Reply(err)

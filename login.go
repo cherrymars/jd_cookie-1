@@ -160,6 +160,7 @@ func init() {
 					go func() {
 						for {
 							msg := <-cry
+							fmt.Println(msg)
 							if msg == "stop" {
 								break
 							}
