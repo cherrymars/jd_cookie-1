@@ -167,7 +167,7 @@ func init() {
 								sendMsg("1")
 								continue
 							}
-							if strings.Contains(msg, "已发送验证码·") {
+							if strings.Contains(msg, "已发送验证码") {
 								ok := false
 								for {
 									if stop {
