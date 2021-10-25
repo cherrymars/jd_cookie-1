@@ -48,19 +48,22 @@ func init() {
 					tip := jd_cookie.Get("tip")
 					if tip == "" {
 						if s.IsAdmin() {
-							return jd_cookie.Get("tip", "阿东不行啦，更改登录提示指令，set jd_cookie tip ?")
+							return jd_cookie.Get("tip", "已支持阿东前往了解，https://github.com/rubyangxg/jd-qinglong。")
 						} else {
 							tip = "暂时无法使用短信登录。"
 						}
 					}
 					return tip
 				}
-				query()
+
 				if !jd_cookie.GetBool("test", true) {
-					if s.IsAdmin() {
-						return "此为内测功能，请关注频道最新消息，https://t.me/nolegee。"
-					} else {
-						return "请联系管理员。"
+					query()
+					if !jd_cookie.GetBool("test", true) {
+						if s.IsAdmin() {
+							return "此为内测功能，请关注频道最新消息，https://t.me/nolegee。"
+						} else {
+							return "请联系管理员。"
+						}
 					}
 				}
 				uid := time.Now().UnixNano()
