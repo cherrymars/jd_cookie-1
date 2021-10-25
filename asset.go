@@ -130,6 +130,7 @@ var GetAsset = func(ck *JdCookie) string {
 	return asset
 }
 
+//检测登录需增加接口
 func init() {
 	go func() {
 		for {
