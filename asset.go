@@ -145,6 +145,7 @@ func init() {
 		c <- GetAsset(&ck)
 		return
 	}
+	//新增惊喜工厂
 	core.AddCommand("jd", []core.Function{
 		{
 			Rules: []string{`asset ?`, `raw ^查询 (\S+)$`},

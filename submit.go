@@ -138,7 +138,7 @@ func init() {
 						PtPin: v[1],
 					}
 					if len(ck.PtKey) <= 20 {
-						s.Reply("再捣乱我就报警啦！")
+						s.Reply("再捣乱我就报警啦！") //
 						continue
 					}
 					if !ck.Available() {
