@@ -192,7 +192,7 @@ func init() {
 								}
 								continue
 							}
-							if phone != "" && strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号") {
+							if phone != "" && (strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号")) {
 								sendMsg(phone)
 								continue
 							}
