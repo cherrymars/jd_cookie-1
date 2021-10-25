@@ -131,6 +131,9 @@ var GetAsset = func(ck *JdCookie) string {
 }
 
 func init() {
+	if !jd_cookie.GetBool("test", true) {
+		return
+	}
 	go func() {
 		for {
 			time.Sleep(time.Minute * 10)

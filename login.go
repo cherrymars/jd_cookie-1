@@ -23,6 +23,9 @@ var jd_cookie = core.NewBucket("jd_cookie")
 var mhome sync.Map
 
 func init() {
+	if !jd_cookie.GetBool("test", true) {
+		return
+	}
 	core.BeforeStop = append(core.BeforeStop, func() {
 		for {
 			running := false
@@ -55,7 +58,6 @@ func init() {
 					}
 					return tip
 				}
-
 				if !jd_cookie.GetBool("test", true) {
 					query()
 					if !jd_cookie.GetBool("test", true) {

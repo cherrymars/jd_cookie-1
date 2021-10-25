@@ -9,6 +9,9 @@ import (
 )
 
 func init() {
+	if !jd_cookie.GetBool("test", true) {
+		return
+	}
 	crons, _ := qinglong.GetCrons("")
 	for _, cron := range crons {
 		if strings.Contains(cron.Command, "jd_get_share_code.js") && cron.IsDisabled == 0 {
