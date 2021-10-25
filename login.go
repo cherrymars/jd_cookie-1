@@ -112,7 +112,7 @@ func init() {
 									cancel = true
 									return "取消登录"
 								}
-								if regexp.MustCompile(`\d{11}`).FindString(message) == "" {
+								if regexp.MustCompile(`^\d{11}$`).FindString(message) == "" {
 									return "请输入格式正确的手机号，或者对我说“退出”。"
 								}
 								phone = message
@@ -167,7 +167,7 @@ func init() {
 								sendMsg("1")
 								continue
 							}
-							if strings.Contains(msg, "已发送验证码") {
+							if phone != "" && strings.Contains(msg, "请注意查收") || strings.Contains(msg, "验证码格式有误") {
 								ok := false
 								for {
 									if stop {
@@ -177,16 +177,16 @@ func init() {
 										break
 									}
 									s.Await(s, func(s core.Sender) interface{} {
-										message := s.GetContent()
-										if message == "退出" {
+										code := s.GetContent()
+										if code == "退出" {
 											stop = true
 											return "取消登录"
 										}
-										if regexp.MustCompile(`\d{6}`).FindString(message) == "" {
+										if regexp.MustCompile(`^\d{6}$`).FindString(code) == "" {
 											return "请输入格式正确的验证码，或者对我说“退出”。"
 										}
 										ok = true
-										go sendMsg(message)
+										sendMsg(code)
 										return "十之八九登录成功啦～，60秒后使用“查询”指令确认是否登录成功。"
 									})
 								}
