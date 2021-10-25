@@ -129,6 +129,10 @@ func init() {
 							sendMsg("1")
 							continue
 						}
+						if strings.Contains(msg, "扫码") {
+							sendMsg("1")
+							continue
+						}
 						if strings.Contains(msg, "pt_key") {
 							cookie = &msg
 							stop = true
