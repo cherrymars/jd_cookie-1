@@ -167,7 +167,7 @@ func init() {
 								sendMsg("1")
 								continue
 							}
-							if phone != "" && strings.Contains(msg, "请注意查收") || strings.Contains(msg, "验证码格式有误") {
+							if phone != "" && (strings.Contains(msg, "请注意查收") || strings.Contains(msg, "验证码格式有误")) {
 								ok := false
 								for {
 									if stop {
