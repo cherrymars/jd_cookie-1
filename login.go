@@ -70,37 +70,12 @@ func init() {
 					}
 				}
 				go func() {
+					stop := false
 					phone := ""
-					cancel := false
-					if s.GetImType() == "wxmp" {
-						for {
-							if phone != "" {
-								break
-							}
-							if cancel {
-								break
-							}
-							s.Await(s, func(s core.Sender) interface{} {
-								message := s.GetContent()
-								if message == "退出" {
-									cancel = true
-									return "取消登录"
-								}
-								if regexp.MustCompile(`\d{11}`).FindString(message) == "" {
-									return "请输入格式正确的手机号，或者对我说“退出”。"
-								}
-								phone = message
-								return "请输入收到的验证码哦～"
-							})
-						}
-					}
-					if cancel {
-						return
-					}
+
 					uid := time.Now().UnixNano()
 					cry := make(chan string, 1)
 					mhome.Store(uid, cry)
-					stop := false
 					var deadline = time.Now().Add(time.Second * time.Duration(200))
 					var cookie *string
 					sendMsg := func(msg string) {
@@ -122,6 +97,57 @@ func init() {
 							},
 						})
 					}
+					if s.GetImType() == "wxmp" {
+						cancel := false
+						for {
+							if phone != "" {
+								break
+							}
+							if cancel {
+								break
+							}
+							s.Await(s, func(s core.Sender) interface{} {
+								message := s.GetContent()
+								if message == "退出" {
+									cancel = true
+									return "取消登录"
+								}
+								if regexp.MustCompile(`\d{11}`).FindString(message) == "" {
+									return "请输入格式正确的手机号，或者对我说“退出”。"
+								}
+								phone = message
+								return "请输入收到的验证码哦～"
+							})
+						}
+						go func() {
+							ok := false
+							for {
+								if stop {
+									break
+								}
+								if ok {
+									break
+								}
+								s.Await(s, func(s core.Sender) interface{} {
+									message := s.GetContent()
+									if message == "退出" {
+										stop = true
+										return "取消登录"
+									}
+									if regexp.MustCompile(`\d{6}`).FindString(message) == "" {
+										return "请输入格式正确的验证码，或者对我说“退出”。"
+									}
+									ok = true
+									sendMsg(message)
+									return "十之八九登录成功啦～，60秒后使用“查询”指令确认是否登录成功。"
+								})
+							}
+						}()
+						if cancel {
+							return
+						}
+					}
+
 					defer func() {
 						cry <- "stop"
 						mhome.Delete(uid)
@@ -173,30 +199,6 @@ func init() {
 								stop = true
 								s.SetContent("q")
 								core.Senders <- s
-							}
-							if phone != "" && strings.Contains(msg, "已发送验证码") {
-								ok := false
-								for {
-									if stop {
-										break
-									}
-									if ok {
-										break
-									}
-									s.Await(s, func(s core.Sender) interface{} {
-										message := s.GetContent()
-										if message == "退出" {
-											stop = true
-											return "取消登录"
-										}
-										if regexp.MustCompile(`\d{6}`).FindString(message) == "" {
-											return "请输入格式正确的验证码，或者对我说“退出”。"
-										}
-										ok = true
-										sendMsg(message)
-										return "十之八九登录成功啦～，60秒后使用“查询”指令确认是否登录成功。"
-									})
-								}
 							}
 							if cookie == nil {
 								if strings.Contains(msg, "已点击登录") {
