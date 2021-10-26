@@ -247,7 +247,7 @@ func init() {
 									stop = true
 								}
 								left = 1
-								return fmt.Sprintf("%d秒后再查询", left)
+								return fmt.Sprintf("%d秒后再查询。", left)
 							}, "^查询$", time.Second)
 						}
 					}
