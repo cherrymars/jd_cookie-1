@@ -48,7 +48,7 @@ func init() {
 					tip := jd_cookie.Get("tip")
 					if tip == "" {
 						if s.IsAdmin() {
-							s.Reply(jd_cookie.Get("tip", "已支持阿东前往了解，https://github.com/rubyangxg/jd-qinglong。"))
+							s.Reply(jd_cookie.Get("tip", "阿东又不行了。")) //已支持阿东前往了解，https://github.com/rubyangxg/jd-qinglong
 							return nil
 						} else {
 							tip = "暂时无法使用短信登录。"
