@@ -10,6 +10,7 @@ import (
 
 func init() {
 	core.AddCommand("jd", []core.Function{
+		// enen 接口貌似失效了
 		// {
 		// 	Rules: []string{"enen ?"},
 		// 	Admin: true,
