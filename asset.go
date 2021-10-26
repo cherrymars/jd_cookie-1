@@ -232,7 +232,7 @@ func init() {
 		{
 			Rules: []string{`^查询$`},
 			Handle: func(s core.Sender) interface{} {
-				defer func() {
+				go func() {
 					l := int64(jd_cookie.GetInt("query_wait_time"))
 					if l != 0 {
 						deadline := time.Now().Unix() + l
