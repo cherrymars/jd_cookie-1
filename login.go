@@ -159,11 +159,7 @@ func init() {
 								}
 							}
 							msg = strings.Join(new, "\n")
-							if strings.Contains(msg, "青龙状态") {
-								sendMsg("1")
-								continue
-							}
-							if strings.Contains(msg, "扫码") {
+							if strings.Contains(msg, "请输入数字编号") {
 								sendMsg("1")
 								continue
 							}
