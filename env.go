@@ -132,6 +132,8 @@ func init() {
 					return err
 				}
 				env.Remarks = s.Get(1)
+				env.Created = 0
+				env.Timestamp = ""
 				if err := qinglong.Config.Req(qinglong.PUT, qinglong.ENVS, *env); err != nil {
 					return err
 				}
