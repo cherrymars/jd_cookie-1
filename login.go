@@ -163,6 +163,10 @@ func init() {
 								sendMsg("1")
 								continue
 							}
+							if strings.Contains(msg, "请选择登录方式") {
+								sendMsg("1")
+								continue
+							}
 							if phone != "" && (strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号")) {
 								sendMsg(phone)
 								continue
