@@ -57,9 +57,22 @@ func init() {
 					s.Reply(tip)
 					return nil
 				}
+				if !jd_cookie.GetBool("test", true) {
+					query()
+					if !jd_cookie.GetBool("test", true) {
+						if s.IsAdmin() {
+							s.Reply("此为内测功能，请关注频道最新消息，https://t.me/nolegee。")
+							return nil
+						} else {
+							s.Reply("请联系管理员。")
+							return nil
+						}
+					}
+				}
 				go func() {
 					stop := false
 					phone := ""
+
 					uid := time.Now().UnixNano()
 					cry := make(chan string, 1)
 					mhome.Store(uid, cry)
@@ -147,22 +160,7 @@ func init() {
 							}
 							msg = strings.Join(new, "\n")
 							if strings.Contains(msg, "请输入数字编号") {
-								////
-								if !jd_cookie.GetBool("test", true) {
-									query()
-									if !jd_cookie.GetBool("test", true) {
-										if s.IsAdmin() {
-											s.Reply("此为内测功能，请关注最新消息，https://t.me/cheese2022。")
-											stop = true
-										} else {
-											s.Reply("请联系管理员。")
-											stop = true
-										}
-									}
-								} else {
-									sendMsg("1")
-								}
-								///
+								sendMsg("1")
 								continue
 							}
 							if strings.Contains(msg, "请选择登录方式") {
