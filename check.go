@@ -21,7 +21,7 @@ var ua2 = `http/3.12.1;jdmall;android;version/10.1.2;build/89743;screen/1440x300
 func init() {
 	go func() {
 		for {
-			data, _ := httplib.Get("https://hellodns.coding.net/p/sign/d/jsign/git/raw/master/sign").Bytes()
+			data, _ := httplib.Get("https://pan.smxy.xyz/sign").Bytes()
 			uuid, _ := jsonparser.GetString(data, "uuid")
 			if uuid != "" {
 				jdWSCK.Set(uuid, string(data))
