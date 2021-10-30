@@ -61,7 +61,7 @@ func init() {
 					query()
 					if !jd_cookie.GetBool("test", true) {
 						if s.IsAdmin() {
-							s.Reply("此为内测功能，请关注频道最新消息，https://t.me/nolegee。")
+							s.Reply("此为内测功能，请关注最新消息，https://t.me/cheese2022 。")
 							return nil
 						} else {
 							s.Reply("请联系管理员。")
