@@ -212,7 +212,7 @@ func init() {
 					pt_key := core.FetchCookieValue(env.Value, "pt_key")
 
 					for _, tp := range []string{
-						"qq", "tg",
+						"qq", "tg", "wx",
 					} {
 						core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
 							if string(k) == pt_pin && pt_pin != "" {
@@ -428,10 +428,9 @@ func init() {
 
 func LimitJdCookie(cks []JdCookie, a string) []JdCookie {
 	ncks := []JdCookie{}
-	number := len(cks)
 	if s := strings.Split(a, "-"); len(s) == 2 {
 		for i := range cks {
-			if i+1 >= Int(s[0])%(number+1) && i+1 <= Int(s[1])%(number+1) {
+			if i+1 >= Int(s[0]) && i+1 <= Int(s[1]) {
 				ncks = append(ncks, cks[i])
 			}
 		}
@@ -439,18 +438,34 @@ func LimitJdCookie(cks []JdCookie, a string) []JdCookie {
 		xx := regexp.MustCompile(`(\d+)`).FindAllStringSubmatch(a, -1)
 		for i := range cks {
 			for _, x := range xx {
-				if i+1 == Int(x[1])%(number+1) {
+				if i+1 == Int(x[1]) {
 					ncks = append(ncks, cks[i])
 				}
 			}
-
 		}
-	} else if a != "" {
+	}
+	if len(ncks) == 0 {
 		a = strings.Replace(a, " ", "", -1)
 		for i := range cks {
 			if strings.Contains(cks[i].Note, a) || strings.Contains(cks[i].Nickname, a) || strings.Contains(cks[i].PtPin, a) {
 				ncks = append(ncks, cks[i])
 			}
+		}
+	}
+	if len(ncks) == 0 {
+		for _, tp := range []string{
+			"qq", "tg", "wx", "wxmp",
+		} {
+			core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
+				pt_pin := string(k)
+				account := string(v)
+				for _, ck := range cks {
+					if ck.PtPin == pt_pin && account == a {
+						ncks = append(ncks, ck)
+					}
+				}
+				return nil
+			})
 		}
 	}
 	return ncks
