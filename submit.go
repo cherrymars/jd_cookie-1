@@ -128,6 +128,32 @@ func init() {
 		// 		return "操作完成"
 		// 	},
 		// },
+		// jd unbind 可以解绑名下所有京东账号
+		// 查询 支持匹配绑定的社交账号
+		// jd send pt_pin msg 给绑定该京东账号的发送消息,pt_pin填all则发给所有。
+		{
+			Rules: []string{"jd send ? ?"},
+			Admin: true,
+			Handle: func(s core.Sender) interface{} {
+				user_pin := s.Get()
+				msg := s.Get()
+				for _, tp := range []string{
+					"qq", "tg", "wx",
+				} {
+					core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
+						pt_pin := string(k)
+						user_id := string(v)
+						if pt_pin == user_pin || user_pin == "all" {
+							if push, ok := core.Pushs[tp]; ok {
+								push(user_id, msg)
+							}
+						}
+						return nil
+					})
+				}
+				return nil
+			},
+		},
 		{
 			Rules: []string{`unbind`},
 			Handle: func(s core.Sender) interface{} {
