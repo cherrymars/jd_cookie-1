@@ -398,7 +398,7 @@ func init() {
 						pt_pin := string(k)
 						account := string(v)
 						if pt_pin == s.Get() {
-							rt += fmt.Sprintf("%s - %s", tp, account)
+							rt += fmt.Sprintf("%s - %s\n", tp, account)
 						}
 						return nil
 					})
