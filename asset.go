@@ -397,7 +397,7 @@ func init() {
 					core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
 						pt_pin := string(k)
 						account := string(v)
-						if pt_pin == s.Get() {
+						if pt_pin == s.Get() && pt_pin != "" {
 							rt += fmt.Sprintf("%s - %s\n", tp, account)
 						}
 						return nil
