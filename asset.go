@@ -391,6 +391,10 @@ func init() {
 			Admin: true,
 			Handle: func(s core.Sender) interface{} {
 				rt := ""
+				pare := s.Get()
+				if r := core.FetchCookieValue("pt_pin", pare); r != "" {
+					pare = r
+				}
 				for _, tp := range []string{
 					"qq", "tg", "wx", "wxmp",
 				} {
