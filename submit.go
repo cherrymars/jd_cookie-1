@@ -136,7 +136,7 @@ func init() {
 			Admin: true,
 			Handle: func(s core.Sender) interface{} {
 				user_pin := s.Get()
-				msg := s.Get()
+				msg := s.Get(1)
 				for _, tp := range []string{
 					"qq", "tg", "wx",
 				} {
