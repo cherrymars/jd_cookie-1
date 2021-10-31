@@ -460,9 +460,9 @@ func LimitJdCookie(cks []JdCookie, a string) []JdCookie {
 
 				pt_pin := string(k)
 				account := string(v)
-				fmt.Println(pt_pin, account)
+				// fmt.Println(pt_pin, account)
 				for _, ck := range cks {
-					fmt.Println(ck.PtPin, pt_pin)
+					// fmt.Println(ck.PtPin, pt_pin)
 					if ck.PtPin == pt_pin && account == a {
 						ncks = append(ncks, ck)
 					}
