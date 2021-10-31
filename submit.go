@@ -132,7 +132,7 @@ func init() {
 		// 查询 支持匹配绑定的社交账号
 		// jd send pt_pin msg 给绑定该京东账号的发送消息,pt_pin填all则发给所有。
 		{
-			Rules: []string{"jd send ? ?"},
+			Rules: []string{"send ? ?"},
 			Admin: true,
 			Handle: func(s core.Sender) interface{} {
 				user_pin := s.Get()
@@ -151,7 +151,7 @@ func init() {
 						return nil
 					})
 				}
-				return nil
+				return "发送完成"
 			},
 		},
 		{
