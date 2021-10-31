@@ -13,6 +13,7 @@ import (
 var pinQQ = core.NewBucket("pinQQ")
 var pinTG = core.NewBucket("pinTG")
 var pinWXMP = core.NewBucket("pinWXMP")
+var pinWX = core.NewBucket("pinWX")
 var pin = func(class string) core.Bucket {
 	return core.Bucket("pin" + strings.ToUpper(class))
 }
@@ -100,8 +101,35 @@ func init() {
 		}
 	})
 	core.AddCommand("jd", []core.Function{
+		// {
+		// 	Rules: []string{`unbind ?`},
+		// 	Admin: true,
+		// 	Handle: func(s core.Sender) interface{} {
+		// 		s.Disappear(time.Second * 40)
+		// 		envs, err := qinglong.GetEnvs("JD_COOKIE")
+		// 		if err != nil {
+		// 			return err
+		// 		}
+		// 		if len(envs) == 0 {
+		// 			return "暂时无法操作。"
+		// 		}
+		// 		key := s.Get()
+		// 		pin := pin(s.GetImType())
+		// 		for _, env := range envs {
+		// 			pt_pin := FetchJdCookieValue("pt_pin", env.Value)
+		// 			pin.Foreach(func(k, v []byte) error {
+		// 				if string(k) == pt_pin && string(v) == key {
+		// 					s.Reply(fmt.Sprintf("已解绑，%s。", pt_pin))
+		// 					pin.Set(string(k), "")
+		// 				}
+		// 				return nil
+		// 			})
+		// 		}
+		// 		return "操作完成"
+		// 	},
+		// },
 		{
-			Rules: []string{`unbind ?`},
+			Rules: []string{`unbind`},
 			Handle: func(s core.Sender) interface{} {
 				s.Disappear(time.Second * 40)
 				envs, err := qinglong.GetEnvs("JD_COOKIE")
@@ -111,14 +139,14 @@ func init() {
 				if len(envs) == 0 {
 					return "暂时无法操作。"
 				}
+				uid := s.GetUserID()
 				for _, env := range envs {
 					pt_pin := FetchJdCookieValue("pt_pin", env.Value)
-					pin(s.GetImType()).Foreach(func(k, v []byte) error {
-						if string(k) == pt_pin && string(v) == s.Get() {
+					pin := pin(s.GetImType())
+					pin.Foreach(func(k, v []byte) error {
+						if string(k) == pt_pin && string(v) == uid {
 							s.Reply(fmt.Sprintf("已解绑，%s。", pt_pin))
-							defer func() {
-								pinQQ.Set(string(k), "")
-							}()
+							pin.Set(string(k), "")
 						}
 						return nil
 					})
