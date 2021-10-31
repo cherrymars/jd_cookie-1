@@ -387,6 +387,26 @@ func init() {
 			},
 		},
 		{
+			Rules: []string{`imOf ?`},
+			Admin: true,
+			Handle: func(s core.Sender) interface{} {
+				rt := ""
+				for _, tp := range []string{
+					"qq", "tg", "wx", "wxmp",
+				} {
+					core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
+						pt_pin := string(k)
+						account := string(v)
+						if pt_pin == s.Get() {
+							rt += fmt.Sprintf("%s - %s", tp, account)
+						}
+						return nil
+					})
+				}
+				return rt
+			},
+		},
+		{
 			Rules: []string{`bean(?)`},
 			Admin: true,
 			Handle: func(s core.Sender) interface{} {
