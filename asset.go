@@ -457,9 +457,11 @@ func LimitJdCookie(cks []JdCookie, a string) []JdCookie {
 			"qq", "tg", "wx", "wxmp",
 		} {
 			core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
+
 				pt_pin := string(k)
 				account := string(v)
 				for _, ck := range cks {
+					fmt.Println(ck.PtPin, pt_pin)
 					if ck.PtPin == pt_pin && account == a {
 						ncks = append(ncks, ck)
 					}
