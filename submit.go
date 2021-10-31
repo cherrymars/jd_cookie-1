@@ -128,9 +128,6 @@ func init() {
 		// 		return "操作完成"
 		// 	},
 		// },
-		// jd unbind 可以解绑名下所有京东账号
-		// 查询 支持匹配绑定的社交账号
-		// jd send pt_pin msg 给绑定该京东账号的发送消息,pt_pin填all则发给所有。
 		{
 			Rules: []string{"send ? ?"},
 			Admin: true,
