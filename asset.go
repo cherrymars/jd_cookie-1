@@ -407,6 +407,9 @@ func init() {
 						return nil
 					})
 				}
+				if rt == "" {
+					return "空"
+				}
 				return rt
 			},
 		},
