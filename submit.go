@@ -139,7 +139,7 @@ func init() {
 				if len(envs) == 0 {
 					return "暂时无法操作。"
 				}
-				uid := s.GetUserID()
+				uid := fmt.Sprint(s.GetUserID())
 				for _, env := range envs {
 					pt_pin := FetchJdCookieValue("pt_pin", env.Value)
 					pin := pin(s.GetImType())
