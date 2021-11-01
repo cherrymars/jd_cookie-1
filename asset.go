@@ -148,7 +148,7 @@ func init() {
 	//待做：增加惊喜工厂
 	core.AddCommand("jd", []core.Function{
 		{
-			Rules: []string{`asset ?`, `raw ^查询 (\S+)$`},
+			Rules: []string{`asset ?`, `raw ^` + jd_cookie.Get("asset_query_alias", "查询") + ` (\S+)$`},
 			Admin: true,
 			Handle: func(s core.Sender) interface{} {
 				if s.GetImType() == "tg" {
