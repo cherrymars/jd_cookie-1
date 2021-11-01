@@ -144,6 +144,9 @@ func init() {
 							if strings.Contains(msg, "不占资源") {
 								msg += "\n" + "4.取消"
 							}
+							if strings.Contains(msg, "无法回复") {
+								sendMsg("帮助")
+							}
 							{
 								res := regexp.MustCompile(`剩余操作时间：(\d+)`).FindStringSubmatch(msg)
 								if len(res) > 0 {
@@ -197,7 +200,12 @@ func init() {
 						}
 						s.Await(s, func(s core.Sender) interface{} {
 							msg := s.GetContent()
-							if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" {
+							if msg == "查询" || strings.Contains(msg, "pt_pin=") {
+								s.Continue()
+								return nil
+							}
+							iw := core.Int(msg)
+							if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" || (fmt.Sprint(iw) == msg && iw > 1) {
 								stop = true
 								if cookie == nil {
 									return "取消登录"
