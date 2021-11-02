@@ -205,7 +205,7 @@ func init() {
 								return nil
 							}
 							iw := core.Int(msg)
-							if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" || (fmt.Sprint(iw) == msg && iw > 1) {
+							if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" || (fmt.Sprint(iw) == msg && iw > 1 && iw < 11) {
 								stop = true
 								if cookie == nil {
 									return "取消登录"
