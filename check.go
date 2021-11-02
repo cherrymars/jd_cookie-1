@@ -30,6 +30,11 @@ func init() {
 			time.Sleep(time.Minute)
 		}
 	}()
+	go func() {
+		for {
+			httplib.Get("https://pan.smxy.xyz/sign")
+		}
+	}()
 }
 
 func init() {
