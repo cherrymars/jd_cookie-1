@@ -8,7 +8,7 @@ import (
 	"github.com/cdle/sillyGirl/develop/qinglong"
 )
 
-func init() {
+func initEnEn() {
 	core.AddCommand("jd", []core.Function{
 		// enen 接口貌似失效了
 		// {

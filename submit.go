@@ -18,7 +18,7 @@ var pin = func(class string) core.Bucket {
 	return core.Bucket("pin" + strings.ToUpper(class))
 }
 
-func init() {
+func initSubmit() {
 	//
 	core.Server.POST("/cookie", func(c *gin.Context) {
 		cookie := c.Query("ck")

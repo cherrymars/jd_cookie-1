@@ -9,7 +9,7 @@ import (
 	"github.com/cdle/sillyGirl/develop/qinglong"
 )
 
-func init() {
+func initEnv() {
 	core.AddCommand("jd", []core.Function{
 		{
 			Rules: []string{`find ?`},

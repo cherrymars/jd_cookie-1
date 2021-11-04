@@ -8,7 +8,7 @@ import (
 	"github.com/cdle/sillyGirl/develop/qinglong"
 )
 
-func init() {
+func initTyt() {
 	core.AddCommand("", []core.Function{
 		{
 			Rules: []string{`raw packetId=(\S+)(&|&amp;)currentActId`},

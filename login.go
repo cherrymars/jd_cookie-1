@@ -14,7 +14,6 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/beego/beego/v2/client/httplib"
 	"github.com/cdle/sillyGirl/core"
-	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
 
@@ -22,7 +21,7 @@ var jd_cookie = core.NewBucket("jd_cookie")
 
 var mhome sync.Map
 
-func init() {
+func initLogin() {
 	core.BeforeStop = append(core.BeforeStop, func() {
 		for {
 			running := false
@@ -322,47 +321,5 @@ func query() {
 		jd_cookie.Set("test", true)
 	} else if data == "fail" {
 		jd_cookie.Set("test", false)
-	}
-}
-
-func init() {
-	go func() {
-		for {
-			query()
-			time.Sleep(time.Hour)
-		}
-	}()
-	if jd_cookie.GetBool("enable_jd_cookie_auth", false) {
-		core.Server.DELETE(auth_api, func(c *gin.Context) {
-			masters := c.Query("masters")
-			if masters == "" {
-				c.String(200, "fail")
-				return
-			}
-			ok := false
-			jd_cookie_auths.Foreach(func(k, _ []byte) error {
-				if strings.Contains(masters, string(k)) {
-					ok = true
-				}
-				return nil
-			})
-			if ok {
-				c.String(200, "success")
-			} else {
-				c.String(200, "fail")
-			}
-		})
-		core.AddCommand("", []core.Function{
-			{
-				Rules: []string{fmt.Sprintf("^%s$", decode("55Sz6K+35YaF5rWL"))},
-				Handle: func(s core.Sender) interface{} {
-					if fmt.Sprint(s.GetChatID()) != auth_group && fmt.Sprint(s.GetChatID()) != "923993867" {
-						return nil
-					}
-					jd_cookie_auths.Set(s.GetUserID(), auth_group)
-					return fmt.Sprintf("%s", decode("55Sz6K+35oiQ5Yqf"))
-				},
-			},
-		})
 	}
 }

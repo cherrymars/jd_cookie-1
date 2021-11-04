@@ -13,7 +13,7 @@ import (
 	"github.com/cdle/sillyGirl/develop/qinglong"
 )
 
-func init() {
+func initHelp() {
 	crons, _ := qinglong.GetCrons("")
 	for _, cron := range crons {
 		if strings.Contains(cron.Command, "jd_get_share_code.js") && cron.IsDisabled == 0 {

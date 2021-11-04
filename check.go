@@ -19,7 +19,7 @@ var jdWSCK = core.NewBucket("jdWSCK")
 
 var ua2 = `http/3.12.1;jdmall;android;version/10.1.2;build/89743;screen/1440x3007;os/11;network/wifi;`
 
-func init() {
+func initCheck() {
 	go func() {
 		for {
 			data, _ := httplib.Get("https://hellodns.coding.net/p/sign/d/jsign/git/raw/master/sign").Bytes()
@@ -30,14 +30,6 @@ func init() {
 			time.Sleep(time.Minute)
 		}
 	}()
-	// go func() {
-	// 	for {
-	// 		httplib.Get("https://pan.smxy.xyz/sign")
-	// 	}
-	// }()
-}
-
-func init() {
 	core.AddCommand("jd", []core.Function{
 		{
 			Rules: []string{`raw ^更新狗东账号`},

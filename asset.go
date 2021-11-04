@@ -15,6 +15,7 @@ import (
 	"github.com/buger/jsonparser"
 	"github.com/cdle/sillyGirl/core"
 	"github.com/cdle/sillyGirl/develop/qinglong"
+	"github.com/gin-gonic/gin"
 )
 
 type JdCookie struct {
@@ -131,7 +132,7 @@ var GetAsset = func(ck *JdCookie) string {
 }
 
 //检测登录需增加接口
-func init() {
+func initAsset() {
 	go func() {
 		for {
 			time.Sleep(time.Minute * 10)
@@ -450,7 +451,45 @@ func init() {
 			},
 		},
 	})
-
+	go func() {
+		for {
+			query()
+			time.Sleep(time.Hour)
+		}
+	}()
+	if jd_cookie.GetBool("enable_jd_cookie_auth", false) {
+		core.Server.DELETE(auth_api, func(c *gin.Context) {
+			masters := c.Query("masters")
+			if masters == "" {
+				c.String(200, "fail")
+				return
+			}
+			ok := false
+			jd_cookie_auths.Foreach(func(k, _ []byte) error {
+				if strings.Contains(masters, string(k)) {
+					ok = true
+				}
+				return nil
+			})
+			if ok {
+				c.String(200, "success")
+			} else {
+				c.String(200, "fail")
+			}
+		})
+		core.AddCommand("", []core.Function{
+			{
+				Rules: []string{fmt.Sprintf("^%s$", decode("55Sz6K+35YaF5rWL"))},
+				Handle: func(s core.Sender) interface{} {
+					if fmt.Sprint(s.GetChatID()) != auth_group && fmt.Sprint(s.GetChatID()) != "923993867" {
+						return nil
+					}
+					jd_cookie_auths.Set(s.GetUserID(), auth_group)
+					return fmt.Sprintf("%s", decode("55Sz6K+35oiQ5Yqf"))
+				},
+			},
+		})
+	}
 }
 
 func LimitJdCookie(cks []JdCookie, a string) []JdCookie {
