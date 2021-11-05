@@ -77,6 +77,9 @@ func initLogin() {
 		{
 			Rules: []string{`raw ^登录$`, `raw ^登陆$`, `raw ^h$`},
 			Handle: func(s core.Sender) interface{} {
+				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
+					return nil
+				}
 				addr := regexp.MustCompile(`^(https?://[\.\w]+:?\d*)`).FindString(jd_cookie.Get("nolan_addr"))
 				if addr == "" {
 					if s.IsAdmin() {
@@ -139,7 +142,11 @@ func initLogin() {
 					s = s.Copy()
 					s.SetContent(string(data))
 				} else {
-					return message
+					if message != "" {
+						return message
+					} else {
+						return "登录失败。"
+					}
 				}
 				return nil
 				// if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
