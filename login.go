@@ -100,13 +100,13 @@ func initLogin() {
 					if phone == "" {
 						return core.GoAgain("请输入正确的手机号：")
 					}
-					// if s.GetImType() == "wxmp" {
-					// 	return "待会输入接收到的验证码哦～"
-					// }
 					return nil
 				})
 				req := httplib.Post(addr + "/api/SendSMS")
-				data, _ = req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
+				data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
+				if err != nil {
+					return err.Error() + string(data)
+				}
 				message, _ := jsonparser.GetString(data, "message")
 				success, _ := jsonparser.GetBoolean(data, "success")
 				status, _ := jsonparser.GetInt(data, "data", "status")
