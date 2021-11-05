@@ -109,9 +109,9 @@ func initLogin() {
 				message, _ := jsonparser.GetString(data, "message")
 				success, _ := jsonparser.GetBoolean(data, "success")
 				status, _ := jsonparser.GetInt(data, "data", "status")
-				// if message != "" {
-				// 	s.Reply(message)
-				// }
+				if message != "" && status != 666 {
+					s.Reply(message)
+				}
 				if !success && status == 666 {
 					s.Reply("正在进行滑块验证...")
 					req = httplib.Post(addr + "/api/AutoCaptcha")
