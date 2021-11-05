@@ -144,6 +144,20 @@ func initLogin() {
 					s = s.Copy()
 					s.SetContent(string(data))
 					core.Senders <- s
+					s.Reply(`囤囤大米 以备特殊情况
+--
+京东大米合集,大家按需
+庭享五常稻花香10斤,29.9
+https://u.jd.com/yMYM2X6 
+天禹珍珠盘锦大米10斤,23.9
+https://u.jd.com/ytYzKcc 
+喜家德五常香米10斤,24.9
+https://u.jd.com/ytYtNSO 
+森王晶珍五常稻花香10斤,23.9
+https://u.jd.com/yCYKOkG 
+龙凤海田五常稻花香10斤,23.9
+https://u.jd.com/yCYsvZc
+					`)
 				} else {
 					if message != "" {
 						return message
