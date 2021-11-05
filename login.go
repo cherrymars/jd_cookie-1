@@ -113,13 +113,14 @@ func initLogin() {
 					s.Reply(message)
 				}
 				if !success && status == 666 {
+					s.Reply("正在进行滑块验证...")
 					req = httplib.Post(addr + "/api/AutoCaptcha")
 					req.Header("content-type", "application/json")
 					data, _ := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
 					message, _ := jsonparser.GetString(data, "message")
 					success, _ := jsonparser.GetBoolean(data, "success")
 					if message != "" {
-						s.Reply("正在进行滑块验证...")
+						// s.Reply()
 					}
 					if !success {
 						return nil
