@@ -104,6 +104,7 @@ func initLogin() {
 					return nil
 				})
 				req := httplib.Post(addr + "/api/SendSMS")
+				req.Header("accept", "application/json")
 				data, _ = req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
 				s.Reply(string(data))
 				message, _ := jsonparser.GetString(data, "message")
@@ -114,6 +115,7 @@ func initLogin() {
 				}
 				if !success && status == 666 {
 					req = httplib.Post(addr + "/api/AutoCaptcha")
+					req.Header("accept", "application/json")
 					data, _ := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
 					message, _ := jsonparser.GetString(data, "message")
 					success, _ := jsonparser.GetBoolean(data, "success")
@@ -134,6 +136,7 @@ func initLogin() {
 					return nil
 				})
 				req = httplib.Post(addr + "/api/VerifyCode")
+				req.Header("accept", "application/json")
 				data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"","qlkey":0,"Code":"` + code + `"}`).Bytes()
 				message, _ = jsonparser.GetString(data, "message")
 				if strings.Contains(string(data), "pt_pin=") {
