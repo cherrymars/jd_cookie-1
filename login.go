@@ -89,6 +89,7 @@ func initLogin() {
 					}
 				}
 				data, _ := httplib.Get(addr + "/api/Config").Bytes()
+				s.Reply(string(data))
 				tabcount, _ := jsonparser.GetInt(data, "data", "tabcount")
 				if tabcount == 0 {
 					return "若兰很忙，请稍后再试。"
@@ -103,10 +104,8 @@ func initLogin() {
 					return nil
 				})
 				req := httplib.Post(addr + "/api/SendSMS")
-				data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
-				if err != nil {
-					return err.Error() + string(data)
-				}
+				data, _ = req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
+				s.Reply(string(data))
 				message, _ := jsonparser.GetString(data, "message")
 				success, _ := jsonparser.GetBoolean(data, "success")
 				status, _ := jsonparser.GetInt(data, "data", "status")
