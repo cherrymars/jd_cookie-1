@@ -93,16 +93,28 @@ func initLogin() {
 				if tabcount == 0 {
 					return "若兰很忙，请稍后再试。"
 				}
-				s.Reply("若兰为您服务，请输入11位手机号：")
+				s.Reply("若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
+				cancel := false
 				phone := ""
 				s.Await(s, func(s core.Sender) interface{} {
-					phone = regexp.MustCompile(`^\d{11}$`).FindString(s.GetContent())
+					ct := s.GetContent()
+					if ct == "q" {
+						cancel = true
+						return "已退出会话。"
+					}
+					phone = regexp.MustCompile(`^\d{11}$`).FindString(ct)
 					if phone == "" {
 						return core.GoAgain("请输入正确的手机号：")
 					}
+					// if s.GetImType() == "wxmp" {
+					// 	return "待会输入收到的验证码哦～"
+					// }
 					s.Delete()
 					return nil
 				})
+				if cancel {
+					return nil
+				}
 				req := httplib.Post(addr + "/api/SendSMS")
 				req.Header("content-type", "application/json")
 				data, _ = req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
@@ -129,12 +141,20 @@ func initLogin() {
 				s.Reply("请输入6位验证码：")
 				code := ""
 				s.Await(s, func(s core.Sender) interface{} {
-					code = regexp.MustCompile(`^\d{6}$`).FindString(s.GetContent())
+					ct := s.GetContent()
+					if ct == "q" {
+						cancel = true
+						return "已退出会话。"
+					}
+					code = regexp.MustCompile(`^\d{6}$`).FindString(ct)
 					if code == "" {
 						return core.GoAgain("请输入正确的验证码：")
 					}
 					return nil
 				})
+				if cancel {
+					return nil
+				}
 				req = httplib.Post(addr + "/api/VerifyCode")
 				req.Header("content-type", "application/json")
 				data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"","qlkey":0,"Code":"` + code + `"}`).Bytes()
