@@ -1389,7 +1389,7 @@ func av2(ck *JdCookie) bool {
 		return true
 	}
 	ck.Nickname, _ = jsonparser.GetString(data, "nickname")
-	return ck.Nickname != ""
+	return !strings.Contains(string(data), "login")
 }
 
 func av3(ck *JdCookie) bool {
