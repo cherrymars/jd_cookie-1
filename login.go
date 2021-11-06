@@ -127,6 +127,7 @@ func initLogin() {
 				if !success && status == 666 {
 					s.Reply("正在进行滑块验证...")
 					req = httplib.Post(addr + "/api/AutoCaptcha")
+					req.SetTimeout(time.Second*60, time.Second*60)
 					req.Header("content-type", "application/json")
 					data, _ := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
 					message, _ := jsonparser.GetString(data, "message")
@@ -157,7 +158,8 @@ func initLogin() {
 				}
 				req = httplib.Post(addr + "/api/VerifyCode")
 				req.Header("content-type", "application/json")
-				data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"","qlkey":0,"Code":"` + code + `"}`).Bytes()
+				req.SetTimeout(time.Second*20, time.Second*20)
+				data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"` + fmt.Sprint(time.Now().Unix()) + `","qlkey":0,"Code":"` + code + `"}`).Bytes()
 				message, _ = jsonparser.GetString(data, "message")
 				if strings.Contains(string(data), "pt_pin=") {
 					s.Reply("登录成功")
