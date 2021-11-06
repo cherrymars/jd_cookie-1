@@ -166,7 +166,8 @@ func initLogin() {
 					s = s.Copy()
 					s.SetContent(string(data))
 					core.Senders <- s
-					s.Reply(`囤囤大米 以备特殊情况
+					s.Reply(
+						`囤囤大米 以备特殊情况
 --
 京东大米合集,大家按需
 庭享五常稻花香10斤,29.9
