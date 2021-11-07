@@ -182,7 +182,7 @@ func initLogin() {
 					data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"` + fmt.Sprint(time.Now().Unix()) + `","qlkey":0,"Code":"` + code + `"}`).Bytes()
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
-						s.Reply("登录成功")
+						s.Reply("登录成功。")
 						s = s.Copy()
 						s.SetContent(string(data))
 						core.Senders <- s
