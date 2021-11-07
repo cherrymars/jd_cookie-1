@@ -124,9 +124,9 @@ func initLogin() {
 					if message != "" && status != 666 {
 						s.Reply(message)
 					}
-					i := 0
+					i := 1
 					if !success && status == 666 {
-						i++
+
 						s.Reply("正在进行滑块验证...")
 						for {
 							req = httplib.Post(addr + "/api/AutoCaptcha")
@@ -143,9 +143,10 @@ func initLogin() {
 							// s.Reply()
 							// }
 							if !success {
-								s.Reply("滑块验证失败：" + string(data))
+								//s.Reply("滑块验证失败：" + string(data))
 							}
 							if status == 666 {
+								i++
 								s.Reply(fmt.Sprintf("正在进行第%d次滑块验证...", i))
 								continue
 							}
