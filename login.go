@@ -132,6 +132,7 @@ func initLogin() {
 							// s.Reply()
 						}
 						if !success {
+							s.Reply("登录失败：" + message)
 							return
 						}
 					}
