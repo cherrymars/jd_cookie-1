@@ -85,7 +85,7 @@ func initLogin() {
 						return jd_cookie.Get("tip", "暂时无法使用短信登录。")
 					}
 				}
-				for _, addr := range addrs {
+				for _, addr = range addrs {
 					addr = regexp.MustCompile(`^(https?://[\.\w]+:?\d*)`).FindString(addr)
 
 					data, _ := httplib.Get(addr + "/api/Config").Bytes()
