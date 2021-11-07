@@ -243,6 +243,7 @@ func initSubmit() {
 							s.Reply(err)
 							continue
 						}
+						assets.Delete(ck.PtPin)
 						rt := ck.Nickname + "，更新成功。"
 						core.NotifyMasters(rt)
 						s.Reply(rt)
