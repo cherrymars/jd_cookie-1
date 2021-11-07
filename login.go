@@ -136,7 +136,7 @@ func initLogin() {
 								s.Reply(err)
 								return
 							}
-							// message, _ := jsonparser.GetString(data, "message")
+							message, _ := jsonparser.GetString(data, "message")
 							success, _ := jsonparser.GetBoolean(data, "success")
 							status, _ := jsonparser.GetInt(data, "data", "status")
 							// if message != "" {
@@ -153,7 +153,7 @@ func initLogin() {
 							if success {
 								break
 							}
-							s.Reply("滑块验证失败，已退出。")
+							s.Reply(message)
 							return
 						}
 					}
