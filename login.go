@@ -75,16 +75,25 @@ func initLogin() {
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
 					return nil
 				}
-				addr := regexp.MustCompile(`^(https?://[\.\w]+:?\d*)`).FindString(jd_cookie.Get("nolan_addr"))
-				if addr == "" {
+				addr := ""
+				var tabcount int64
+				addrs := strings.Split(jd_cookie.Get("nolan_addr"), "&")
+				if len(addrs) == 0 {
 					if s.IsAdmin() {
 						return "建议了解下若兰。"
 					} else {
 						return jd_cookie.Get("tip", "暂时无法使用短信登录。")
 					}
 				}
-				data, _ := httplib.Get(addr + "/api/Config").Bytes()
-				tabcount, _ := jsonparser.GetInt(data, "data", "tabcount")
+				for _, addr := range addrs {
+					addr = regexp.MustCompile(`^(https?://[\.\w]+:?\d*)`).FindString(addr)
+
+					data, _ := httplib.Get(addr + "/api/Config").Bytes()
+					tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
+					if tabcount != 0 {
+						break
+					}
+				}
 				if tabcount == 0 {
 					return "若兰很忙，请稍后再试。"
 				}
