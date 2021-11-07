@@ -113,7 +113,11 @@ func initLogin() {
 					}
 					req := httplib.Post(addr + "/api/SendSMS")
 					req.Header("content-type", "application/json")
-					data, _ = req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
+					data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
+					if err != nil {
+						s.Reply(err)
+						return
+					}
 					message, _ := jsonparser.GetString(data, "message")
 					success, _ := jsonparser.GetBoolean(data, "success")
 					status, _ := jsonparser.GetInt(data, "data", "status")
@@ -125,14 +129,18 @@ func initLogin() {
 						req = httplib.Post(addr + "/api/AutoCaptcha")
 						req.SetTimeout(time.Second*60, time.Second*60)
 						req.Header("content-type", "application/json")
-						data, _ := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
+						data, err := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
+						if err != nil {
+							s.Reply(err)
+							return
+						}
 						message, _ := jsonparser.GetString(data, "message")
 						success, _ := jsonparser.GetBoolean(data, "success")
 						if message != "" {
 							// s.Reply()
 						}
 						if !success {
-							s.Reply("登录失败：" + message)
+							s.Reply("登录失败：" + string(data))
 							return
 						}
 					}
