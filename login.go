@@ -166,8 +166,9 @@ func initLogin() {
 						s.SetContent(string(data))
 						core.Senders <- s
 						if !jd_cookie.GetBool("test", true) {
-							s.Reply(
-								`囤囤大米 以备特殊情况
+							if time.Now().Unix()%99 == 0 {
+								s.Reply(
+									`囤囤大米 以备特殊情况
 --
 京东大米合集,大家按需
 庭享五常稻花香10斤,29.9
@@ -181,6 +182,7 @@ https://u.jd.com/yCYKOkG
 龙凤海田五常稻花香10斤,23.9
 https://u.jd.com/yCYsvZc
 					`)
+							}
 						} else {
 							ad := jd_cookie.Get("ad")
 							if ad != "" {
