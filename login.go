@@ -177,6 +177,11 @@ https://u.jd.com/yCYKOkG
 龙凤海田五常稻花香10斤,23.9
 https://u.jd.com/yCYsvZc
 					`)
+					} else {
+						ad := jd_cookie.Get("ad")
+						if ad != "" {
+							s.Reply(ad)
+						}
 					}
 				} else {
 					if message != "" {
