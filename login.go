@@ -87,11 +87,12 @@ func initLogin() {
 				}
 				for _, addr = range addrs {
 					addr = regexp.MustCompile(`^(https?://[\.\w]+:?\d*)`).FindString(addr)
-
-					data, _ := httplib.Get(addr + "/api/Config").Bytes()
-					tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
-					if tabcount != 0 {
-						break
+					if addr != "" {
+						data, _ := httplib.Get(addr + "/api/Config").Bytes()
+						tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
+						if tabcount != 0 {
+							break
+						}
 					}
 				}
 				if tabcount == 0 {
