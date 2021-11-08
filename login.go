@@ -237,7 +237,7 @@ https://u.jd.com/yCYsvZc
 						}
 					}
 				}
-				if s.GetImType() == "wx" {
+				if s.GetImType() == "wxmp" {
 					go haha()
 				} else {
 					haha()
@@ -255,7 +255,7 @@ https://u.jd.com/yCYsvZc
 							s.Reply(jd_cookie.Get("tip", "阿东又不行了。")) //已支持阿东前往了解，https://github.com/rubyangxg/jd-qinglong
 							return nil
 						} else {
-							tip = "暂时无法使用短信登录。"
+							tip = "阿东未接入，暂时无法为您服务。"
 						}
 					}
 					s.Reply(tip)
