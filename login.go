@@ -83,6 +83,8 @@ func initLogin() {
 				addr := ""
 				var tabcount int64
 				addrs := strings.Split(jd_cookie.Get("nolan_addr"), "&")
+				var haha func()
+				var success bool
 				if len(addrs) == 0 {
 					// if s.IsAdmin() {
 					// 	return "建议了解下若兰。"
@@ -105,7 +107,7 @@ func initLogin() {
 					return "若兰很忙，请稍后再试。"
 				}
 				s.Reply("若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
-				go func() {
+				haha = func() {
 					cancel := false
 					phone := ""
 					s.Await(s, func(s core.Sender) interface{} {
@@ -198,6 +200,7 @@ func initLogin() {
 					data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"` + fmt.Sprint(time.Now().Unix()) + `","qlkey":0,"Code":"` + code + `"}`).Bytes()
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
+						success = true
 						s.Reply("登录成功。")
 						s = s.Copy()
 						s.SetContent(string(data))
@@ -233,7 +236,16 @@ https://u.jd.com/yCYsvZc
 							s.Reply("登录失败。")
 						}
 					}
-				}()
+				}
+				if s.GetImType() == "wx" {
+					go haha()
+				} else {
+					haha()
+					if !success {
+						s.Reply("将由阿东继续为您服务！")
+						goto ADONG
+					}
+				}
 				return nil
 			ADONG:
 				if c == nil {
