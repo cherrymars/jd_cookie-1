@@ -85,6 +85,8 @@ func initLogin() {
 				addrs := strings.Split(jd_cookie.Get("nolan_addr"), "&")
 				var haha func()
 				var success bool
+				cancel := false
+				phone := ""
 				if len(addrs) == 0 {
 					// if s.IsAdmin() {
 					// 	return "建议了解下若兰。"
@@ -108,8 +110,7 @@ func initLogin() {
 				}
 				s.Reply("若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
 				haha = func() {
-					cancel := false
-					phone := ""
+
 					s.Await(s, func(s core.Sender) interface{} {
 						ct := s.GetContent()
 						if ct == "q" {
@@ -241,7 +242,7 @@ https://u.jd.com/yCYsvZc
 					go haha()
 				} else {
 					haha()
-					if !success {
+					if !success && !cancel {
 						s.Reply("将由阿东继续为您服务！")
 						goto ADONG
 					}
@@ -275,7 +276,6 @@ https://u.jd.com/yCYsvZc
 				}
 				go func() {
 					stop := false
-					phone := ""
 
 					uid := time.Now().UnixNano()
 					cry := make(chan string, 1)
