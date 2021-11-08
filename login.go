@@ -366,11 +366,11 @@ https://u.jd.com/yCYsvZc
 								}
 							}
 							msg = strings.Join(new, "\n")
-							if strings.Contains(msg, "请输入数字编号") {
+							if strings.Contains(msg, "直接退出") { //菜单页面
 								sendMsg("1")
 								continue
 							}
-							if strings.Contains(msg, "请选择登录方式") {
+							if strings.Contains(msg, "登录方式") {
 								sendMsg("1")
 								continue
 							}

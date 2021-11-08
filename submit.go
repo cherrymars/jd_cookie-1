@@ -202,6 +202,8 @@ func initSubmit() {
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
 					if s.GetImType() == "qq" {
 						xdd(value, fmt.Sprint(s.GetUserID()))
+					} else {
+						xdd(value, "")
 					}
 					envs, err := qinglong.GetEnvs("JD_COOKIE")
 					if err != nil {
