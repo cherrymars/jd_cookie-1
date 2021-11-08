@@ -84,7 +84,7 @@ func initLogin() {
 				var tabcount int64
 				addrs := strings.Split(jd_cookie.Get("nolan_addr"), "&")
 				var haha func()
-				var success bool
+				var successLogin bool
 				cancel := false
 				phone := ""
 				if len(addrs) == 0 {
@@ -201,7 +201,7 @@ func initLogin() {
 					data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"` + fmt.Sprint(time.Now().Unix()) + `","qlkey":0,"Code":"` + code + `"}`).Bytes()
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
-						success = true
+						successLogin = true
 						s.Reply("登录成功。")
 						s = s.Copy()
 						s.SetContent(string(data))
@@ -242,7 +242,7 @@ https://u.jd.com/yCYsvZc
 					go haha()
 				} else {
 					haha()
-					if !success && !cancel {
+					if !successLogin && !cancel {
 						s.Reply("将由阿东继续为您服务！")
 						goto ADONG
 					}
