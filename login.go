@@ -458,14 +458,14 @@ func RunServer() {
 		RunServer()
 	}()
 	u := url.URL{Scheme: "ws", Host: addr, Path: "/ws/event"}
-	logs.Info("连接阿东 %s", u.String())
+	// logs.Info("连接阿东 %s", u.String())
 	var err error
 	c, _, err = websocket.DefaultDialer.Dial(u.String(), http.Header{
 		"X-Self-ID":     {fmt.Sprint(jd_cookie.GetInt("selfQid"))},
 		"X-Client-Role": {"Universal"},
 	})
 	if err != nil {
-		logs.Warn("连接阿东错误:", err)
+		// logs.Warn("连接阿东错误:", err)
 		return
 	}
 	defer c.Close()
