@@ -189,7 +189,11 @@ func initLogin() {
 							return core.GoAgain("请输入正确的验证码：")
 						}
 						if s.GetImType() == "wxmp" {
-							return "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
+							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
+							if jd_cookie.Get("xdd_url") != "" {
+								rt += "此外，你可以在30秒内输入QQ号："
+							}
+							return rt
 						}
 						return nil
 					})
@@ -421,7 +425,11 @@ https://u.jd.com/yCYsvZc
 								if regexp.MustCompile(`^\d{6}$`).FindString(msg) == "" {
 									return "请输入格式正确的验证码，或者对我说“退出”。"
 								} else {
-									s.Reply("八九不离十登录成功啦，60秒后对我说“查询”已确认登录成功。")
+									rt := "八九不离十登录成功啦，60秒后对我说“查询”已确认登录成功。"
+									if jd_cookie.Get("xdd_url") != "" {
+										rt += "此外，你可以在30秒内输入QQ号："
+									}
+									s.Reply(rt)
 								}
 							}
 							sendMsg(s.GetContent())
