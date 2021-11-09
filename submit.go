@@ -200,10 +200,16 @@ func initSubmit() {
 					}
 
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
-					if s.GetImType() == "qq" {
-						xdd(value, fmt.Sprint(s.GetUserID()))
-					} else {
-						xdd(value, "")
+					if jd_cookie.Get("xdd_url") != "" {
+						if s.GetImType() == "qq" {
+							xdd(value, fmt.Sprint(s.GetUserID()))
+						} else {
+							s.Reply("请在30秒内输入QQ号：")
+							s.Await(s, func(s core.Sender) interface{} {
+								xdd(value, s.GetContent())
+								return "OK"
+							}, `^\d+$`, time.Second*30)
+						}
 					}
 					envs, err := qinglong.GetEnvs("JD_COOKIE")
 					if err != nil {
