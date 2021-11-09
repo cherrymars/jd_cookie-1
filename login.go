@@ -72,7 +72,7 @@ func initLogin() {
 			time.Sleep(time.Second)
 		}
 	})
-	// go RunServer()
+	go RunServer()
 	core.AddCommand("", []core.Function{
 		{
 			Rules: []string{`raw ^登录$`, `raw ^登陆$`, `raw ^h$`},
