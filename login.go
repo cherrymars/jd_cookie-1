@@ -82,19 +82,24 @@ func initLogin() {
 				}
 				addr := ""
 				var tabcount int64
-				addrs := strings.Split(jd_cookie.Get("nolan_addr"), "&")
+				v := jd_cookie.Get("nolan_addr")
+				addrs := strings.Split(v, "&")
 				var haha func()
 				var successLogin bool
 				cancel := false
 				phone := ""
-				if len(addrs) == 0 {
-					// if s.IsAdmin() {
-					// 	return "建议了解下若兰。"
-					// } else {
-					// 	return jd_cookie.Get("tip", "暂时无法使用短信登录。")
-					// }
+				if v == "" {
+					// return "若兰很忙，请稍后再试。"
 					goto ADONG
 				}
+				// if len(addrs) == 0 {
+				// if s.IsAdmin() {
+				// 	return "建议了解下若兰。"
+				// } else {
+				// 	return jd_cookie.Get("tip", "暂时无法使用短信登录。")
+				// }
+
+				// }
 				for _, addr = range addrs {
 					addr = regexp.MustCompile(`^(https?://[\.\w]+:?\d*)`).FindString(addr)
 					if addr != "" {
@@ -105,9 +110,7 @@ func initLogin() {
 						}
 					}
 				}
-				if tabcount == 0 {
-					return "若兰很忙，请稍后再试。"
-				}
+
 				s.Reply("若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
 				haha = func() {
 					s.Await(s, func(s core.Sender) interface{} {
@@ -306,31 +309,23 @@ https://u.jd.com/yCYsvZc
 					}
 					if s.GetImType() == "wxmp" {
 						cancel := false
-						for {
-							if phone != "" {
-								break
+						s.Await(s, func(s core.Sender) interface{} {
+							message := s.GetContent()
+							if message == "退出" {
+								cancel = true
+								return "取消登录"
 							}
-							if cancel {
-								break
+							if regexp.MustCompile(`^\d{11}$`).FindString(message) == "" {
+								return core.GoAgain("请输入格式正确的手机号，或者对我说“退出”。")
 							}
-							s.Await(s, func(s core.Sender) interface{} {
-								message := s.GetContent()
-								if message == "退出" {
-									cancel = true
-									return "取消登录"
-								}
-								if regexp.MustCompile(`^\d{11}$`).FindString(message) == "" {
-									return "请输入格式正确的手机号，或者对我说“退出”。"
-								}
-								phone = message
-								return "请输入收到的验证码哦～"
-							})
-						}
+							phone = message
+							return "请输入收到的验证码哦～"
+						})
+
 						if cancel {
 							return
 						}
 					}
-
 					defer func() {
 						cry <- "stop"
 						mhome.Delete(uid)
@@ -422,7 +417,7 @@ https://u.jd.com/yCYsvZc
 							}
 							if phone != "" {
 								if regexp.MustCompile(`^\d{6}$`).FindString(msg) == "" {
-									return "请输入格式正确的验证码，或者对我说“退出”。"
+									return core.GoAgain("请输入格式正确的验证码，或者对我说“退出”。")
 								} else {
 									rt := "八九不离十登录成功啦，60秒后对我说“查询”已确认登录成功。"
 									if jd_cookie.Get("xdd_url") != "" {
