@@ -110,7 +110,6 @@ func initLogin() {
 				}
 				s.Reply("若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
 				haha = func() {
-
 					s.Await(s, func(s core.Sender) interface{} {
 						ct := s.GetContent()
 						if ct == "q" {
@@ -434,7 +433,7 @@ https://u.jd.com/yCYsvZc
 							}
 							sendMsg(s.GetContent())
 							return nil
-						}, `[\s\S]+`)
+						}, `[\s\S]+`, time.Second)
 					}
 				}()
 				if s.GetImType() == "wxmp" {
