@@ -256,6 +256,8 @@ https://u.jd.com/yCYsvZc
 				}
 				return nil
 			ADONG:
+				s.Reply("阿东嗝屁了。")
+				return nil
 				if c == nil {
 					tip := jd_cookie.Get("tip")
 					if tip == "" {
@@ -390,7 +392,7 @@ https://u.jd.com/yCYsvZc
 							}
 						}
 					}()
-					sendMsg("登录")
+					sendMsg("h")
 					for {
 						if stop == true {
 							break
