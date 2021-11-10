@@ -148,7 +148,6 @@ func initLogin() {
 					}
 					i := 1
 					if !success && status == 666 {
-
 						s.Reply("正在进行滑块验证...")
 						for {
 							req = httplib.Post(addr + "/api/AutoCaptcha")
@@ -484,7 +483,7 @@ func RunServer() {
 				Action string `json:"action"`
 				Echo   string `json:"echo"`
 				Params struct {
-					UserID  int64  `json:"user_id"`
+					UserID  string `json:"user_id"`
 					Message string `json:"message"`
 				} `json:"params"`
 			}
