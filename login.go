@@ -73,10 +73,12 @@ func initLogin() {
 		}
 	})
 	go RunServer()
+
 	core.AddCommand("", []core.Function{
 		{
 			Rules: []string{`raw ^登录$`, `raw ^登陆$`, `raw ^h$`},
 			Handle: func(s core.Sender) interface{} {
+
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
 					logs.Info("跳过登录。")
 					return nil
@@ -284,7 +286,7 @@ https://u.jd.com/yCYsvZc
 				}
 				go func() {
 					stop := false
-					uid := time.Now().UnixNano()
+					uid := fmt.Sprint(time.Now().UnixNano())
 					cry := make(chan string, 1)
 					mhome.Store(uid, cry)
 					var deadline = time.Now().Add(time.Second * time.Duration(200))
