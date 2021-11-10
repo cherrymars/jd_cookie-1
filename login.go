@@ -89,6 +89,7 @@ func initLogin() {
 				addrs := strings.Split(v, "&")
 				var haha func()
 				var successLogin bool
+
 				cancel := false
 				phone := ""
 				if v == "" {
@@ -250,7 +251,7 @@ https://u.jd.com/yCYsvZc
 					go haha()
 				} else {
 					haha()
-					if !successLogin && !cancel {
+					if !successLogin && !cancel && c != nil {
 						s.Reply("将由阿东继续为您服务！")
 						goto ADONG
 					}
@@ -314,12 +315,12 @@ https://u.jd.com/yCYsvZc
 						cancel := false
 						s.Await(s, func(s core.Sender) interface{} {
 							message := s.GetContent()
-							if message == "退出" {
+							if message == "退出" || message == "q" {
 								cancel = true
 								return "取消登录"
 							}
 							if regexp.MustCompile(`^\d{11}$`).FindString(message) == "" {
-								return core.GoAgain("请输入格式正确的手机号，或者对我说“退出”。")
+								return core.GoAgain("请输入格式正确的手机号，或者对我说“q”。")
 							}
 							phone = message
 							return "请输入收到的验证码哦～"
@@ -375,9 +376,13 @@ https://u.jd.com/yCYsvZc
 								sendMsg("1")
 								continue
 							}
-							if phone != "" && (strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号")) {
-								sendMsg(phone)
-								continue
+							if strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号") {
+								if phone != "" {
+									sendMsg(phone)
+									continue
+								}
+							} else {
+								s.Reply("阿东为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
 							}
 							if strings.Contains(msg, "pt_key") {
 								cookie = &msg
@@ -420,7 +425,7 @@ https://u.jd.com/yCYsvZc
 							}
 							if phone != "" {
 								if regexp.MustCompile(`^\d{6}$`).FindString(msg) == "" {
-									return core.GoAgain("请输入格式正确的验证码，或者对我说“退出”。")
+									return core.GoAgain("请输入格式正确的验证码，或者对我说“q”。")
 								} else {
 									rt := "八九不离十登录成功啦，60秒后对我说“查询”已确认登录成功。"
 									if jd_cookie.Get("xdd_url") != "" {
