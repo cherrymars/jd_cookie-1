@@ -183,17 +183,30 @@ func initAsset() {
 					return "没有匹配的京东账号。"
 				}
 				if s.GetImType() == "wxmp" {
-					cs := []chan string{}
-					for _, ck := range cks {
-						c := make(chan string)
-						cs = append(cs, c)
-						go get(c, ck)
+
+					if len(cks) <= 2 {
+						cs := []chan string{}
+						for _, ck := range cks {
+							c := make(chan string)
+							cs = append(cs, c)
+							go get(c, ck)
+						}
+						rt := []string{}
+						for _, c := range cs {
+							rt = append(rt, <-c)
+						}
+						s.Reply(strings.Join(rt, "\n\n"))
+					} else {
+						go func() {
+							for _, ck := range cks {
+								s.Await(s, func(s core.Sender) interface{} {
+									return GetAsset(&ck)
+								})
+							}
+						}()
+						return "您有多个账号，输入任意字符将依次为您展示查询结果："
 					}
-					rt := []string{}
-					for _, c := range cs {
-						rt = append(rt, <-c)
-					}
-					s.Reply(strings.Join(rt, "\n\n"))
+
 				} else {
 					for _, ck := range cks {
 						s.Reply(GetAsset(&ck))
@@ -218,6 +231,7 @@ func initAsset() {
 						core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
 							if string(k) == pt_pin && pt_pin != "" {
 								if push, ok := core.Pushs[tp]; ok {
+									time.Sleep(time.Second)
 									push(string(v), GetAsset(&JdCookie{
 										PtPin: pt_pin,
 										PtKey: pt_key,
@@ -235,26 +249,29 @@ func initAsset() {
 		{
 			Rules: []string{`^` + jd_cookie.Get("asset_query_alias", "查询") + `$`},
 			Handle: func(s core.Sender) interface{} {
-				go func() {
-					l := int64(jd_cookie.GetInt("query_wait_time"))
-					if l != 0 {
-						deadline := time.Now().Unix() + l
-						stop := false
-						for {
-							if stop {
-								break
-							}
-							s.Await(s, func(_ core.Sender) interface{} {
-								left := deadline - time.Now().Unix()
-								if left <= 0 {
-									stop = true
-									left = 1
+				if s.GetImType() != "wxmp" {
+					go func() {
+						l := int64(jd_cookie.GetInt("query_wait_time"))
+						if l != 0 {
+							deadline := time.Now().Unix() + l
+							stop := false
+							for {
+								if stop {
+									break
 								}
-								return fmt.Sprintf("%d秒后再查询。", left)
-							}, "^查询$", time.Second)
+								s.Await(s, func(_ core.Sender) interface{} {
+									left := deadline - time.Now().Unix()
+									if left <= 0 {
+										stop = true
+										left = 1
+									}
+									return fmt.Sprintf("%d秒后再查询。", left)
+								}, "^"+jd_cookie.Get("asset_query_alias", "查询")+"$", time.Second)
+							}
 						}
-					}
-				}()
+					}()
+				}
+
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
 					return nil
 				}
@@ -289,16 +306,27 @@ func initAsset() {
 				}
 				if s.GetImType() == "wxmp" {
 					cs := []chan string{}
-					for _, ck := range cks {
-						c := make(chan string)
-						cs = append(cs, c)
-						go get(c, ck)
+					if len(cks) <= 2 {
+						for _, ck := range cks {
+							c := make(chan string)
+							cs = append(cs, c)
+							go get(c, ck)
+						}
+						rt := []string{}
+						for _, c := range cs {
+							rt = append(rt, <-c)
+						}
+						s.Reply(strings.Join(rt, "\n\n"))
+					} else {
+						go func() {
+							for _, ck := range cks {
+								s.Await(s, func(s core.Sender) interface{} {
+									return GetAsset(&ck)
+								})
+							}
+						}()
+						return "您有多个账号，输入任意字符将依次为您展示查询结果："
 					}
-					rt := []string{}
-					for _, c := range cs {
-						rt = append(rt, <-c)
-					}
-					s.Reply(strings.Join(rt, "\n\n"))
 				} else {
 					for _, ck := range cks {
 						s.Reply(GetAsset(&ck))
