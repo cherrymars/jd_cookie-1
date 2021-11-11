@@ -380,9 +380,9 @@ https://u.jd.com/yCYsvZc
 								if phone != "" {
 									sendMsg(phone)
 									continue
+								} else {
+									msg = "阿东为您服务，请输入11位手机号：(输入“q”随时退出会话。)"
 								}
-							} else {
-								s.Reply("阿东为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
 							}
 							if strings.Contains(msg, "pt_key") {
 								cookie = &msg
