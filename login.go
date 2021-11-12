@@ -273,18 +273,6 @@ https://u.jd.com/yCYsvZc
 					s.Reply(tip)
 					return nil
 				}
-				if !jd_cookie.GetBool("test", true) {
-					query()
-					if !jd_cookie.GetBool("test", true) {
-						if s.IsAdmin() {
-							s.Reply("此为内测功能，请关注最新消息，https://t.me/cheese2022 。")
-							return nil
-						} else {
-							s.Reply("请联系管理员。")
-							return nil
-						}
-					}
-				}
 				go func() {
 					stop := false
 					uid := fmt.Sprint(time.Now().UnixNano())
