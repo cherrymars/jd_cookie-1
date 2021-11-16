@@ -1368,7 +1368,7 @@ func (ck *JdCookie) Available() bool {
 	req.Header("Connection", "keep-alive,")
 	req.Header("Referer", "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&")
 	req.Header("Host", "me-api.jd.com")
-	req.Header("User-Agent", "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1")
+	req.Header("User-Agent", ua())
 	data, err := req.Bytes()
 	if err != nil {
 		return av2(ck)
