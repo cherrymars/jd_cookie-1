@@ -221,10 +221,10 @@ func initAsset() {
 			Admin: true,
 			Handle: func(_ core.Sender) interface{} {
 				envs, _ := qinglong.GetEnvs("JD_COOKIE")
+				qqGroup := jd_cookie.GetInt("qqGroup")
 				for _, env := range envs {
 					pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
 					pt_key := core.FetchCookieValue(env.Value, "pt_key")
-
 					for _, tp := range []string{
 						"qq", "tg", "wx",
 					} {
@@ -235,13 +235,26 @@ func initAsset() {
 									push(string(v), GetAsset(&JdCookie{
 										PtPin: pt_pin,
 										PtKey: pt_key,
-									}))
+									}), qqGroup)
 								}
 							}
 							return nil
 						})
 					}
 
+				}
+				return "推送完成"
+			},
+		},
+		{
+			Rules: []string{`raw ^任务通知$`},
+			Cron:  jd_cookie.Get("task_Notify", "2 7,13,19 * * *"),
+			Admin: true,
+			Handle: func(_ core.Sender) interface{} {
+				envs, _ := qinglong.GetEnvs("JD_COOKIE")
+				for _, env := range envs {
+					initPetTown(env.Value, nil)
+					initFarm(env.Value, nil)
 				}
 				return "推送完成"
 			},
@@ -1032,13 +1045,17 @@ func initFarm(cookie string, state chan string) {
 	} else {
 		if a.TreeState == 2 || a.TreeState == 3 {
 			rt += "已可领取⏰"
+			Notify(core.FetchCookieValue("pt_pin", cookie), "东东农场通知：\n"+rt)
 		} else if a.TreeState == 1 {
 			rt += fmt.Sprintf("种植中，进度%.2f%%🍒", 100*float64(a.FarmUserPro.TreeEnergy)/float64(a.FarmUserPro.TreeTotalEnergy))
 		} else if a.TreeState == 0 {
 			rt = "您忘了种植新的水果⏰"
+			Notify(core.FetchCookieValue("pt_pin", cookie), "东东农场通知：\n"+rt)
 		}
 	}
-	state <- rt
+	if state != nil {
+		state <- rt
+	}
 }
 
 func initPetTown(cookie string, state chan string) {
@@ -1121,22 +1138,30 @@ func initPetTown(cookie string, state chan string) {
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
 	rt := ""
+
 	if a.Code == "0" && a.ResultCode == "0" && a.Message == "success" {
 		if a.Result.UserStatus == 0 {
 			rt = "请手动开启活动⏰"
+			Notify(core.FetchCookieValue("pt_pin", cookie), "东东萌宠通知：\n"+rt)
 		} else if a.Result.GoodsInfo.GoodsName == "" {
 			rt = "你忘了选购新的商品⏰"
+			Notify(core.FetchCookieValue("pt_pin", cookie), "东东萌宠通知：\n"+rt)
 		} else if a.Result.PetStatus == 5 {
 			rt = a.Result.GoodsInfo.GoodsName + "已可领取⏰"
+			Notify(core.FetchCookieValue("pt_pin", cookie), "东东萌宠通知：\n"+rt)
 		} else if a.Result.PetStatus == 6 {
 			rt = a.Result.GoodsInfo.GoodsName + "未继续领养新的物品⏰"
+			Notify(core.FetchCookieValue("pt_pin", cookie), "东东萌宠通知：\n"+rt)
 		} else {
 			rt = a.Result.GoodsInfo.GoodsName + fmt.Sprintf("领养中，进度%.2f%%，勋章%d/%d🐶", a.Result.MedalPercent, a.Result.MedalNum, a.Result.GoodsInfo.ExchangeMedalNum)
 		}
 	} else {
 		rt = "数据异常"
 	}
-	state <- rt
+	if state != nil {
+		state <- rt
+	}
+
 }
 
 func jsGold(cookie string, state chan int64) { //
@@ -1185,7 +1210,9 @@ func jsGold(cookie string, state chan int64) { //
 	req.Body(`functionId=MyAssetsService.execute&body={"method":"goldShopPage","data":{"channel":1}}&_t=` + fmt.Sprint(time.Now().Unix()) + `&appid=market-task-h5;`)
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
-	state <- int64(a.Data.BalanceVO.GoldBalance)
+	if state != nil {
+		state <- int64(a.Data.BalanceVO.GoldBalance)
+	}
 }
 
 func jxncEgg(cookie string, state chan int64) {
@@ -1357,49 +1384,49 @@ func (ck *JdCookie) Available() bool {
 	if ck.PtKey == "" {
 		return false
 	}
-	cookie := "pt_key=" + ck.PtKey + ";pt_pin=" + ck.PtPin + ";"
+	// cookie := "pt_key=" + ck.PtKey + ";pt_pin=" + ck.PtPin + ";"
 	if ck == nil {
 		return true
 	}
-	req := httplib.Get("https://me-api.jd.com/user_new/info/GetJDUserInfoUnion")
-	req.Header("Cookie", cookie)
-	req.Header("Accept", "*/*")
-	req.Header("Accept-Language", "zh-cn,")
-	req.Header("Connection", "keep-alive,")
-	req.Header("Referer", "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&")
-	req.Header("Host", "me-api.jd.com")
-	req.Header("User-Agent", ua())
-	data, err := req.Bytes()
-	if err != nil {
-		return av2(ck)
-	}
-	ui := &UserInfoResult{}
-	if nil != json.Unmarshal(data, ui) {
-		return av2(ck)
-	}
-	switch ui.Retcode {
-	// case "1001": //ck.BeanNum
-	// 	if ui.Msg == "not login" {
-	// 		return false
+	// req := httplib.Get("https://me-api.jd.com/user_new/info/GetJDUserInfoUnion")
+	// req.Header("Cookie", cookie)
+	// req.Header("Accept", "*/*")
+	// req.Header("Accept-Language", "zh-cn,")
+	// req.Header("Connection", "keep-alive,")
+	// req.Header("Referer", "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&")
+	// req.Header("Host", "me-api.jd.com")
+	// req.Header("User-Agent", ua())
+	// data, err := req.Bytes()
+	// if err != nil {
+	// 	return av2(ck)
+	// }
+	// ui := &UserInfoResult{}
+	// if nil != json.Unmarshal(data, ui) {
+	// 	return av2(ck)
+	// }
+	// switch ui.Retcode {
+	// // case "1001": //ck.BeanNum
+	// // 	if ui.Msg == "not login" {
+	// // 		return false
+	// // 	}
+	// case "0":
+	// 	realPin := url.QueryEscape(ui.Data.UserInfo.BaseInfo.CurPin)
+	// 	if realPin != ck.PtPin {
+	// 		if realPin == "" {
+	// 			return av2(ck)
+	// 		} else {
+	// 			ck.PtPin = realPin
+	// 		}
 	// 	}
-	case "0":
-		realPin := url.QueryEscape(ui.Data.UserInfo.BaseInfo.CurPin)
-		if realPin != ck.PtPin {
-			if realPin == "" {
-				return av2(ck)
-			} else {
-				ck.PtPin = realPin
-			}
-		}
-		if ui.Data.UserInfo.BaseInfo.Nickname != ck.Nickname || ui.Data.AssetInfo.BeanNum != ck.BeanNum || ui.Data.UserInfo.BaseInfo.UserLevel != ck.UserLevel || ui.Data.UserInfo.BaseInfo.LevelName != ck.LevelName {
-			ck.UserLevel = ui.Data.UserInfo.BaseInfo.UserLevel
-			ck.LevelName = ui.Data.UserInfo.BaseInfo.LevelName
-			ck.Nickname = ui.Data.UserInfo.BaseInfo.Nickname
-			ck.BeanNum = ui.Data.AssetInfo.BeanNum
-		}
-		return true
-	}
-	return av3(ck)
+	// 	if ui.Data.UserInfo.BaseInfo.Nickname != ck.Nickname || ui.Data.AssetInfo.BeanNum != ck.BeanNum || ui.Data.UserInfo.BaseInfo.UserLevel != ck.UserLevel || ui.Data.UserInfo.BaseInfo.LevelName != ck.LevelName {
+	// 		ck.UserLevel = ui.Data.UserInfo.BaseInfo.UserLevel
+	// 		ck.LevelName = ui.Data.UserInfo.BaseInfo.LevelName
+	// 		ck.Nickname = ui.Data.UserInfo.BaseInfo.Nickname
+	// 		ck.BeanNum = ui.Data.AssetInfo.BeanNum
+	// 	}
+	// 	return true
+	// }
+	return av2(ck)
 }
 
 func av2(ck *JdCookie) bool {
