@@ -215,37 +215,37 @@ func initAsset() {
 				return nil
 			},
 		},
-		{
-			Rules: []string{`raw ^资产推送$`},
-			Cron:  jd_cookie.Get("asset_push"),
-			Admin: true,
-			Handle: func(_ core.Sender) interface{} {
-				envs, _ := qinglong.GetEnvs("JD_COOKIE")
-				qqGroup := jd_cookie.GetInt("qqGroup")
-				for _, env := range envs {
-					pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
-					pt_key := core.FetchCookieValue(env.Value, "pt_key")
-					for _, tp := range []string{
-						"qq", "tg", "wx",
-					} {
-						core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
-							if string(k) == pt_pin && pt_pin != "" {
-								if push, ok := core.Pushs[tp]; ok {
-									time.Sleep(time.Second)
-									push(string(v), GetAsset(&JdCookie{
-										PtPin: pt_pin,
-										PtKey: pt_key,
-									}), qqGroup)
-								}
-							}
-							return nil
-						})
-					}
+		// {
+		// 	Rules: []string{`raw ^资产推送$`},
+		// 	Cron:  jd_cookie.Get("asset_push"),
+		// 	Admin: true,
+		// 	Handle: func(_ core.Sender) interface{} {
+		// 		envs, _ := qinglong.GetEnvs("JD_COOKIE")
+		// 		qqGroup := jd_cookie.GetInt("qqGroup")
+		// 		for _, env := range envs {
+		// 			pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
+		// 			pt_key := core.FetchCookieValue(env.Value, "pt_key")
+		// 			for _, tp := range []string{
+		// 				"qq", "tg", "wx",
+		// 			} {
+		// 				core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
+		// 					if string(k) == pt_pin && pt_pin != "" {
+		// 						if push, ok := core.Pushs[tp]; ok {
+		// 							time.Sleep(time.Second)
+		// 							push(string(v), GetAsset(&JdCookie{
+		// 								PtPin: pt_pin,
+		// 								PtKey: pt_key,
+		// 							}), qqGroup)
+		// 						}
+		// 					}
+		// 					return nil
+		// 				})
+		// 			}
 
-				}
-				return "推送完成"
-			},
-		},
+		// 		}
+		// 		return "推送完成"
+		// 	},
+		// },
 		{
 			Rules: []string{`raw ^任务通知$`},
 			Cron:  jd_cookie.Get("task_Notify", "2 7,13,19 * * *"),
