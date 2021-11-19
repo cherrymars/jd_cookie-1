@@ -223,23 +223,34 @@ func initAsset() {
 				envs, _ := qinglong.GetEnvs("JD_COOKIE")
 				qqGroup := jd_cookie.GetInt("qqGroup")
 				for _, env := range envs {
+					if env.Status != 0 {
+						continue
+					}
 					pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
 					pt_key := core.FetchCookieValue(env.Value, "pt_key")
 					for _, tp := range []string{
 						"qq", "tg", "wx",
 					} {
+						var fs []func()
 						core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
 							if string(k) == pt_pin && pt_pin != "" {
 								if push, ok := core.Pushs[tp]; ok {
-									time.Sleep(time.Second)
-									push(string(v), GetAsset(&JdCookie{
-										PtPin: pt_pin,
-										PtKey: pt_key,
-									}), qqGroup)
+									fs = append(fs, func() {
+										push(string(v), GetAsset(&JdCookie{
+											PtPin: pt_pin,
+											PtKey: pt_key,
+										}), qqGroup)
+									})
 								}
 							}
 							return nil
 						})
+						if len(fs) != 0 {
+							for _, f := range fs {
+								f()
+							}
+						}
+						time.Sleep(time.Second)
 					}
 
 				}
