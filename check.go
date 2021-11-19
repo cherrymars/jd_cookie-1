@@ -241,6 +241,9 @@ func appjmp(tokenKey string) (string, error) {
 }
 
 func Notify(pt_pin string, content string) {
+	if jd_cookie.GetBool("disable_notify") {
+		return
+	}
 	qqGroup := jd_cookie.GetInt("qqGroup")
 	wxGroup := jd_cookie.GetInt("wxGroup")
 	mode := jd_cookie.Get("notify_mode", "private")
