@@ -136,6 +136,7 @@ func initLogin() {
 					if cancel {
 						return
 					}
+					s.Reply("请输入6位验证码：")
 					req := httplib.Post(addr + "/api/SendSMS")
 					req.Header("content-type", "application/json")
 					data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
@@ -151,7 +152,7 @@ func initLogin() {
 					}
 					i := 1
 					if !success && status == 666 {
-						s.Reply("正在进行滑块验证...")
+						// s.Reply("正在进行滑块验证...")
 						for {
 							req = httplib.Post(addr + "/api/AutoCaptcha")
 							req.Header("content-type", "application/json")
@@ -171,7 +172,7 @@ func initLogin() {
 							}
 							if status == 666 {
 								i++
-								s.Reply(fmt.Sprintf("正在进行第%d次滑块验证...", i))
+								// s.Reply(fmt.Sprintf("正在进行第%d次滑块验证...", i))
 								continue
 							}
 							if success {
@@ -181,7 +182,7 @@ func initLogin() {
 							return
 						}
 					}
-					s.Reply("请输入6位验证码：")
+					// s.Reply("请输入6位验证码：")
 					code := ""
 					s.Await(s, func(s core.Sender) interface{} {
 						ct := s.GetContent()
@@ -217,21 +218,21 @@ func initLogin() {
 						core.Senders <- s
 						if !jd_cookie.GetBool("test", true) {
 							if time.Now().Unix()%99 == 0 {
-								s.Reply(
-									`囤囤大米 以备特殊情况
---
-京东大米合集,大家按需
-庭享五常稻花香10斤,29.9
-https://u.jd.com/yMYM2X6 
-天禹珍珠盘锦大米10斤,23.9
-https://u.jd.com/ytYzKcc 
-喜家德五常香米10斤,24.9
-https://u.jd.com/ytYtNSO 
-森王晶珍五常稻花香10斤,23.9
-https://u.jd.com/yCYKOkG 
-龙凤海田五常稻花香10斤,23.9
-https://u.jd.com/yCYsvZc
-					`)
+								// 								s.Reply(
+								// 									`囤囤大米 以备特殊情况
+								// --
+								// 京东大米合集,大家按需
+								// 庭享五常稻花香10斤,29.9
+								// https://u.jd.com/yMYM2X6
+								// 天禹珍珠盘锦大米10斤,23.9
+								// https://u.jd.com/ytYzKcc
+								// 喜家德五常香米10斤,24.9
+								// https://u.jd.com/ytYtNSO
+								// 森王晶珍五常稻花香10斤,23.9
+								// https://u.jd.com/yCYKOkG
+								// 龙凤海田五常稻花香10斤,23.9
+								// https://u.jd.com/yCYsvZc
+								// 					`)
 							}
 						} else {
 							ad := jd_cookie.Get("ad")
