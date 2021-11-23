@@ -184,6 +184,7 @@ func initLogin() {
 					}
 					// s.Reply("请输入6位验证码：")
 					code := ""
+
 					s.Await(s, func(s core.Sender) interface{} {
 						ct := s.GetContent()
 						if ct == "q" {
@@ -203,6 +204,9 @@ func initLogin() {
 							return rt
 						}
 						return nil
+					}, time.Second*60, func(_ error) {
+						s.Reply("叼毛，你超时啦～")
+						cancel = true
 					})
 					if cancel {
 						return
