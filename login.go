@@ -194,6 +194,7 @@ func initLogin() {
 						if code == "" {
 							return core.GoAgain("请输入正确的验证码：")
 						}
+						s.Reply("登录成功。")
 						if s.GetImType() == "wxmp" {
 							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
 							if jd_cookie.Get("xdd_url") != "" {
@@ -212,7 +213,7 @@ func initLogin() {
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
 						successLogin = true
-						s.Reply("登录成功。")
+						// s.Reply("登录成功。")
 						s = s.Copy()
 						s.SetContent(string(data))
 						core.Senders <- s
@@ -242,9 +243,9 @@ func initLogin() {
 						}
 					} else {
 						if message != "" {
-							s.Reply(message)
+							s.Reply("不好意思，刚搞错了还没成功，因为" + message + "。")
 						} else {
-							s.Reply("登录失败。")
+							s.Reply("不好意思，刚搞错了并没有成功...")
 						}
 					}
 				}
