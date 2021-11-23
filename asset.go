@@ -1057,12 +1057,17 @@ func initFarm(cookie string, state chan string) {
 		if a.TreeState == 2 || a.TreeState == 3 {
 
 			rt += "已可领取⏰"
-			Notify(pt_pin, "东东农场通知("+pt_pin+")：\n"+rt)
+			if state == nil {
+				Notify(pt_pin, "东东农场通知("+pt_pin+")：\n"+rt)
+			}
+
 		} else if a.TreeState == 1 {
 			rt += fmt.Sprintf("种植中，进度%.2f%%🍒", 100*float64(a.FarmUserPro.TreeEnergy)/float64(a.FarmUserPro.TreeTotalEnergy))
 		} else if a.TreeState == 0 {
 			rt = "您忘了种植新的水果⏰"
-			Notify(core.FetchCookieValue("pt_pin", cookie), "东东农场通知("+pt_pin+")：\n"+rt)
+			if state == nil {
+				Notify(core.FetchCookieValue("pt_pin", cookie), "东东农场通知("+pt_pin+")：\n"+rt)
+			}
 		}
 	}
 	if state != nil {
@@ -1154,16 +1159,27 @@ func initPetTown(cookie string, state chan string) {
 	if a.Code == "0" && a.ResultCode == "0" && a.Message == "success" {
 		if a.Result.UserStatus == 0 {
 			rt = "请手动开启活动⏰"
-			Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			if state == nil {
+				Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			}
+
 		} else if a.Result.GoodsInfo.GoodsName == "" {
 			rt = "你忘了选购新的商品⏰"
-			Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			if state == nil {
+				Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			}
+
 		} else if a.Result.PetStatus == 5 {
 			rt = a.Result.GoodsInfo.GoodsName + "已可领取⏰"
-			Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			if state == nil {
+				Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			}
+
 		} else if a.Result.PetStatus == 6 {
 			rt = a.Result.GoodsInfo.GoodsName + "未继续领养新的物品⏰"
-			Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			if state == nil {
+				Notify(pt_pin, "东东萌宠通知("+pt_pin+")：\n"+rt)
+			}
 		} else {
 			rt = a.Result.GoodsInfo.GoodsName + fmt.Sprintf("领养中，进度%.2f%%，勋章%d/%d🐶", a.Result.MedalPercent, a.Result.MedalNum, a.Result.GoodsInfo.ExchangeMedalNum)
 		}
@@ -1679,4 +1695,200 @@ func GetYestodayBean(ck *JdCookie, state chan int) {
 		page++
 	}
 	return
+}
+
+//欢迎叼毛来抄代码
+func dream(cookie string, state chan string) {
+	type AssistCondition struct {
+		AssistConditionMsg    string `json:"assistConditionMsg"`
+		AssistNumCurrent      int    `json:"assistNumCurrent"`
+		AssistNumLimit        int    `json:"assistNumLimit"`
+		AssistNumMax          int    `json:"assistNumMax"`
+		AssistRemindKey       string `json:"assistRemindKey"`
+		AssistRemindUser      string `json:"assistRemindUser"`
+		CommodityAppLimitFlag int    `json:"commodityAppLimitFlag"`
+		FactoryStatus         int    `json:"factoryStatus"`
+		HireNumLimit          int    `json:"hireNumLimit"`
+		ReAssistFlag          int    `json:"reAssistFlag"`
+		SharePin              string `json:"sharePin"`
+		SharePinHeadImage     string `json:"sharePinHeadImage"`
+	}
+	type AssistMaterialTuanCondition struct {
+		AssistAppFlag    int           `json:"assistAppFlag"`
+		AssistSelfFlag   int           `json:"assistSelfFlag"`
+		CommodityList    []interface{} `json:"commodityList"`
+		LimitTime        int           `json:"limitTime"`
+		MaterialName     string        `json:"materialName"`
+		MaterialPicture  string        `json:"materialPicture"`
+		MaterialStatus   int           `json:"materialStatus"`
+		OutOfStockFlag   int           `json:"outOfStockFlag"`
+		RemindMsg        string        `json:"remindMsg"`
+		SharePin         string        `json:"sharePin"`
+		SharePinNickname string        `json:"sharePinNickname"`
+		StartTime        int           `json:"startTime"`
+		TuanID           string        `json:"tuanId"`
+	}
+	type DeviceList struct {
+		CreateTime  int `json:"createTime"`
+		DeviceDimID int `json:"deviceDimId"`
+		DeviceID    int `json:"deviceId"`
+		FactoryID   int `json:"factoryId"`
+		UpdateTime  int `json:"updateTime"`
+	}
+	type FactoryList struct {
+		CreateTime int    `json:"createTime"`
+		FactoryID  int    `json:"factoryId"`
+		Name       string `json:"name"`
+		UpdateTime int    `json:"updateTime"`
+	}
+	type NewFactoryFlower struct {
+		FactoryFlowerSendFlag int `json:"factoryFlowerSendFlag"`
+		SendElectric          int `json:"sendElectric"`
+	}
+	type PickSiteInfo struct {
+		Address         string `json:"address"`
+		CityID          int    `json:"cityId"`
+		CityName        string `json:"cityName"`
+		CountryID       int    `json:"countryId"`
+		CountryName     string `json:"countryName"`
+		DcID            int    `json:"dcId"`
+		ProvinceID      int    `json:"provinceId"`
+		ProvinceName    string `json:"provinceName"`
+		Sid             int    `json:"sid"`
+		SiteID          string `json:"siteId"`
+		SiteName        string `json:"siteName"`
+		SiteURL         string `json:"siteUrl"`
+		ToastChangeSite bool   `json:"toastChangeSite"`
+		TownID          int    `json:"townId"`
+		TownName        string `json:"townName"`
+		Weight          int    `json:"weight"`
+	}
+	type ProductionList struct {
+		BeginTime        int   `json:"beginTime"`
+		CommodityDimID   int   `json:"commodityDimId"`
+		CreateTime       int   `json:"createTime"`
+		DataMark         int   `json:"dataMark"`
+		DeviceID         int   `json:"deviceId"`
+		EndTime          int   `json:"endTime"`
+		ExchangeStatus   int   `json:"exchangeStatus"`
+		FactoryID        int   `json:"factoryId"`
+		InvestedElectric int   `json:"investedElectric"`
+		NeedElectric     int   `json:"needElectric"`
+		ProductionID     int64 `json:"productionId"`
+		Status           int   `json:"status"`
+		UpdateTime       int   `json:"updateTime"`
+	}
+	type ProductionStage struct {
+		IsReachEnd                 int    `json:"isReachEnd"`
+		ProductionStageAwardStatus int    `json:"productionStageAwardStatus"`
+		ProductionStageProgress    string `json:"productionStageProgress"`
+	}
+	type Speciality struct {
+		FactoryFlowerQualification int `json:"factoryFlowerQualification"`
+		FactoryFlowerStatus        int `json:"factoryFlowerStatus"`
+		SkinQualification          int `json:"skinQualification"`
+		SkinStatus                 int `json:"skinStatus"`
+	}
+	type User struct {
+		CreateTime                int    `json:"createTime"`
+		CurrentLevel              int    `json:"currentLevel"`
+		DataMark                  int    `json:"dataMark"`
+		DeviceID                  string `json:"deviceId"`
+		Electric                  int    `json:"electric"`
+		EncryptPin                string `json:"encryptPin"`
+		HeadImage                 string `json:"headImage"`
+		HongBaoValue              string `json:"hongBaoValue"`
+		IsJXNewUser               int    `json:"isJXNewUser"`
+		IsProductSpecialCommodity int    `json:"isProductSpecialCommodity"`
+		MosaicPin                 string `json:"mosaicPin"`
+		NewPlayerWelfareFlag      int    `json:"newPlayerWelfareFlag"`
+		NextLevelPercent          int    `json:"nextLevelPercent"`
+		Nickname                  string `json:"nickname"`
+		NpcStep                   int    `json:"npcStep"`
+		Pin                       string `json:"pin"`
+		ShareQywx                 string `json:"shareQywx"`
+		UpdateTime                int    `json:"updateTime"`
+		UserIdentity              string `json:"userIdentity"`
+		Xid                       string `json:"xid"`
+		Zone                      string `json:"zone"`
+	}
+	type UserAttrExtInfo struct {
+		Electric              int `json:"electric"`
+		InvestElectricLimDays int `json:"investElectricLimDays"`
+		LastProduceInvestTime int `json:"lastProduceInvestTime"`
+		ProductLimFlag        int `json:"productLimFlag"`
+		RewardType            int `json:"rewardType"`
+		UserType              int `json:"userType"`
+	}
+	type Data struct {
+		AssistCondition             AssistCondition             `json:"assistCondition"`
+		AssistMaterialTuanCondition AssistMaterialTuanCondition `json:"assistMaterialTuanCondition"`
+		DeviceList                  []DeviceList                `json:"deviceList"`
+		FactoryList                 []FactoryList               `json:"factoryList"`
+		NeedSelectPickSite          int                         `json:"needSelectPickSite"`
+		NewFactoryFlower            NewFactoryFlower            `json:"newFactoryFlower"`
+		PickSiteInfo                PickSiteInfo                `json:"pickSiteInfo"`
+		ProductionList              []ProductionList            `json:"productionList"`
+		ProductionStage             ProductionStage             `json:"productionStage"`
+		Speciality                  Speciality                  `json:"speciality"`
+		SystemVersion               string                      `json:"systemVersion"`
+		User                        User                        `json:"user"`
+		UserAttrExtInfo             UserAttrExtInfo             `json:"userAttrExtInfo"`
+	}
+	type AutoGenerated struct {
+		Data    Data   `json:"data"`
+		Msg     string `json:"msg"`
+		NowTime int    `json:"nowTime"`
+		Ret     int    `json:"ret"`
+	}
+	url := "https://m.jingxi.com/dreamfactory/userinfo/GetUserInfo?zone=dream_factory&pin=&sharePin=&shareType=&materialTuanPin=&materialTuanId=&needPickSiteInfo=1&source=&_time=1637631683565&_ts=1637631683565&timeStamp=&_stk=_time,_ts,materialTuanId,materialTuanPin,needPickSiteInfo,pin,sharePin,shareType,source,timeStamp,zone&_ste=1&_=1637631683575&sceneval=2&g_login_type=1&g_ty=ls"
+
+	req := httplib.Get(url)
+	req.Header("Host", "m.jingxi.com")
+	req.Header("Accept", "*/*")
+	req.Header("Connection", "keep-alive")
+	req.Header("Cookie", cookie)
+	req.Header("User-Agent", "jdpingou;"+ua())
+	req.Header("Accept-Language", "zh-cn")
+	req.Header("Referer", "https://st.jingxi.com/pingou/dream_factory/index.html?ptag=7155.9.46")
+	req.Header("Accept-Encoding", "gzip, deflate, br")
+
+	data, _ := req.Bytes()
+	a := &AutoGenerated{}
+	json.Unmarshal(data, a)
+
+	desc := ""
+	not := true
+	if state != nil {
+		not = false
+	}
+	if len(a.Data.ProductionList) > 0 && len(a.Data.FactoryList) > 0 {
+		var production = a.Data.ProductionList[0]
+		if production.InvestedElectric >= production.NeedElectric {
+			if production.ExchangeStatus == 1 {
+				desc = "可以兑换商品了。"
+			}
+			if production.ExchangeStatus == 3 {
+				desc = "商品兑换已超时，请选择新商品进行制造。"
+			}
+			// await exchangeProNotify()
+		} else {
+			not = false
+			desc = fmt.Sprintf(`预计最快还需%d天生产完毕`, (production.NeedElectric-production.InvestedElectric)/(2*60*60*24))
+
+		}
+	} else {
+		if len(a.Data.FactoryList) == 0 {
+			desc = "请手动开启活动。"
+		} else if len(a.Data.ProductionList) == 0 {
+			desc = "请手动选购商品进行生产。"
+		}
+	}
+	if state != nil {
+		state <- desc
+	}
+	if not {
+		pt_pin := core.FetchCookieValue("pt_pin", cookie)
+		Notify(pt_pin, "京喜工厂通知("+pt_pin+")：\n"+desc)
+	}
 }
