@@ -1887,6 +1887,7 @@ func dream(cookie string, state chan string) {
 			desc = "请手动选购商品进行生产。"
 		}
 	}
+	desc += "🏭"
 	if state != nil {
 		state <- desc
 	}
