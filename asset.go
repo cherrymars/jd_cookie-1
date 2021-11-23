@@ -1869,10 +1869,10 @@ func dream(cookie string, state chan string) {
 		var production = a.Data.ProductionList[0]
 		if production.InvestedElectric >= production.NeedElectric {
 			if production.ExchangeStatus == 1 {
-				desc = "可以兑换商品了。"
+				desc = "可以兑换商品了"
 			}
 			if production.ExchangeStatus == 3 {
-				desc = "商品兑换已超时，请选择新商品进行制造。"
+				desc = "商品兑换已超时，请选择新商品进行制造"
 			}
 			// await exchangeProNotify()
 		} else {
@@ -1882,9 +1882,9 @@ func dream(cookie string, state chan string) {
 		}
 	} else {
 		if len(a.Data.FactoryList) == 0 {
-			desc = "请手动开启活动。"
+			desc = "请手动开启活动"
 		} else if len(a.Data.ProductionList) == 0 {
-			desc = "请手动选购商品进行生产。"
+			desc = "请手动选购商品进行生产"
 		}
 	}
 	desc += "🏭"
