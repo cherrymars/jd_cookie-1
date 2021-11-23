@@ -646,12 +646,13 @@ func (ck *JdCookie) QueryAsset() string {
 		var rpc = make(chan []RedList)
 		var fruit = make(chan string)
 		var pet = make(chan string)
-		var dream = make(chan string)
+		var dm = make(chan string)
 		var gold = make(chan int64)
 		var egg = make(chan int64)
 		var tyt = make(chan string)
 		var mmc = make(chan int64)
 		var zjb = make(chan int64)
+		go dream(cookie, dm)
 		go redPacket(cookie, rpc)
 		go initFarm(cookie, fruit)
 		go initPetTown(cookie, pet)
@@ -791,7 +792,7 @@ func (ck *JdCookie) QueryAsset() string {
 		} else {
 			// msgs = append(msgs, fmt.Sprintf("京东秒杀：暂无数据"))
 		}
-		msgs = append(msgs, fmt.Sprintf("京喜工厂：%s", <-dream))
+		msgs = append(msgs, fmt.Sprintf("京喜工厂：%s", <-dm))
 		if tyt := <-tyt; tyt != "" {
 			msgs = append(msgs, fmt.Sprintf("推一推券：%s", tyt))
 		}
