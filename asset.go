@@ -266,6 +266,7 @@ func initAsset() {
 				for _, env := range envs {
 					initPetTown(env.Value, nil)
 					initFarm(env.Value, nil)
+					dream(env.Value, nil)
 				}
 				return "推送完成"
 			},
