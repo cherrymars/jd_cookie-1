@@ -160,7 +160,7 @@ func initSubmit() {
 				pin := pin(s.GetImType())
 				pin.Foreach(func(k, v []byte) error {
 					if string(v) == uid {
-						s.Reply(fmt.Sprintf("已解绑，%s。", string(v)))
+						s.Reply(fmt.Sprintf("已解绑，%s。", string(k)))
 						pin.Set(string(k), "")
 					}
 					return nil
