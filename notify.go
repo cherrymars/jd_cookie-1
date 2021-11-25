@@ -65,7 +65,7 @@ func initNotify() {
 				case nil:
 					return "超时，已退出会话。"
 				case int:
-					pt_pin := accounts[rt.(int)]
+					pt_pin := accounts[rt.(int)-1]
 					jn := &JdNotify{
 						ID: pt_pin,
 					}
