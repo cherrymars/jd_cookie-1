@@ -99,7 +99,7 @@ func initNotify() {
 					case int:
 						switch rt.(int) {
 						case 1:
-							return "请使用“查询”命令。"
+							return "请使用“查询”命令进行资产查询。"
 						case 2:
 							jn.Pet = !jn.Pet
 						case 3:
