@@ -103,7 +103,7 @@ func initNotify() {
 					case int:
 						switch rt.(int) {
 						case 1:
-							return "请使用“查询”命令进行资产查询。"
+							return "请使用“查询”命令进行资产查询，会话结束"
 						case 2:
 							jn.Pet = !jn.Pet
 						case 3:
@@ -112,7 +112,7 @@ func initNotify() {
 							jn.DreamFactory = !jn.DreamFactory
 						case 5:
 							pin.Set(pt_pin, "")
-							return "解绑成功。"
+							return "解绑成功，会话结束"
 						case 6:
 							return "已退出会话。"
 						}
