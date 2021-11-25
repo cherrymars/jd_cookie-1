@@ -40,6 +40,10 @@ func initNotify() {
 		{
 			Rules: []string{`raw ^账号管理$`},
 			Handle: func(s core.Sender) interface{} {
+				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
+					s.Continue()
+					return nil
+				}
 				pin := pin(s.GetImType())
 				uid := fmt.Sprint(s.GetUserID())
 				accounts := []string{}

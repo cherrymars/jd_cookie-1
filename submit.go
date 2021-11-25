@@ -154,25 +154,17 @@ func initSubmit() {
 			Rules: []string{`unbind`},
 			Handle: func(s core.Sender) interface{} {
 				s.Disappear(time.Second * 40)
-				envs, err := qinglong.GetEnvs("JD_COOKIE")
-				if err != nil {
-					return err
-				}
-				if len(envs) == 0 {
-					return "暂时无法操作。"
-				}
+
 				uid := fmt.Sprint(s.GetUserID())
-				for _, env := range envs {
-					pt_pin := FetchJdCookieValue("pt_pin", env.Value)
-					pin := pin(s.GetImType())
-					pin.Foreach(func(k, v []byte) error {
-						if string(k) == pt_pin && string(v) == uid {
-							s.Reply(fmt.Sprintf("已解绑，%s。", pt_pin))
-							pin.Set(string(k), "")
-						}
-						return nil
-					})
-				}
+
+				pin := pin(s.GetImType())
+				pin.Foreach(func(k, v []byte) error {
+					if string(v) == uid {
+						s.Reply(fmt.Sprintf("已解绑，%s。", string(v)))
+						pin.Set(string(k), "")
+					}
+					return nil
+				})
 				return "操作完成"
 			},
 		},
