@@ -53,7 +53,7 @@ func initNotify() {
 				if num == 0 {
 					return "抱歉，你还没有绑定的账号呢~"
 				}
-				ask := fmt.Sprintf("请在20秒内从1~%d中选择你要操作的账号：", num)
+				ask := fmt.Sprintf("请在20秒内从1~%d中选择你要操作的账号：\n", num)
 				for i := range accounts {
 					ask += fmt.Sprintf("%d. %s\n", i+1, accounts[i])
 				}
@@ -71,6 +71,7 @@ func initNotify() {
 					}
 					jdNotify.First(jn)
 					ask := "请在20秒内选择操作：\n1. 查询账号资产\n"
+
 					if jn.Pet {
 						ask += "2. 开启东东萌宠通知\n"
 					} else {
@@ -81,12 +82,14 @@ func initNotify() {
 					} else {
 						ask += "3. 关闭东东果园通知\n"
 					}
+
 					if jn.DreamFactory {
 						ask += "4. 开启京喜工厂通知\n"
 					} else {
 						ask += "4. 关闭京喜工厂通知\n"
 					}
 					ask += "5. 解绑当前账号\n6. 退出当前会话"
+					s.Reply(ask)
 					rt := s.Await(s, func(s core.Sender) interface{} {
 						return core.Range([]int{1, 6})
 					}, time.Second*20)
