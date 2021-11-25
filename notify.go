@@ -55,7 +55,7 @@ func initNotify() {
 				}
 				ask := fmt.Sprintf("请在20秒内从1~%d中选择你要操作的账号：", num)
 				for i := range accounts {
-					ask += fmt.Sprintf("%d. %s", i+1, accounts[i])
+					ask += fmt.Sprintf("%d. %s\n", i+1, accounts[i])
 				}
 				s.Reply(strings.Trim(ask, "\n"))
 				rt := s.Await(s, func(s core.Sender) interface{} {
