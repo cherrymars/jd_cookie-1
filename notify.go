@@ -187,7 +187,7 @@ func initNotify() {
 					ask += "7. 解绑当前账号\n8. 退出当前会话"
 					s.Reply(ask)
 					rt := s.Await(s, func(s core.Sender) interface{} {
-						return core.Range([]int{1, 6})
+						return core.Range([]int{1, 8})
 					}, time.Second*20)
 					switch rt.(type) {
 					case nil:
