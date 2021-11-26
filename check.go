@@ -77,7 +77,7 @@ func initCheck() {
 					}
 					pt_key, err := getKey(wse.Value)
 					if err != nil {
-						s.Reply(fmt.Sprintf("%s,JD_WSCK转换失败。%v", pin, err), core.E)
+						s.Reply(fmt.Sprintf("%s,JD_WSCK转换失败。%v", pin, err), core.E, core.N)
 						delete(wscks, pin)
 						continue
 					}
@@ -93,7 +93,7 @@ func initCheck() {
 						delete(wscks, pin)
 						continue
 					}
-					s.Reply(fmt.Sprintf("%s,JD_WSCK转换JD_COOKIE成功。", pin), core.E)
+					s.Reply(fmt.Sprintf("%s,JD_WSCK转换JD_COOKIE成功。", pin), core.E, core.N)
 					if err := qinglong.Config.Req(qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
 						s.Reply(fmt.Sprintf("%s,JD_COOKIE启用失败。%v", pin, err), core.E)
 					} else {
@@ -111,7 +111,7 @@ func initCheck() {
 				for pin, wse := range wscks {
 					pt_key, err := getKey(wse.Value)
 					if err != nil {
-						s.Reply(fmt.Sprintf("%s,JD_WSCK转换失败。%v", pin, err), core.E)
+						s.Reply(fmt.Sprintf("%s,JD_WSCK转换失败。%v", pin, err), core.E, core.N)
 						continue
 					}
 					if strings.Contains(pt_key, "fake") {
@@ -125,7 +125,7 @@ func initCheck() {
 						}
 						continue
 					}
-					s.Reply(fmt.Sprintf("%s,JD_WSCK转换JD_COOKIE成功。", pin), core.E)
+					s.Reply(fmt.Sprintf("%s,JD_WSCK转换JD_COOKIE成功。", pin), core.E, core.N)
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", pt_key, pin)
 					if env, ok := cks[pin]; ok {
 						env.Value = value
