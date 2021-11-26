@@ -227,7 +227,7 @@ func initNotify() {
 									assetPush(jn.ID)
 								}); err == nil {
 									ccc[jn.ID] = rid
-								}
+								}else{return err}
 							}
 						case 7:
 							pin.Set(pt_pin, "")
