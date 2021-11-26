@@ -229,7 +229,6 @@ func initNotify() {
 									ccc[jn.ID] = rid
 								}
 							}
-							jn.Note = s.Await(s, nil).(string)
 						case 7:
 							pin.Set(pt_pin, "")
 							return "解绑成功，会话结束。"
