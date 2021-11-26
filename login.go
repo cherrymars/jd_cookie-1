@@ -136,7 +136,7 @@ func initLogin() {
 					if cancel {
 						return
 					}
-					s.Reply("请输入6位验证码：")
+					// s.Reply("请输入6位验证码：")
 					req := httplib.Post(addr + "/api/SendSMS")
 					req.Header("content-type", "application/json")
 					data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
@@ -152,7 +152,7 @@ func initLogin() {
 					}
 					i := 1
 					if !success && status == 666 {
-						// s.Reply("正在进行滑块验证...")
+						s.Reply("正在进行滑块验证...")
 						for {
 							req = httplib.Post(addr + "/api/AutoCaptcha")
 							req.Header("content-type", "application/json")
@@ -165,14 +165,14 @@ func initLogin() {
 							success, _ := jsonparser.GetBoolean(data, "success")
 							status, _ := jsonparser.GetInt(data, "data", "status")
 							// if message != "" {
-							// s.Reply()
+							// 	s.Reply()
 							// }
 							if !success {
-								//s.Reply("滑块验证失败：" + string(data))
+								s.Reply("滑块验证失败：" + string(data))
 							}
 							if status == 666 {
 								i++
-								// s.Reply(fmt.Sprintf("正在进行第%d次滑块验证...", i))
+								s.Reply(fmt.Sprintf("正在进行第%d次滑块验证...", i))
 								continue
 							}
 							if success {
@@ -182,7 +182,7 @@ func initLogin() {
 							return
 						}
 					}
-					// s.Reply("请输入6位验证码：")
+					s.Reply("请输入6位验证码：")
 					code := ""
 
 					s.Await(s, func(s core.Sender) interface{} {
@@ -195,7 +195,7 @@ func initLogin() {
 						if code == "" {
 							return core.GoAgain("请输入正确的验证码：")
 						}
-						s.Reply("登录成功。")
+						// s.Reply("登录成功。")
 						if s.GetImType() == "wxmp" {
 							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
 							if jd_cookie.Get("xdd_url") != "" {
@@ -217,7 +217,7 @@ func initLogin() {
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
 						successLogin = true
-						// s.Reply("登录成功。")
+						s.Reply("登录成功。")
 						s = s.Copy()
 						s.SetContent(string(data))
 						core.Senders <- s
@@ -246,11 +246,12 @@ func initLogin() {
 							}
 						}
 					} else {
-						if message != "" {
-							s.Reply("不好意思，刚搞错了还没成功，因为" + message + "。")
-						} else {
-							s.Reply("不好意思，刚搞错了并没有成功...")
-						}
+						s.Reply(message + "。")
+						// if message != "" {
+						// 	s.Reply("不好意思，刚搞错了还没成功，因为" + message + "。")
+						// } else {
+						// 	s.Reply("不好意思，刚搞错了并没有成功...")
+						// }
 					}
 				}
 				if s.GetImType() == "wxmp" {
