@@ -76,18 +76,21 @@ func initNotify() {
 		return nil
 	})
 	go func() {
-		time.Sleep(time.Second * 2)
-		envs, _ := qinglong.GetEnvs("JD_COOKIE")
-		for _, env := range envs {
-			pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
-			pt_key := core.FetchCookieValue(env.Value, "pt_key")
-			if pt_pin != "" && pt_key != "" {
-				jn := &JdNotify{
-					ID: pt_pin,
-				}
-				jdNotify.First(jn)
-				if jn.PtKey != pt_key {
-					jn.PtKey = pt_key
+		for {
+			time.Sleep(time.Second * 2)
+			envs, _ := qinglong.GetEnvs("JD_COOKIE")
+			for _, env := range envs {
+				pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
+				pt_key := core.FetchCookieValue(env.Value, "pt_key")
+				if pt_pin != "" && pt_key != "" {
+					jn := &JdNotify{
+						ID: pt_pin,
+					}
+					jdNotify.First(jn)
+					if jn.PtKey != pt_key {
+						jn.PtKey = pt_key
+					}
+					jdNotify.Create(jn)
 				}
 			}
 		}
