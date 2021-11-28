@@ -114,7 +114,7 @@ func initNotify() {
 			},
 		},
 		{
-			Rules: []string{`关闭?通知`},
+			Rules: []string{`raw ^关闭.+通知$`},
 			Handle: func(s core.Sender) interface{} {
 				class := s.Get()
 				pin := pin(s.GetImType())
