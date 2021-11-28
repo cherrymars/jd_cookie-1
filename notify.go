@@ -80,6 +80,9 @@ func initNotify() {
 			time.Sleep(time.Second * 2)
 			envs, _ := qinglong.GetEnvs("JD_COOKIE")
 			for _, env := range envs {
+				if env.Status != 0 {
+					continue
+				}
 				pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
 				pt_key := core.FetchCookieValue(env.Value, "pt_key")
 				if pt_pin != "" && pt_key != "" {
@@ -227,7 +230,9 @@ func initNotify() {
 									assetPush(jn.ID)
 								}); err == nil {
 									ccc[jn.ID] = rid
-								}else{return err}
+								} else {
+									return err
+								}
 							}
 						case 7:
 							pin.Set(pt_pin, "")
