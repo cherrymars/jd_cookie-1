@@ -738,7 +738,7 @@ func (ck *JdCookie) QueryAsset() string {
 		if ck.BeanNum != "" {
 			ti = append(ti, ck.BeanNum+"京豆")
 		}
-		if xdd[0] != 0 {
+		if len(xdd) > 0 && xdd[0] != 0 {
 			ti = append(ti, fmt.Sprint(xdd[0])+"喜豆")
 		}
 		if len(ti) > 0 {
