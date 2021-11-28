@@ -114,6 +114,38 @@ func initNotify() {
 			},
 		},
 		{
+			Rules: []string{`关闭?通知`},
+			Handle: func(s core.Sender) interface{} {
+				class := s.Get()
+				pin := pin(s.GetImType())
+				uid := fmt.Sprint(s.GetUserID())
+				accounts := []string{}
+				pin.Foreach(func(k, v []byte) error {
+					if string(v) == uid {
+						accounts = append(accounts, string(k))
+					}
+					return nil
+				})
+				for i := range accounts {
+					jn := &JdNotify{
+						ID: accounts[i],
+					}
+					jdNotify.First(jn)
+					if class == "京喜工厂" {
+						jn.DreamFactory = true
+					}
+					if class == "东东农场" {
+						jn.Fruit = true
+					}
+					if class == "东东萌宠" {
+						jn.Pet = true
+					}
+					jdNotify.Create(jn)
+				}
+				return fmt.Sprintf("已为你关闭%d个账号的"+class+"通知。", len(accounts))
+			},
+		},
+		{
 			Rules: []string{`raw ^账号管理$`},
 			Handle: func(s core.Sender) interface{} {
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
@@ -267,5 +299,5 @@ func a叉哦叉哦(pt_pin, class, content string) {
 	if u.Note == "" {
 		u.Note = u.ID
 	}
-	Notify(pt_pin, class+"通知("+u.Note+")：\n"+content+"\n\n通知没有用？请对我说“账号管理”，根据提示进行关闭。")
+	Notify(pt_pin, class+"通知("+u.Note+")：\n"+content+"\n\n通知没有用？请对我说“关闭"+class+"通知”或“账号管理”，根据提示进行关闭。")
 }
