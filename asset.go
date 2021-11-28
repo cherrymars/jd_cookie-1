@@ -666,7 +666,7 @@ func (ck *JdCookie) QueryAsset() string {
 				}
 				if len(ti) > 0 {
 					msgs = append(msgs,
-						"昨日收入：", strings.Join(ti, "、"),
+						"昨日收入："+strings.Join(ti, "、"),
 					)
 				}
 				ti = []string{}
@@ -678,7 +678,7 @@ func (ck *JdCookie) QueryAsset() string {
 				}
 				if len(ti) > 0 {
 					msgs = append(msgs,
-						"昨日支出：", strings.Join(ti, "、"),
+						"昨日支出："+strings.Join(ti, "、"),
 					)
 				}
 				ti = []string{}
@@ -690,7 +690,7 @@ func (ck *JdCookie) QueryAsset() string {
 				}
 				if len(ti) > 0 {
 					msgs = append(msgs,
-						"今日收入：", strings.Join(ti, "、"),
+						"今日收入："+strings.Join(ti, "、"),
 					)
 				}
 				ti = []string{}
@@ -702,7 +702,7 @@ func (ck *JdCookie) QueryAsset() string {
 				}
 				if len(ti) > 0 {
 					msgs = append(msgs,
-						"今日支出：", strings.Join(ti, "、"),
+						"今日支出："+strings.Join(ti, "、"),
 					)
 				}
 				break
@@ -734,7 +734,16 @@ func (ck *JdCookie) QueryAsset() string {
 			}
 			page++
 		}
-		msgs = append(msgs, fmt.Sprintf("当前京豆：%v京豆", ck.BeanNum))
+		var ti []string
+		if ck.BeanNum != "" {
+			ti = append(ti, ck.BeanNum+"京豆")
+		}
+		if xdd[0] != 0 {
+			ti = append(ti, fmt.Sprint(xdd[0])+"喜豆")
+		}
+		if len(ti) > 0 {
+			msgs = append(msgs, "当前京豆："+strings.Join(ti, "、"))
+		}
 		ysd := int(time.Now().Add(24 * time.Hour).Unix())
 		if rps := <-rpc; len(rps) != 0 {
 			for _, rp := range rps {
