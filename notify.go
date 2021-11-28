@@ -61,7 +61,7 @@ func assetPush(pt_pin string) {
 
 func initNotify() {
 	var ccc = map[string]cron.EntryID{}
-	cc = cron.New()
+	cc = cron.New(cron.WithSeconds())
 	cc.Start()
 	jdNotify.Foreach(func(_, v []byte) error {
 		aa := &JdNotify{}
