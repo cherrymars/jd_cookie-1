@@ -742,7 +742,7 @@ func (ck *JdCookie) QueryAsset() string {
 			ti = append(ti, fmt.Sprint(xdd[0])+"喜豆")
 		}
 		if len(ti) > 0 {
-			msgs = append(msgs, "当前京豆："+strings.Join(ti, "、"))
+			msgs = append(msgs, "当前豆豆："+strings.Join(ti, "、"))
 		}
 		ysd := int(time.Now().Add(24 * time.Hour).Unix())
 		if rps := <-rpc; len(rps) != 0 {
@@ -1751,13 +1751,13 @@ func queryuserjingdoudetail(cookie string, e下水道 chan []int) {
 	yestoday := time.Now().Local().Add(-time.Hour * 24).Format("2006/01/02")
 	for _, v := range a.Detail {
 		e叼毛[0] += v.Amount
-		if strings.Contains(v.Visibleinfo, today) {
+		if strings.Contains(v.Createdate, today) {
 			if v.Amount > 0 {
 				e叼毛[1] += v.Amount
 			} else {
 				e叼毛[2] += -v.Amount
 			}
-		} else if strings.Contains(v.Visibleinfo, yestoday) {
+		} else if strings.Contains(v.Createdate, yestoday) {
 			if v.Amount > 0 {
 				e叼毛[3] += v.Amount
 			} else {
