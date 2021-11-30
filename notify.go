@@ -92,8 +92,8 @@ func initNotify() {
 					jdNotify.First(jn)
 					if jn.PtKey != pt_key {
 						jn.PtKey = pt_key
+						jdNotify.Create(jn)
 					}
-					jdNotify.Create(jn)
 				}
 			}
 		}
