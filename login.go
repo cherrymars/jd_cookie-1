@@ -115,7 +115,7 @@ func initLogin() {
 					}
 				}
 
-				s.Reply("若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)")
+				s.Reply(jd_cookie.Get("nolan_first", "若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)"))
 				haha = func() {
 					s.Await(s, func(s core.Sender) interface{} {
 						ct := s.GetContent()
