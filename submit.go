@@ -141,7 +141,7 @@ func initSubmit() {
 						pt_pin := string(k)
 						if pt_pin == user_pin || user_pin == "all" {
 							if push, ok := core.Pushs[tp]; ok {
-								push(string(v), msg, nil)
+								push(string(v), msg, nil, "")
 							}
 						}
 						return nil

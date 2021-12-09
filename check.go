@@ -254,15 +254,15 @@ func Notify(pt_pin string, content string) {
 			if string(k) == pt_pin && pt_pin != "" {
 				if mode != "group" {
 					if push, ok := core.Pushs[tp]; ok {
-						push(string(v), content, qqGroup)
+						push(string(v), content, qqGroup, "")
 					}
 				} else {
 					if push, ok := core.GroupPushs[tp]; ok {
 						if tp == "qq" {
-							push(qqGroup, string(v), content)
+							push(qqGroup, string(v), content, "")
 						}
 						if tp == "wx" {
-							push(wxGroup, string(v), content)
+							push(wxGroup, string(v), content, "")
 						}
 					}
 				}

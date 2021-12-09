@@ -44,7 +44,7 @@ func assetPush(pt_pin string) {
 							push(string(v), GetAsset(&JdCookie{
 								PtPin: pt_pin,
 								PtKey: pt_key,
-							}), qqGroup)
+							}), qqGroup, "")
 						})
 					}
 				}
