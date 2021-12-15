@@ -186,6 +186,7 @@ func initLogin() {
 							}
 						} else {
 							//欢迎叼毛前来抄代码
+							//看代码的也是叼毛
 							s.Reply("请先完成找成语小游戏：" + addr + "?id=" + phone)
 							for {
 								time.Sleep(time.Second)
