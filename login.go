@@ -249,6 +249,7 @@ func initLogin() {
 						}
 					} else {
 						if strings.Contains(message, "验证码输入错误") {
+							s.Reply("请输入正确的验证码：")
 							goto aaa带带弟弟
 						}
 						s.Reply(message + "。")
