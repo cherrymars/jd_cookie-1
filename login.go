@@ -145,7 +145,7 @@ func initLogin() {
 					}
 					message, _ := jsonparser.GetString(data, "message")
 					success, _ := jsonparser.GetBoolean(data, "success")
-					captcha, _ := jsonparser.GetInt(data, "captcha")
+					captcha, _ := jsonparser.GetInt(data, "data", "captcha")
 					status, _ := jsonparser.GetInt(data, "data", "status")
 					if message != "" && status != 666 {
 						s.Reply(message)
