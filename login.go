@@ -2,10 +2,7 @@ package jd_cookie
 
 import (
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
-	"net/http"
-	"net/url"
 	"regexp"
 	"strings"
 	"sync"
@@ -15,7 +12,6 @@ import (
 	"github.com/beego/beego/v2/client/httplib"
 	"github.com/buger/jsonparser"
 	"github.com/cdle/sillyGirl/core"
-	"github.com/gorilla/websocket"
 )
 
 var jd_cookie = core.NewBucket("jd_cookie")
@@ -72,7 +68,7 @@ func initLogin() {
 			time.Sleep(time.Second)
 		}
 	})
-	go RunServer()
+	// go RunServer()
 
 	core.AddCommand("", []core.Function{
 		{
@@ -94,7 +90,8 @@ func initLogin() {
 				phone := ""
 				hasNolan := false
 				if v == "" {
-					goto ADONG
+					// goto ADONG
+					return "快递员没有诺兰的地址。"
 				}
 				for _, addr = range addrs {
 					addr = regexp.MustCompile(`^(https?://[-\.\w]+:?\d*)`).FindString(addr)
@@ -108,7 +105,8 @@ func initLogin() {
 					}
 				}
 				if !hasNolan == true {
-					goto ADONG
+					// goto ADONG
+					return "诺兰无法为您服务。"
 				}
 				s.Reply(jd_cookie.Get("nolan_first", "若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)"))
 				haha = func() {
@@ -251,262 +249,263 @@ func initLogin() {
 					go haha()
 				} else {
 					haha()
-					if !successLogin && !cancel && c != nil {
-						s.Reply("将由阿东继续为您服务！")
-						goto ADONG
+					if !successLogin && !cancel { // && c != nil
+						// s.Reply("将由阿东继续为您服务！")
+						// goto ADONG
+						return "登录失败。"
 					}
 				}
 				return nil
-			ADONG:
-				// s.Reply("阿东嗝屁了。")
-				// return nil
-				if c == nil {
-					tip := jd_cookie.Get("tip")
-					if tip == "" {
-						if s.IsAdmin() {
-							s.Reply(jd_cookie.Get("tip", "阿东又不行了。")) //已支持阿东前往了解，https://github.com/rubyangxg/jd-qinglong
-							return nil
-						} else {
-							tip = "阿东未接入，暂时无法为您服务。"
-						}
-					}
-					s.Reply(tip)
-					return nil
-				}
-				go func() {
-					stop := false
-					uid := fmt.Sprint(time.Now().UnixNano())
-					cry := make(chan string, 1)
-					mhome.Store(uid, cry)
-					var deadline = time.Now().Add(time.Second * time.Duration(200))
-					var cookie *string
-					sendMsg := func(msg string) {
-						c.WriteJSON(map[string]interface{}{
-							"time":         time.Now().Unix(),
-							"self_id":      jd_cookie.GetInt("selfQid"),
-							"post_type":    "message",
-							"message_type": "private",
-							"sub_type":     "friend",
-							"message_id":   time.Now().UnixNano(),
-							"user_id":      uid,
-							"message":      msg,
-							"raw_message":  msg,
-							"font":         456,
-							"sender": map[string]interface{}{
-								"nickname": "傻妞",
-								"sex":      "female",
-								"age":      18,
-							},
-						})
-					}
-					if s.GetImType() == "wxmp" {
-						cancel := false
-						s.Await(s, func(s core.Sender) interface{} {
-							message := s.GetContent()
-							if message == "退出" || message == "q" {
-								cancel = true
-								return "取消登录"
-							}
-							if regexp.MustCompile(`^\d{11}$`).FindString(message) == "" {
-								return core.GoAgain("请输入格式正确的手机号，或者对我说“q”。")
-							}
-							phone = message
-							return "请输入收到的验证码哦～"
-						})
+				// 		ADONG:
+				// 			// s.Reply("阿东嗝屁了。")
+				// 			// return nil
+				// 			if c == nil {
+				// 				tip := jd_cookie.Get("tip")
+				// 				if tip == "" {
+				// 					if s.IsAdmin() {
+				// 						s.Reply(jd_cookie.Get("tip", "阿东又不行了。")) //已支持阿东前往了解，https://github.com/rubyangxg/jd-qinglong
+				// 						return nil
+				// 					} else {
+				// 						tip = "阿东未接入，暂时无法为您服务。"
+				// 					}
+				// 				}
+				// 				s.Reply(tip)
+				// 				return nil
+				// 			}
+				// 			go func() {
+				// 				stop := false
+				// 				uid := fmt.Sprint(time.Now().UnixNano())
+				// 				cry := make(chan string, 1)
+				// 				mhome.Store(uid, cry)
+				// 				var deadline = time.Now().Add(time.Second * time.Duration(200))
+				// 				var cookie *string
+				// 				sendMsg := func(msg string) {
+				// 					c.WriteJSON(map[string]interface{}{
+				// 						"time":         time.Now().Unix(),
+				// 						"self_id":      jd_cookie.GetInt("selfQid"),
+				// 						"post_type":    "message",
+				// 						"message_type": "private",
+				// 						"sub_type":     "friend",
+				// 						"message_id":   time.Now().UnixNano(),
+				// 						"user_id":      uid,
+				// 						"message":      msg,
+				// 						"raw_message":  msg,
+				// 						"font":         456,
+				// 						"sender": map[string]interface{}{
+				// 							"nickname": "傻妞",
+				// 							"sex":      "female",
+				// 							"age":      18,
+				// 						},
+				// 					})
+				// 				}
+				// 				if s.GetImType() == "wxmp" {
+				// 					cancel := false
+				// 					s.Await(s, func(s core.Sender) interface{} {
+				// 						message := s.GetContent()
+				// 						if message == "退出" || message == "q" {
+				// 							cancel = true
+				// 							return "取消登录"
+				// 						}
+				// 						if regexp.MustCompile(`^\d{11}$`).FindString(message) == "" {
+				// 							return core.GoAgain("请输入格式正确的手机号，或者对我说“q”。")
+				// 						}
+				// 						phone = message
+				// 						return "请输入收到的验证码哦～"
+				// 					})
 
-						if cancel {
-							return
-						}
-					}
-					defer func() {
-						cry <- "stop"
-						mhome.Delete(uid)
-						if cookie != nil {
-							s.SetContent(*cookie)
-							core.Senders <- s
-						}
-						sendMsg("q")
-					}()
-					go func() {
-						for {
-							msg := <-cry
-							fmt.Println(msg)
-							if msg == "stop" {
-								break
-							}
-							msg = strings.Replace(msg, "登陆", "登录", -1)
-							if strings.Contains(msg, "不占资源") {
-								msg += "\n" + "4.取消"
-							}
-							if strings.Contains(msg, "无法回复") {
-								sendMsg("帮助")
-							}
-							{
-								res := regexp.MustCompile(`剩余操作时间：(\d+)`).FindStringSubmatch(msg)
-								if len(res) > 0 {
-									remain := core.Int(res[1])
-									deadline = time.Now().Add(time.Second * time.Duration(remain))
-								}
-							}
-							lines := strings.Split(msg, "\n")
-							new := []string{}
-							for _, line := range lines {
-								if !strings.Contains(line, "剩余操作时间") {
-									new = append(new, line)
-								}
-							}
-							msg = strings.Join(new, "\n")
-							if strings.Contains(msg, "直接退出") { //菜单页面
-								sendMsg("1")
-								continue
-							}
-							if strings.Contains(msg, "登录方式") {
-								sendMsg("1")
-								continue
-							}
-							if strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号") {
-								if phone != "" {
-									sendMsg(phone)
-									continue
-								} else {
-									msg = "阿东为您服务，请输入11位手机号：(输入“q”随时退出会话。)"
-								}
-							}
-							if strings.Contains(msg, "pt_key") {
-								cookie = &msg
-								stop = true
-								s.SetContent("q")
-								core.Senders <- s
-							}
-							if cookie == nil {
-								if strings.Contains(msg, "已点击登录") {
-									continue
-								}
-								s.Reply(msg)
-							}
-						}
-					}()
-					sendMsg("h")
-					for {
-						if stop == true {
-							break
-						}
-						if deadline.Before(time.Now()) {
-							stop = true
-							s.Reply("登录超时")
-							break
-						}
-						s.Await(s, func(s core.Sender) interface{} {
-							msg := s.GetContent()
-							if msg == "查询" || strings.Contains(msg, "pt_pin=") {
-								s.Continue()
-								return nil
-							}
-							iw := core.Int(msg)
-							if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" || (fmt.Sprint(iw) == msg && iw > 1 && iw < 11) {
-								stop = true
-								if cookie == nil {
-									return "取消登录"
-								} else {
-									return "登录成功"
-								}
-							}
-							if phone != "" {
-								if regexp.MustCompile(`^\d{6}$`).FindString(msg) == "" {
-									return core.GoAgain("请输入格式正确的验证码，或者对我说“q”。")
-								} else {
-									rt := "八九不离十登录成功啦，60秒后对我说“查询”已确认登录成功。"
-									if jd_cookie.Get("xdd_url") != "" {
-										rt += "此外，你可以在30秒内输入QQ号："
-									}
-									s.Reply(rt)
-								}
-							}
-							sendMsg(s.GetContent())
-							return nil
-						}, `[\s\S]+`, time.Second)
-					}
-				}()
-				if s.GetImType() == "wxmp" {
-					return "请输入11位手机号："
-				}
-				return nil
+				// 					if cancel {
+				// 						return
+				// 					}
+				// 				}
+				// 				defer func() {
+				// 					cry <- "stop"
+				// 					mhome.Delete(uid)
+				// 					if cookie != nil {
+				// 						s.SetContent(*cookie)
+				// 						core.Senders <- s
+				// 					}
+				// 					sendMsg("q")
+				// 				}()
+				// 				go func() {
+				// 					for {
+				// 						msg := <-cry
+				// 						fmt.Println(msg)
+				// 						if msg == "stop" {
+				// 							break
+				// 						}
+				// 						msg = strings.Replace(msg, "登陆", "登录", -1)
+				// 						if strings.Contains(msg, "不占资源") {
+				// 							msg += "\n" + "4.取消"
+				// 						}
+				// 						if strings.Contains(msg, "无法回复") {
+				// 							sendMsg("帮助")
+				// 						}
+				// 						{
+				// 							res := regexp.MustCompile(`剩余操作时间：(\d+)`).FindStringSubmatch(msg)
+				// 							if len(res) > 0 {
+				// 								remain := core.Int(res[1])
+				// 								deadline = time.Now().Add(time.Second * time.Duration(remain))
+				// 							}
+				// 						}
+				// 						lines := strings.Split(msg, "\n")
+				// 						new := []string{}
+				// 						for _, line := range lines {
+				// 							if !strings.Contains(line, "剩余操作时间") {
+				// 								new = append(new, line)
+				// 							}
+				// 						}
+				// 						msg = strings.Join(new, "\n")
+				// 						if strings.Contains(msg, "直接退出") { //菜单页面
+				// 							sendMsg("1")
+				// 							continue
+				// 						}
+				// 						if strings.Contains(msg, "登录方式") {
+				// 							sendMsg("1")
+				// 							continue
+				// 						}
+				// 						if strings.Contains(msg, "请输入手机号") || strings.Contains(msg, "请输入11位手机号") {
+				// 							if phone != "" {
+				// 								sendMsg(phone)
+				// 								continue
+				// 							} else {
+				// 								msg = "阿东为您服务，请输入11位手机号：(输入“q”随时退出会话。)"
+				// 							}
+				// 						}
+				// 						if strings.Contains(msg, "pt_key") {
+				// 							cookie = &msg
+				// 							stop = true
+				// 							s.SetContent("q")
+				// 							core.Senders <- s
+				// 						}
+				// 						if cookie == nil {
+				// 							if strings.Contains(msg, "已点击登录") {
+				// 								continue
+				// 							}
+				// 							s.Reply(msg)
+				// 						}
+				// 					}
+				// 				}()
+				// 				sendMsg("h")
+				// 				for {
+				// 					if stop == true {
+				// 						break
+				// 					}
+				// 					if deadline.Before(time.Now()) {
+				// 						stop = true
+				// 						s.Reply("登录超时")
+				// 						break
+				// 					}
+				// 					s.Await(s, func(s core.Sender) interface{} {
+				// 						msg := s.GetContent()
+				// 						if msg == "查询" || strings.Contains(msg, "pt_pin=") {
+				// 							s.Continue()
+				// 							return nil
+				// 						}
+				// 						iw := core.Int(msg)
+				// 						if msg == "q" || msg == "exit" || msg == "退出" || msg == "10" || msg == "4" || (fmt.Sprint(iw) == msg && iw > 1 && iw < 11) {
+				// 							stop = true
+				// 							if cookie == nil {
+				// 								return "取消登录"
+				// 							} else {
+				// 								return "登录成功"
+				// 							}
+				// 						}
+				// 						if phone != "" {
+				// 							if regexp.MustCompile(`^\d{6}$`).FindString(msg) == "" {
+				// 								return core.GoAgain("请输入格式正确的验证码，或者对我说“q”。")
+				// 							} else {
+				// 								rt := "八九不离十登录成功啦，60秒后对我说“查询”已确认登录成功。"
+				// 								if jd_cookie.Get("xdd_url") != "" {
+				// 									rt += "此外，你可以在30秒内输入QQ号："
+				// 								}
+				// 								s.Reply(rt)
+				// 							}
+				// 						}
+				// 						sendMsg(s.GetContent())
+				// 						return nil
+				// 					}, `[\s\S]+`, time.Second)
+				// 				}
+				// 			}()
+				// 			if s.GetImType() == "wxmp" {
+				// 				return "请输入11位手机号："
+				// 			}
+				// 			return nil
 			},
 		},
 	})
-	// if jd_cookie.GetBool("enable_aaron", false) {
-	// core.Senders <- &core.Faker{
-	// 	Message: "ql cron disable https://github.com/Aaron-lv/sync.git",
-	// }
-	// core.Senders <- &core.Faker{
-	// 	Message: "ql cron disable task Aaron-lv_sync_jd_scripts_jd_city.js",
-	// }
-	// }
-}
-
-var c *websocket.Conn
-
-func RunServer() {
-	addr := jd_cookie.Get("adong_addr")
-	if addr == "" {
-		return
-	}
-	defer func() {
-		time.Sleep(time.Second * 2)
-		RunServer()
-	}()
-	u := url.URL{Scheme: "ws", Host: addr, Path: "/ws/event"}
-	logs.Info("连接阿东 %s", u.String())
-	var err error
-	c, _, err = websocket.DefaultDialer.Dial(u.String(), http.Header{
-		"X-Self-ID":     {fmt.Sprint(jd_cookie.GetInt("selfQid"))},
-		"X-Client-Role": {"Universal"},
-	})
-	if err != nil {
-		logs.Warn("连接阿东错误:", err)
-		return
-	}
-	defer c.Close()
-	go func() {
-		for {
-			_, message, err := c.ReadMessage()
-			if err != nil {
-				logs.Info("read:", err)
-				return
-			}
-			type AutoGenerated struct {
-				Action string `json:"action"`
-				Echo   string `json:"echo"`
-				Params struct {
-					UserID  interface{} `json:"user_id"`
-					Message string      `json:"message"`
-				} `json:"params"`
-			}
-			ag := &AutoGenerated{}
-			json.Unmarshal(message, ag)
-			if ag.Action == "send_private_msg" {
-				if cry, ok := mhome.Load(fmt.Sprint(ag.Params.UserID)); ok {
-					fmt.Println(ag.Params.Message)
-					cry.(chan string) <- ag.Params.Message
-				}
-			}
-			logs.Info("recv: %s", message)
+	if jd_cookie.GetBool("enable_aaron", false) {
+		core.Senders <- &core.Faker{
+			Message: "ql cron disable https://github.com/Aaron-lv/sync.git",
 		}
-	}()
-	ticker := time.NewTicker(time.Second)
-	defer ticker.Stop()
-	for {
-		select {
-		case <-ticker.C:
-			err := c.WriteMessage(websocket.TextMessage, []byte(`{}`))
-			if err != nil {
-				logs.Info("阿东错误:", err)
-				c = nil
-				return
-			}
+		core.Senders <- &core.Faker{
+			Message: "ql cron disable task Aaron-lv_sync_jd_scripts_jd_city.js",
 		}
 	}
 }
+
+// var c *websocket.Conn
+
+// func RunServer() {
+// 	addr := jd_cookie.Get("adong_addr")
+// 	if addr == "" {
+// 		return
+// 	}
+// 	defer func() {
+// 		time.Sleep(time.Second * 2)
+// 		RunServer()
+// 	}()
+// 	u := url.URL{Scheme: "ws", Host: addr, Path: "/ws/event"}
+// 	logs.Info("连接阿东 %s", u.String())
+// 	var err error
+// 	c, _, err = websocket.DefaultDialer.Dial(u.String(), http.Header{
+// 		"X-Self-ID":     {fmt.Sprint(jd_cookie.GetInt("selfQid"))},
+// 		"X-Client-Role": {"Universal"},
+// 	})
+// 	if err != nil {
+// 		logs.Warn("连接阿东错误:", err)
+// 		return
+// 	}
+// 	defer c.Close()
+// 	go func() {
+// 		for {
+// 			_, message, err := c.ReadMessage()
+// 			if err != nil {
+// 				logs.Info("read:", err)
+// 				return
+// 			}
+// 			type AutoGenerated struct {
+// 				Action string `json:"action"`
+// 				Echo   string `json:"echo"`
+// 				Params struct {
+// 					UserID  interface{} `json:"user_id"`
+// 					Message string      `json:"message"`
+// 				} `json:"params"`
+// 			}
+// 			ag := &AutoGenerated{}
+// 			json.Unmarshal(message, ag)
+// 			if ag.Action == "send_private_msg" {
+// 				if cry, ok := mhome.Load(fmt.Sprint(ag.Params.UserID)); ok {
+// 					fmt.Println(ag.Params.Message)
+// 					cry.(chan string) <- ag.Params.Message
+// 				}
+// 			}
+// 			logs.Info("recv: %s", message)
+// 		}
+// 	}()
+// 	ticker := time.NewTicker(time.Second)
+// 	defer ticker.Stop()
+// 	for {
+// 		select {
+// 		case <-ticker.C:
+// 			err := c.WriteMessage(websocket.TextMessage, []byte(`{}`))
+// 			if err != nil {
+// 				logs.Info("阿东错误:", err)
+// 				c = nil
+// 				return
+// 			}
+// 		}
+// 	}
+// }
 
 func decode(encodeed string) string {
 	decoded, _ := base64.StdEncoding.DecodeString(encodeed)
