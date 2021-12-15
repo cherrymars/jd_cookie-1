@@ -212,6 +212,7 @@ func initLogin() {
 					if cancel {
 						return
 					}
+				aaa带带弟弟:
 					req = httplib.Post(addr + "/api/VerifyCode")
 					req.Header("content-type", "application/json")
 					data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"` + fmt.Sprint(time.Now().Unix()) + `","qlkey":0,"Code":"` + code + `"}`).Bytes()
@@ -247,6 +248,9 @@ func initLogin() {
 							}
 						}
 					} else {
+						if strings.Contains(message, "验证码输入错误") {
+							goto aaa带带弟弟
+						}
 						s.Reply(message + "。")
 						// if message != "" {
 						// 	s.Reply("不好意思，刚搞错了还没成功，因为" + message + "。")
