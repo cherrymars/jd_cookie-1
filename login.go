@@ -185,7 +185,7 @@ func initLogin() {
 								return
 							}
 						} else {
-							s.Reply("请先完成找成语小游戏：" + addr + "/Captcha/" + phone)
+							s.Reply("请先完成找成语小游戏：" + addr + "?id=" + phone)
 							for {
 								time.Sleep(time.Second)
 								req = httplib.Get(addr + "/api/GetVerifyCaptchabyPhone?Phone=" + phone)
