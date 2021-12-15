@@ -185,7 +185,21 @@ func initLogin() {
 								return
 							}
 						} else {
-							s.Reply("请先去完成找成语小游戏：" + addr + "/Captcha/" + phone)
+							s.Reply("请先完成找成语小游戏：" + addr + "/Captcha/" + phone)
+							for {
+								time.Sleep(time.Second)
+								req = httplib.Post(addr + "/api/GetVerifyCaptchabyPhone?Phone=" + phone)
+								req.Header("Proxy-Connection", "keep-alive")
+								req.Header("accept", "application/json")
+								req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
+								req.Header("content-type", "application/json")
+								req.Header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+								data, _ := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
+								status, _ := jsonparser.GetInt(data, "data", "status")
+								if status != 666 {
+									break
+								}
+							}
 						}
 					}
 					s.Reply("请输入6位验证码：")
