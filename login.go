@@ -185,8 +185,7 @@ func initLogin() {
 								return
 							}
 						} else {
-							s.Reply(string(data))
-							s.Reply(message)
+							s.Reply("请先去完成找成语小游戏：" + addr + "/Captcha/" + phone)
 						}
 					}
 					s.Reply("请输入6位验证码：")
