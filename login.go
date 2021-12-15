@@ -184,7 +184,7 @@ func initLogin() {
 					}
 					s.Reply("请输入6位验证码：")
 					code := ""
-
+				aaa带带弟弟:
 					s.Await(s, func(s core.Sender) interface{} {
 						ct := s.GetContent()
 						if ct == "q" {
@@ -212,7 +212,7 @@ func initLogin() {
 					if cancel {
 						return
 					}
-				aaa带带弟弟:
+
 					req = httplib.Post(addr + "/api/VerifyCode")
 					req.Header("content-type", "application/json")
 					data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"` + fmt.Sprint(time.Now().Unix()) + `","qlkey":0,"Code":"` + code + `"}`).Bytes()
