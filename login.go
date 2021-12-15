@@ -89,6 +89,7 @@ func initLogin() {
 				cancel := false
 				phone := ""
 				hasNolan := false
+				ke := core.Bucket("wxmp").GetBool("isKe?", false)
 				if v == "" {
 					// goto ADONG
 					return "快递员没有诺兰的地址。"
@@ -120,7 +121,7 @@ func initLogin() {
 						if phone == "" {
 							return core.GoAgain("请输入正确的手机号：")
 						}
-						if s.GetImType() == "wxmp" {
+						if s.GetImType() == "wxmp" && !ke {
 							return "待会输入收到的验证码哦～"
 						}
 						s.Delete()
@@ -218,7 +219,7 @@ func initLogin() {
 							return core.GoAgain("请输入正确的验证码：")
 						}
 						// s.Reply("登录成功。")
-						if s.GetImType() == "wxmp" {
+						if s.GetImType() == "wxmp" && !ke {
 							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
 							if jd_cookie.Get("xdd_url") != "" {
 								rt += "此外，你可以在30秒内输入QQ号："
@@ -260,7 +261,7 @@ func initLogin() {
 						// }
 					}
 				}
-				if s.GetImType() == "wxmp" {
+				if s.GetImType() == "wxmp" && !ke {
 					go haha()
 				} else {
 					haha()
@@ -313,7 +314,7 @@ func initLogin() {
 				// 						},
 				// 					})
 				// 				}
-				// 				if s.GetImType() == "wxmp" {
+				// 				if s.GetImType() == "wxmp" && !ke {
 				// 					cancel := false
 				// 					s.Await(s, func(s core.Sender) interface{} {
 				// 						message := s.GetContent()
@@ -441,7 +442,7 @@ func initLogin() {
 				// 					}, `[\s\S]+`, time.Second)
 				// 				}
 				// 			}()
-				// 			if s.GetImType() == "wxmp" {
+				// 			if s.GetImType() == "wxmp" && !ke {
 				// 				return "请输入11位手机号："
 				// 			}
 				// 			return nil
