@@ -136,7 +136,7 @@ func initLogin() {
 					if cancel {
 						return
 					}
-					// s.Reply("请输入6位验证码：")
+					s.Reply("请稍等片刻...")
 					req := httplib.Post(addr + "/api/SendSMS")
 					req.Header("content-type", "application/json")
 					data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
@@ -146,40 +146,45 @@ func initLogin() {
 					}
 					message, _ := jsonparser.GetString(data, "message")
 					success, _ := jsonparser.GetBoolean(data, "success")
+					captcha, _ := jsonparser.GetInt(data, "captcha")
 					status, _ := jsonparser.GetInt(data, "data", "status")
 					if message != "" && status != 666 {
 						s.Reply(message)
 					}
 					i := 1
 					if !success && status == 666 {
-						s.Reply("正在进行滑块验证...")
-						for {
-							req = httplib.Post(addr + "/api/AutoCaptcha")
-							req.Header("content-type", "application/json")
-							data, err := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
-							if err != nil {
-								s.Reply(err)
+						if captcha == 1 {
+							s.Reply("正在进行滑块验证...")
+							for {
+								req = httplib.Post(addr + "/api/AutoCaptcha")
+								req.Header("content-type", "application/json")
+								data, err := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
+								if err != nil {
+									s.Reply(err)
+									return
+								}
+								message, _ := jsonparser.GetString(data, "message")
+								success, _ := jsonparser.GetBoolean(data, "success")
+								status, _ := jsonparser.GetInt(data, "data", "status")
+								// if message != "" {
+								// 	s.Reply()
+								// }
+								if !success {
+									s.Reply("滑块验证失败：" + string(data))
+								}
+								if status == 666 {
+									i++
+									s.Reply(fmt.Sprintf("正在进行第%d次滑块验证...", i))
+									continue
+								}
+								if success {
+									break
+								}
+								s.Reply(message)
 								return
 							}
-							message, _ := jsonparser.GetString(data, "message")
-							success, _ := jsonparser.GetBoolean(data, "success")
-							status, _ := jsonparser.GetInt(data, "data", "status")
-							// if message != "" {
-							// 	s.Reply()
-							// }
-							if !success {
-								s.Reply("滑块验证失败：" + string(data))
-							}
-							if status == 666 {
-								i++
-								s.Reply(fmt.Sprintf("正在进行第%d次滑块验证...", i))
-								continue
-							}
-							if success {
-								break
-							}
+						} else {
 							s.Reply(message)
-							return
 						}
 					}
 					s.Reply("请输入6位验证码：")
@@ -205,7 +210,6 @@ func initLogin() {
 						}
 						return nil
 					}, time.Second*60, func(_ error) {
-
 						s.Reply(jd_cookie.Get("nolan_timeout", "叼毛，你超时啦～"))
 						cancel = true
 					})
