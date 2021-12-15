@@ -133,7 +133,11 @@ func initLogin() {
 					}
 					s.Reply("请稍等片刻...")
 					req := httplib.Post(addr + "/api/SendSMS")
+					req.Header("Proxy-Connection", "keep-alive")
+					req.Header("accept", "application/json")
+					req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
 					req.Header("content-type", "application/json")
+					req.Header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
 					data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
 					if err != nil {
 						s.Reply(err)
@@ -152,7 +156,11 @@ func initLogin() {
 							s.Reply("正在进行滑块验证...")
 							for {
 								req = httplib.Post(addr + "/api/AutoCaptcha")
+								req.Header("Proxy-Connection", "keep-alive")
+								req.Header("accept", "application/json")
+								req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
 								req.Header("content-type", "application/json")
+								req.Header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
 								data, err := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
 								if err != nil {
 									s.Reply(err)
