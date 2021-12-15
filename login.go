@@ -187,6 +187,7 @@ func initLogin() {
 								return
 							}
 						} else {
+							s.Reply(string(data))
 							s.Reply(message)
 						}
 					}
