@@ -92,29 +92,24 @@ func initLogin() {
 
 				cancel := false
 				phone := ""
+				hasNolan := false
 				if v == "" {
-					// return "若兰很忙，请稍后再试。"
 					goto ADONG
 				}
-				// if len(addrs) == 0 {
-				// if s.IsAdmin() {
-				// 	return "建议了解下若兰。"
-				// } else {
-				// 	return jd_cookie.Get("tip", "暂时无法使用短信登录。")
-				// }
-
-				// }
 				for _, addr = range addrs {
 					addr = regexp.MustCompile(`^(https?://[-\.\w]+:?\d*)`).FindString(addr)
 					if addr != "" {
 						data, _ := httplib.Get(addr + "/api/Config").Bytes()
 						tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
 						if tabcount != 0 {
+							hasNolan = true
 							break
 						}
 					}
 				}
-
+				if !hasNolan == true {
+					goto ADONG
+				}
 				s.Reply(jd_cookie.Get("nolan_first", "若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)"))
 				haha = func() {
 					s.Await(s, func(s core.Sender) interface{} {
