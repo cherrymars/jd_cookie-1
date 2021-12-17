@@ -883,6 +883,7 @@ func getJingBeanBalanceDetail(page int, cookie string) []BeanDetail {
 	req.Header("Host", "api.m.jd.com")
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
 	req.Header("Cookie", cookie)
+	req.SetTimeout(time.Second, time.Second)
 	req.Body(fmt.Sprintf(`body={"pageSize": "20", "page": "%d"}&appid=ld`, page))
 	data, err := req.Bytes()
 	if err != nil {
@@ -933,6 +934,7 @@ func redPacket(cookie string, rpc chan []RedList) {
 	req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://st.jingxi.com/my/redpacket.shtml?newPg=App")
 	req.Header("Cookie", cookie)
+	req.SetTimeout(time.Second, time.Second)
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
 	rpc <- a.Data.UseRedInfo.RedList
@@ -1088,6 +1090,7 @@ func initFarm(cookie string, state chan string) {
 	req.Header("sec-fetch-site", "same-site")
 	req.Header("User-Agent", ua())
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
+	req.SetTimeout(time.Second, time.Second)
 	req.Body(`body={"version":4}&appid=wh5&clientVersion=9.1.0`)
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
@@ -1190,6 +1193,7 @@ func initPetTown(cookie string, state chan string) {
 	req.Header("User-Agent", ua())
 	req.Header("cookie", cookie)
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
+	req.SetTimeout(time.Second, time.Second)
 	req.Body(`body={}&appid=wh5&loginWQBiz=pet-town&clientVersion=9.0.4`)
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
@@ -1268,6 +1272,7 @@ func jsGold(cookie string, state chan int64) { //
 	req.Header("Connection", "keep-alive")
 	req.Header("User-Agent", ua())
 	req.Header("Referer", "https://gold.jd.com/")
+	req.SetTimeout(time.Second, time.Second)
 	req.Body(`functionId=MyAssetsService.execute&body={"method":"goldShopPage","data":{"channel":1}}&_t=` + fmt.Sprint(time.Now().Unix()) + `&appid=market-task-h5;`)
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
@@ -1285,6 +1290,7 @@ func jxncEgg(cookie string, state chan int64) {
 	req.Header("Accept-Language", "zh-cn")
 	req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://st.jingxi.com/pingou/jxmc/index.html?nativeConfig=%7B%22immersion%22%3A1%2C%22toColor%22%3A%22%23e62e0f%22%7D&;__mcwvt=sjcp&ptag=7155.9.95")
+	req.SetTimeout(time.Second, time.Second)
 	req.Header("Cookie", cookie)
 	data, _ := req.Bytes()
 
@@ -1382,6 +1388,7 @@ func tytCoupon(cookie string, state chan string) {
 
 	req.Header("User-Agent", ua())
 	req.Header("Referer", "https://st.jingxi.com/my/coupon/jx.shtml?sceneval=2&ptag=7155.1.18")
+	req.SetTimeout(time.Second, time.Second)
 	data, _ := req.Bytes()
 	res := regexp.MustCompile(`jsonpCBKB[(](.*)\s+[)];}catch`).FindSubmatch(data)
 	rt := ""
@@ -1421,6 +1428,7 @@ func mmCoin(cookie string, state chan int64) {
 	req.Header("User-Agent", ua())
 	req.Header("cookie", cookie)
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
+	req.SetTimeout(time.Second, time.Second)
 	req.Body(`uuid=3245ad3d16ab2153c69f9ca91cd2e931b06a3bb8&clientVersion=10.1.0&client=wh5&osVersion=&area=&networkType=wifi&functionId=homePageV2&body=%7B%7D&appid=SecKill2020`)
 	data, _ := req.Bytes()
 	mmc, _ := jsonparser.GetInt(data, "result", "assignment", "assignmentPoints")
@@ -1436,6 +1444,7 @@ func jdzz(cookie string, state chan int64) { //
 	req.Header("User-Agent", ua())
 	req.Header("cookie", cookie)
 	req.Header("Content-Type", "application/json")
+	req.SetTimeout(time.Second, time.Second)
 	data, _ := req.Bytes()
 	mmc, _ := jsonparser.GetString(data, "data", "totalNum")
 	state <- int64(Int(mmc))
@@ -1457,6 +1466,7 @@ func (ck *JdCookie) Available() bool {
 	req.Header("Referer", "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&")
 	req.Header("Host", "me-api.jd.com")
 	req.Header("User-Agent", ua())
+	req.SetTimeout(time.Second, time.Second)
 	data, err := req.Bytes()
 	if err != nil {
 		return av2(ck)
@@ -1500,6 +1510,7 @@ func av2(ck *JdCookie) bool {
 	req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://st.jingxi.com/my/userinfo.html?&ptag=7205.12.4")
 	req.Header("Cookie", "pt_key="+ck.PtKey+";pt_pin="+ck.PtPin+";")
+	req.SetTimeout(time.Second, time.Second)
 	data, err := req.Bytes()
 	if err != nil {
 		return true
@@ -1517,6 +1528,7 @@ func av3(ck *JdCookie) bool {
 	req.Header("Accept-Language", "zh-cn")
 	req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&")
+	req.SetTimeout(time.Second, time.Second)
 	req.Header("Cookie", "pt_key="+ck.PtKey+";pt_pin="+ck.PtPin+";")
 	data, err := req.Bytes()
 	if err != nil {
@@ -1753,6 +1765,7 @@ func queryuserjingdoudetail(cookie string, e下水道 chan []int) {
 	req.Header("Referer", "https://st.jingxi.com/sns/202105/31/xi_bean/index.html?nativeConfig=%7B%22immersion%22%3A%221%22%2C%20%22layoutUnderNavi%22%3A%220%22%2C%20%22showTitle%22%3A%221%22%2C%20%22toColor%22%3A%20%22%23f84b3b%22%7D")
 	req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Cookie", cookie)
+	req.SetTimeout(time.Second, time.Second)
 	data, err := req.Bytes()
 	if err != nil {
 		return
@@ -1935,7 +1948,7 @@ func dream(cookie string, state chan string) {
 	req.Header("Accept-Language", "zh-cn")
 	req.Header("Referer", "https://st.jingxi.com/pingou/dream_factory/index.html?ptag=7155.9.46")
 	req.Header("Accept-Encoding", "gzip, deflate, br")
-
+	req.SetTimeout(time.Second, time.Second)
 	data, _ := req.Bytes()
 	a := &AutoGenerated{}
 	json.Unmarshal(data, a)

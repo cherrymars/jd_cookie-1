@@ -191,7 +191,7 @@ func initLogin() {
 							s.Reply("请先完成找成语小游戏：" + addr + "?id=" + phone)
 							for {
 								time.Sleep(time.Second)
-								req = httplib.Get(addr + "/api/GetVerifyCaptchabyPhone?Phone=" + phone)
+								req = httplib.Get(addr + "/Captcha/" + phone)
 								req.Header("Proxy-Connection", "keep-alive")
 								req.Header("accept", "application/json")
 								req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
