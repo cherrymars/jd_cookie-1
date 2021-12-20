@@ -77,7 +77,6 @@ func initNotify() {
 	})
 	go func() {
 		for {
-			time.Sleep(time.Second * 2)
 			envs, _ := qinglong.GetEnvs("JD_COOKIE")
 			for _, env := range envs {
 				if env.Status != 0 {
@@ -96,6 +95,7 @@ func initNotify() {
 					}
 				}
 			}
+			time.Sleep(time.Hour)
 		}
 	}()
 	core.AddCommand("", []core.Function{
