@@ -19,6 +19,7 @@ type JdNotify struct {
 	Note         string
 	PtKey        string
 	AssetCron    string
+	PushPlus     string
 }
 
 var cc *cron.Cron
@@ -219,10 +220,10 @@ func initNotify() {
 					} else {
 						ask += "6. 修改资产推送时间\n"
 					}
-					ask += "7. 解绑当前账号\n8. 退出当前会话"
+					ask += "7. 解绑当前账号\n8. 设置微信push+通知(推荐)\n8. 退出当前会话"
 					s.Reply(ask)
 					rt := s.Await(s, func(s core.Sender) interface{} {
-						return core.Range([]int{1, 8})
+						return core.Range([]int{1, 9})
 					}, time.Second*20)
 					switch rt.(type) {
 					case nil:
@@ -270,6 +271,9 @@ func initNotify() {
 							pin.Set(pt_pin, "")
 							return "解绑成功，会话结束。"
 						case 8:
+							s.Reply("请输入push+推送key：(前往获取https://www.pushplus.plus/)")
+							jn.PushPlus = s.Await(s, nil).(string)
+						case 9:
 							return "已退出会话。"
 						}
 					}
