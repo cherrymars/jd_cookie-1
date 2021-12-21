@@ -1563,23 +1563,13 @@ func jingxiangzhi(cookie string, e下水道 chan string) {
 		Ret    int           `json:"ret"`
 		Retmsg string        `json:"retmsg"`
 	}
-	req := httplib.Get(`https://api.m.jd.com/client.action?functionId=pg_channel_page_data&body=%257B%2522v%2522%253A%252212.2%2522%252C%2522paramData%2522%253A%257B%2522token%2522%253A%2522a243ca12-6642-4754-bc5e-0ff012681710%2522%252C%2522lid%2522%253A%2522Gv8zAj0mnx9iiLgIWfwBEA%253D%253D%2522%252C%2522priceChannel%2522%253A2%252C%2522device%2522%253A4%257D%252C%2522argMap%2522%253A%257B%2522channel%2522%253A%2522M%2522%257D%257D&uuid=&appid=vipChannelHome&ext=&t=` + fmt.Sprint(time.Now().Unix()))
+	req := httplib.Get(`https://wxapp.m.jd.com/kwxhome/myJd/home.json?&useGuideModule=0&bizId=&brandId=&fromType=wxapp&timestamp=` + fmt.Sprint(time.Now().Unix()))
 	req.Header("User-Agent", ua())
 	req.Header("Cookie", cookie)
-	req.Header("authority", "api.m.jd.com")
-	req.Header("accept", "*/*")
-	req.Header("sec-fetch-site", "same-site")
-	req.Header("sec-fetch-mode", "no-cors")
-	req.Header("sec-fetch-dest", "script")
-	req.Header("referer", "https://huiyuan.m.jd.com/")
-	req.Header("accept-language", "zh-CN,zh;q=0.9,en;q=0.8")
-	data, _ := req.String()
-	res := regexp.MustCompile(`"score":(\d+),`).FindStringSubmatch(data)
-	e叼毛 := ""
+	data, _ := req.Bytes()
+	e叼毛, _ := jsonparser.GetString(data, "user", "uclass")
+	e叼毛 = strings.Replace(e叼毛, "京享值", "", -1)
 
-	if len(res) > 0 {
-		e叼毛 = res[1]
-	}
 	e下水道 <- e叼毛 //叼毛去下水道
 }
 
