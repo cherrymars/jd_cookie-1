@@ -1199,8 +1199,14 @@ func mmCoin(cookie string, state chan int64) {
 
 func jdzz(cookie string, state chan int64) { //
 	req := httplib.Post(`https://api.m.jd.com/client.action?functionId=interactTaskIndex&body={}&client=wh5&clientVersion=9.1.0`)
-	req.Header("user-agent", ua())
+	req.Header("Host", "api.m.jd.com")
+	req.Header("Accept-Language", "zh-cn")
+	req.Header("Accept-Encoding", "gzip, deflate, br")
+	req.Header("Referer", "http://wq.jd.com/wxapp/pages/hd-interaction/index/index")
+	req.Header("User-Agent", ua())
 	req.Header("cookie", cookie)
+	req.Header("Content-Type", "application/json")
+
 	data, _ := req.Bytes()
 	mmc, _ := jsonparser.GetString(data, "data", "totalNum")
 	state <- int64(Int(mmc))
