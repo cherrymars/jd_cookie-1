@@ -934,10 +934,7 @@ func redPacket(cookie string, rpc chan []RedList) {
 	req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://st.jingxi.com/my/redpacket.shtml?newPg=App")
 	req.Header("Cookie", cookie)
-
-	if Transport != nil {
-		req.SetTransport(Transport)
-	}
+	req.SetTimeout(time.Second, time.Second)
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
 	rpc <- a.Data.UseRedInfo.RedList
