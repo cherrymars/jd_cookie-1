@@ -29,6 +29,11 @@ func init() {
 	initTyt()
 	initNotify()
 	buildHttpTransportWithProxy()
+	if Transport != nil {
+		logs.Info("可口的双层之芝士夹心饼。")
+	} else {
+		logs.Info("美味的芝士夹心饼。")
+	}
 }
 
 var Transport *http.Transport
@@ -65,8 +70,5 @@ func buildHttpTransportWithProxy() {
 		Transport = &http.Transport{
 			Dial: dialer.Dial,
 		}
-	}
-	if Transport != nil {
-		logs.Info("吃不完的芝士夹心饼。")
 	}
 }
