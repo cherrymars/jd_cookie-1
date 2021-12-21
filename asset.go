@@ -1093,7 +1093,6 @@ func initFarm(cookie string, state chan string) {
 	req.Header("sec-fetch-site", "same-site")
 	req.Header("User-Agent", ua())
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
-
 	if Transport != nil {
 		req.SetTransport(Transport)
 	}
@@ -1201,6 +1200,9 @@ func initPetTown(cookie string, state chan string) {
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
 
 	req.Body(`body={}&appid=wh5&loginWQBiz=pet-town&clientVersion=9.0.4`)
+	if Transport != nil {
+		req.SetTransport(Transport)
+	}
 	data, _ := req.Bytes()
 	json.Unmarshal(data, &a)
 	rt := ""
