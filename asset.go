@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/beego/beego/v2/client/httplib"
-	"github.com/beego/beego/v2/core/logs"
 	"github.com/buger/jsonparser"
 	"github.com/cdle/sillyGirl/core"
 	"github.com/cdle/sillyGirl/develop/qinglong"
@@ -1095,7 +1094,6 @@ func initFarm(cookie string, state chan string) {
 	req.Header("User-Agent", ua())
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
 	if Transport != nil {
-		logs.Info("农场...")
 		req.SetTransport(Transport)
 	}
 	req.Body(`body={"version":4}&appid=wh5&clientVersion=9.1.0`)
