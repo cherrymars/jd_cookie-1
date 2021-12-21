@@ -246,16 +246,18 @@ func initLogin() {
 						successLogin = true
 						s.Reply("登录成功。")
 						pt_pin := core.FetchCookieValue(string(data), "pt_pin")
-						s = s.Copy()
-						s.SetContent(string(data))
-						core.Senders <- s
+						pt_key := core.FetchCookieValue(string(data), "pt_key")
+						core.Senders <- &core.Faker{
+							Message: string(data),
+						}
 						ad := jd_cookie.Get("ad")
 						if ad != "" {
 							s.Reply(ad)
 						}
 						time.Sleep(time.Second)
 						jn := &JdNotify{
-							ID: pt_pin,
+							ID:    pt_pin,
+							PtKey: pt_key,
 						}
 						jdNotify.First(jn)
 						if jn.PushPlus == "" {

@@ -172,8 +172,8 @@ func initSubmit() {
 			Rules:   []string{`raw pt_key=([^;=\s]+);\s*pt_pin=([^;=\s]+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
-				// s.Reply(s.Delete())
-				// s.Disappear(time.Second * 20)
+				s.Reply(s.Delete())
+				s.Disappear(time.Second * 20)
 				for _, v := range s.GetAllMatch() {
 					ck := &JdCookie{
 						PtKey: v[0],
