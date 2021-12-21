@@ -231,7 +231,7 @@ func initLogin() {
 						}
 						return nil
 					}, time.Second*60, func(_ error) {
-						s.Reply(jd_cookie.Get("nolan_timeout", "叼毛，你超时啦～"))
+						s.Reply(jd_cookie.Get("nolan_timeout", "兄贵，你超时啦～"))
 						cancel = true
 					})
 					if cancel {
