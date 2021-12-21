@@ -309,7 +309,7 @@ func initNotify() {
 							req.Header("Cookie", ck)
 							data, _ = req.Bytes()
 							jn.PushPlus, _ = jsonparser.GetString(data, "data")
-							pushpluspush("账号绑定成功", GetAsset(&JdCookie{
+							go pushpluspush("账号绑定成功", GetAsset(&JdCookie{
 								PtPin: jn.ID,
 								PtKey: jn.PtKey,
 							}), jn.PushPlus)
