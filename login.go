@@ -244,13 +244,86 @@ func initLogin() {
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
 						successLogin = true
-						s.Reply("登录成功，你可以对我说“账号管理”实现微信资产推送等功能。")
+						s.Reply("登录成功。")
+						pt_pin := core.FetchCookieValue(string(data), "pt_pin")
 						s = s.Copy()
 						s.SetContent(string(data))
 						core.Senders <- s
 						ad := jd_cookie.Get("ad")
 						if ad != "" {
 							s.Reply(ad)
+						}
+						time.Sleep(time.Second)
+						jn := &JdNotify{
+							ID: pt_pin,
+						}
+						jdNotify.First(jn)
+						if jn.PushPlus == "" {
+							s.Reply("是否订阅微信推送消息通知？(请在30s内回复”是“或”否“)")
+							switch s.Await(s, func(s core.Sender) interface{} {
+								return core.Switch{"是", "否"}
+							}) {
+							case "是":
+								if jn.AssetCron == "" {
+									rt := ""
+									for {
+										s.Reply("请输入资产推送时间(格式00:00:00，对应时、分、秒):")
+										rt = s.Await(s, nil).(string)
+										_, err := time.ParseInLocation("2006-01-02 15:04:05", time.Now().Format("2006-01-02"+" ")+rt, time.Local)
+										if err == nil {
+											break
+										}
+									}
+									dd := strings.Split(rt, ":")
+									jn.AssetCron = fmt.Sprintf("%s %s %s * * *", dd[2], dd[1], dd[0])
+									if rid, ok := ccc[jn.ID]; ok {
+										cc.Remove(rid)
+										if rid, err := cc.AddFunc(jn.AssetCron, func() {
+											assetPush(jn.ID)
+										}); err == nil {
+											ccc[jn.ID] = rid
+										} else {
+											return
+										}
+									}
+								}
+								data, _ := httplib.Get("https://www.pushplus.plus/api/common/wechat/getQrcode").Bytes()
+								qrCodeUrl, _ := jsonparser.GetString(data, "data", "qrCodeUrl")
+								qrCode, _ := jsonparser.GetString(data, "data", "qrCode")
+								if qrCodeUrl == "" {
+									s.Reply("嗝屁了。")
+									return
+								}
+								s.Reply("请在30秒内打开微信扫描二维码关注公众号：\n" + core.ToImage(qrCodeUrl))
+								ck := ""
+								n := time.Now()
+								for {
+									if n.Add(time.Second * 30).Before(time.Now()) {
+										s.Reply("扫码超时。")
+										return
+									}
+									time.Sleep(time.Second)
+									rsp, err := httplib.Get("https://www.pushplus.plus/api/common/wechat/confirmLogin?key=" + qrCode + "&code=1001").Response()
+									if err != nil {
+										continue
+									}
+									ck = rsp.Header.Get("Set-Cookie")
+									if ck != "" {
+										fmt.Println(ck)
+										break
+									}
+								}
+								req := httplib.Get("https://www.pushplus.plus/api/customer/user/token")
+								req.Header("Cookie", ck)
+								data, _ = req.Bytes()
+								jn.PushPlus, _ = jsonparser.GetString(data, "data")
+								s.Reply("扫码成功，请关注公号，我将尝试为你推送资产信息。")
+								pushpluspush("资产推送通知", GetAsset(&JdCookie{
+									PtPin: jn.ID,
+									PtKey: jn.PtKey,
+								}), jn.PushPlus)
+								s.Reply("推送完成，祝您生活愉快！！！")
+							}
 						}
 					} else {
 						if strings.Contains(message, "验证码输入错误") {
