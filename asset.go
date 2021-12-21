@@ -1220,13 +1220,15 @@ func (ck *JdCookie) Available() bool {
 	if ck == nil {
 		return true
 	}
-	req := httplib.Get("https://me-api.jd.com/user_new/info/GetJDUserInfoUnion")
+	req := httplib.Get("https://me-api.jd.com/user_new/info/GetJDUserInfoUnion?orgFlag=JD_PinGou_New&callSource=mainorder&channel=4&isHomewhite=0&sceneval=2&_=" + fmt.Sprint(time.Now().Unix()) + "&sceneval=2&g_login_type=1&g_ty=ls")
 	req.Header("Cookie", cookie)
-	req.Header("Accept", "*/*")
-	req.Header("Accept-Language", "zh-cn,")
-	req.Header("Connection", "keep-alive,")
-	req.Header("Referer", "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&")
-	req.Header("Host", "me-api.jd.com")
+	req.Header("authority", "me-api.jd.com")
+	req.Header("accept", "*/*")
+	req.Header("sec-fetch-site", "same-site")
+	req.Header("sec-fetch-mode", "no-cors")
+	req.Header("sec-fetch-dest", "script")
+	req.Header("referer", "https://home.m.jd.com/")
+	req.Header("accept-language", "zh-CN,zh;q=0.9,en;q=0.8")
 	req.Header("User-Agent", ua())
 
 	data, err := req.Bytes()
