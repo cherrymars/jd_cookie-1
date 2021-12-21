@@ -257,8 +257,8 @@ func initSubmit() {
 			Rules:   []string{`raw pin=([^;=\s]+);\s*wskey=([^;=\s]+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
-				s.Reply(s.Delete())
-				s.Disappear(time.Second * 20)
+				// s.Reply(s.Delete())
+				// s.Disappear(time.Second * 20)
 				value := fmt.Sprintf("pin=%s;wskey=%s;", s.Get(0), s.Get(1))
 
 				pt_key, err := getKey(value)
