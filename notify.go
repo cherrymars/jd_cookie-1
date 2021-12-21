@@ -396,7 +396,7 @@ func (ck *JdCookie) QueryAsset() string {
 		go tytCoupon(cookie, tyt)
 		go mmCoin(cookie, mmc)
 		go jdzz(cookie, zjb)
-		msgs = append(msgs, fmt.Sprintf("京享分数：%v", jxz))
+		msgs = append(msgs, fmt.Sprintf("京享分数：%v", <-jxz))
 		today := time.Now().Local().Format("2006-01-02")
 		yestoday := time.Now().Local().Add(-time.Hour * 24).Format("2006-01-02")
 		page := 1
