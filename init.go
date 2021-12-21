@@ -66,4 +66,7 @@ func buildHttpTransportWithProxy() {
 			Dial: dialer.Dial,
 		}
 	}
+	if Transport != nil {
+		logs.Info("芝士夹心饼已启用。")
+	}
 }
