@@ -67,6 +67,6 @@ func buildHttpTransportWithProxy() {
 		}
 	}
 	if Transport != nil {
-		logs.Info("芝士夹心饼已启用。")
+		logs.Info("吃不完的芝士夹心饼。")
 	}
 }
