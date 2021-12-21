@@ -398,7 +398,7 @@ func (ck *JdCookie) QueryAsset() string {
 		go mmCoin(cookie, mmc)
 		go jdzz(cookie, zjb)
 		go jingtie(cookie, jrjt)
-		msgs = append(msgs, fmt.Sprintf("京享分值：%v", <-jxz))
+		msgs = append(msgs, fmt.Sprintf("京享值：%v", <-jxz))
 		today := time.Now().Local().Format("2006-01-02")
 		yestoday := time.Now().Local().Add(-time.Hour * 24).Format("2006-01-02")
 		page := 1
