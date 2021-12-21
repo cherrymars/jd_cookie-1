@@ -244,7 +244,7 @@ func initLogin() {
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
 						successLogin = true
-						s.Reply("登录成功。")
+						s.Reply("登录成功，你可以对我说“账号管理”实现微信资产推送等功能。")
 						s = s.Copy()
 						s.SetContent(string(data))
 						core.Senders <- s
