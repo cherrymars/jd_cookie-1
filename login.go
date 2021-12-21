@@ -266,13 +266,14 @@ func initLogin() {
 							case "是":
 								if jn.AssetCron == "" {
 									rt := ""
+									s.Reply("请先输入资产推送时间(格式00:00:00，对应时、分、秒):")
 									for {
-										s.Reply("请输入资产推送时间(格式00:00:00，对应时、分、秒):")
 										rt = s.Await(s, nil).(string)
 										_, err := time.ParseInLocation("2006-01-02 15:04:05", time.Now().Format("2006-01-02"+" ")+rt, time.Local)
 										if err == nil {
 											break
 										}
+										s.Reply("格式错误请重新输入资产推送时间(格式00:00:00，对应时、分、秒):")
 									}
 									dd := strings.Split(rt, ":")
 									jn.AssetCron = fmt.Sprintf("%s %s %s * * *", dd[2], dd[1], dd[0])
