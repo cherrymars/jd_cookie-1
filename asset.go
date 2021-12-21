@@ -1199,7 +1199,7 @@ func mmCoin(cookie string, state chan int64) {
 
 func jdzz(cookie string, state chan int64) { //
 	req := httplib.Post(`https://api.m.jd.com/client.action?functionId=interactTaskIndex&body={}&client=wh5&clientVersion=9.1.0`)
-	req.Header("User-Agent", ua())
+	req.Header("user-agent", ua())
 	req.Header("cookie", cookie)
 	data, _ := req.Bytes()
 	mmc, _ := jsonparser.GetString(data, "data", "totalNum")
