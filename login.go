@@ -137,6 +137,7 @@ func initLogin() {
 					req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
 					req.Header("content-type", "application/json")
 					req.Header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+					req.SetTimeout(time.Second*60, time.Second*60)
 					data, err := req.Body(`{"Phone":"` + phone + `","qlkey":0}`).Bytes()
 					if err != nil {
 						s.Reply(err)
@@ -160,6 +161,7 @@ func initLogin() {
 								req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
 								req.Header("content-type", "application/json")
 								req.Header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+								req.SetTimeout(time.Second*60, time.Second*60)
 								data, err := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
 								if err != nil {
 									s.Reply(err)
@@ -197,6 +199,7 @@ func initLogin() {
 								req.Header("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.93 Safari/537.36")
 								req.Header("content-type", "application/json")
 								req.Header("Accept-Language", "zh-CN,zh;q=0.9,en;q=0.8")
+								req.SetTimeout(time.Second*60, time.Second*60)
 								data, _ := req.Body(`{"Phone":"` + phone + `"}`).Bytes()
 								status, _ := jsonparser.GetInt(data, "data", "status")
 								if status != 666 {
@@ -237,6 +240,7 @@ func initLogin() {
 					req = httplib.Post(addr + "/api/VerifyCode")
 					req.Header("content-type", "application/json")
 					data, _ = req.Body(`{"Phone":"` + phone + `","QQ":"` + fmt.Sprint(time.Now().Unix()) + `","qlkey":0,"Code":"` + code + `"}`).Bytes()
+					req.SetTimeout(time.Second*60, time.Second*60)
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
 						successLogin = true
