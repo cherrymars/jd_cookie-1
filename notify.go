@@ -385,6 +385,7 @@ func (ck *JdCookie) QueryAsset() string {
 		var zjb = make(chan int64)
 		var xdm = make(chan []int)
 		var jxz = make(chan string)
+		var jrjt = make(chan string)
 		go jingxiangzhi(cookie, jxz)
 		go queryuserjingdoudetail(cookie, xdm)
 		go dream(cookie, dm)
@@ -396,7 +397,8 @@ func (ck *JdCookie) QueryAsset() string {
 		go tytCoupon(cookie, tyt)
 		go mmCoin(cookie, mmc)
 		go jdzz(cookie, zjb)
-		msgs = append(msgs, fmt.Sprintf("京享分数：%v", <-jxz))
+		go jingtie(cookie, jrjt)
+		msgs = append(msgs, fmt.Sprintf("京享分值：%v", <-jxz))
 		today := time.Now().Local().Format("2006-01-02")
 		yestoday := time.Now().Local().Add(-time.Hour * 24).Format("2006-01-02")
 		page := 1
@@ -551,6 +553,9 @@ func (ck *JdCookie) QueryAsset() string {
 		}
 		msgs = append(msgs, fmt.Sprintf("东东农场：%s", <-fruit))
 		msgs = append(msgs, fmt.Sprintf("东东萌宠：%s", <-pet))
+
+		msgs = append(msgs, fmt.Sprintf("金融金贴：%s💰", <-jrjt))
+
 		gn := <-gold
 		// if gn >= 30000 {
 		msgs = append(msgs, fmt.Sprintf("极速金币：%d(≈%.2f元)💰", gn, float64(gn)/10000))
