@@ -34,7 +34,7 @@ func init() {
 var Transport *http.Transport
 
 func buildHttpTransportWithProxy() {
-	addr := jdNotify.Get("http_proxy")
+	addr := jd_cookie.Get("http_proxy")
 	if strings.Contains(addr, "http://") {
 		if addr != "" {
 			u, err := url.Parse(addr)
