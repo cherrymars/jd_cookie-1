@@ -554,7 +554,7 @@ func (ck *JdCookie) QueryAsset() string {
 		msgs = append(msgs, fmt.Sprintf("东东农场：%s", <-fruit))
 		msgs = append(msgs, fmt.Sprintf("东东萌宠：%s", <-pet))
 
-		msgs = append(msgs, fmt.Sprintf("金融金贴：%s💰", <-jrjt))
+		msgs = append(msgs, fmt.Sprintf("金融金贴：%s元💰", <-jrjt))
 
 		gn := <-gold
 		// if gn >= 30000 {
