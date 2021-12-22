@@ -174,7 +174,7 @@ func initLogin() {
 								// 	s.Reply()
 								// }
 								if !success {
-									s.Reply("滑块验证失败：" + string(data))
+									// s.Reply("滑块验证失败：" + string(data))
 								}
 								if status == 666 {
 									i++
