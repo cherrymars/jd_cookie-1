@@ -1143,7 +1143,7 @@ func tytCoupon(cookie string, state chan string) {
 	req := httplib.Get(`https://m.jingxi.com/activeapi/queryjdcouponlistwithfinance?state=1&wxadd=1&filterswitch=1&_=1629296270692&sceneval=2&g_login_type=1&callback=jsonpCBKB&g_ty=ls`)
 	// req.Header("Accept", "*/*")
 	req.Header("Connection", "keep-alive")
-	req.Header("Accept-Encoding", "gzip, deflate, br")
+	// req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Cookie", cookie)
 	req.Header("Content-Type", "application/x-www-form-urlencoded")
 	req.Header("Host", "m.jingxi.com")
