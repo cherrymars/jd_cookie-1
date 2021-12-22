@@ -322,6 +322,8 @@ func initLogin() {
 								req.Header("Cookie", ck)
 								data, _ = req.Bytes()
 								jn.PushPlus, _ = jsonparser.GetString(data, "data")
+								jn.LoginedAt = time.Now()
+								jdNotify.Create(jn)
 								s.Reply("扫码成功，请关注公号，我将尝试为你推送资产信息。")
 								time.Sleep(time.Second * 5)
 								pushpluspush("资产推送通知", GetAsset(&JdCookie{
@@ -329,7 +331,6 @@ func initLogin() {
 									PtKey: jn.PtKey,
 								}), jn.PushPlus)
 								s.Reply("推送完成，祝您生活愉快！！！")
-								jdNotify.Create(jn)
 							}
 						}
 					HELL:
