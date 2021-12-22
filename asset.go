@@ -1047,7 +1047,7 @@ func jxncEgg(cookie string, state chan int64) {
 	req := httplib.Get("https://m.jingxi.com/jxmc/queryservice/GetHomePageInfo?channel=7&sceneid=1001&activeid=null&activekey=null&isgift=1&isquerypicksite=1&_stk=activeid%2Cactivekey%2Cchannel%2Cisgift%2Cisquerypicksite%2Csceneid&_ste=1&h5st=20210818211830955%3B4408816258824161%3B10028%3Btk01w8db21b2130ny2eg0siAPpNQgBqjGzYfuG6IP7Z%2BAOB40BiqLQ%2Blglfi540AB%2FaQrTduHbnk61ngEeKn813gFeRD%3Bd9a0b833bf99a29ed726cbffa07ba955cc27d1ff7d2d55552878fc18fc667929&_=1629292710957&sceneval=2&g_login_type=1&g_ty=ls")
 	req.Header("User-Agent", ua())
 	req.Header("Host", "m.jingxi.com")
-	req.Header("Accept", "*/*")
+	// req.Header("Accept", "*/*")
 	req.Header("Connection", "keep-alive")
 	req.Header("Accept-Language", "zh-cn")
 	// req.Header("Accept-Encoding", "gzip, deflate, br")
