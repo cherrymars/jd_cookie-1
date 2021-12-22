@@ -270,7 +270,7 @@ func initLogin() {
 									res := s.Await(s, nil, time.Second*30)
 									if res == nil {
 										rt = time.Now().Add(time.Minute * 2).Format("15:04:05")
-										s.Reply(fmt.Sprintf("已为你设置随机推送时间(%s)，如需修改请请在“账号管理”中设置。", rt))
+										s.Reply(fmt.Sprintf("已自动为你设置随机推送时间(%s)，如需修改请请在“账号管理”中设置。", rt))
 									} else {
 										rt = res.(string)
 										_, err := time.ParseInLocation("2006-01-02 15:04:05", time.Now().Format("2006-01-02"+" ")+rt, time.Local)

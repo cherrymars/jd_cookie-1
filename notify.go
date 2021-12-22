@@ -387,6 +387,7 @@ func (ck *JdCookie) QueryAsset() string {
 		var xdm = make(chan []int)
 		var jxz = make(chan string)
 		var jrjt = make(chan string)
+		var sysp = make(chan string)
 		go jingxiangzhi(cookie, jxz)
 		go queryuserjingdoudetail(cookie, xdm)
 		go dream(cookie, dm)
@@ -399,6 +400,7 @@ func (ck *JdCookie) QueryAsset() string {
 		go mmCoin(cookie, mmc)
 		go jdzz(cookie, zjb)
 		go jingtie(cookie, jrjt)
+		go jdsy(cookie, sysp)
 		msgs = append(msgs, fmt.Sprintf("京享值：%v", <-jxz))
 		today := time.Now().Local().Format("2006-01-02")
 		yestoday := time.Now().Local().Add(-time.Hour * 24).Format("2006-01-02")
@@ -554,6 +556,8 @@ func (ck *JdCookie) QueryAsset() string {
 		}
 		msgs = append(msgs, fmt.Sprintf("东东农场：%s", <-fruit))
 		msgs = append(msgs, fmt.Sprintf("东东萌宠：%s", <-pet))
+
+		msgs = append(msgs, fmt.Sprintf("京东试用：%s", <-sysp))
 
 		msgs = append(msgs, fmt.Sprintf("金融金贴：%s元💰", <-jrjt))
 
