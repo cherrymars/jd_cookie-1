@@ -372,8 +372,8 @@ func (ck *JdCookie) QueryAsset() string {
 	}
 	asset := Asset{}
 	if ck.Available() {
-		msgs = append(msgs, fmt.Sprintf("用户等级：%v", ck.UserLevel))
-		msgs = append(msgs, fmt.Sprintf("等级名称：%v", ck.LevelName))
+		// msgs = append(msgs, fmt.Sprintf("用户等级：%v", ck.UserLevel))
+		// msgs = append(msgs, fmt.Sprintf("等级名称：%v", ck.LevelName))
 		cookie := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
 		var rpc = make(chan []RedList)
 		var fruit = make(chan string)
@@ -385,11 +385,11 @@ func (ck *JdCookie) QueryAsset() string {
 		var mmc = make(chan int64)
 		var zjb = make(chan int64)
 		var xdm = make(chan []int)
-		var jxz = make(chan string)
+		// var jxz = make(chan string)
 		var jrjt = make(chan string)
 		var sysp = make(chan string)
 		var wwjf = make(chan int)
-		go jingxiangzhi(cookie, jxz)
+		// go jingxiangzhi(cookie, jxz)
 		go queryuserjingdoudetail(cookie, xdm)
 		go dream(cookie, dm)
 		go redPacket(cookie, rpc)
@@ -403,7 +403,7 @@ func (ck *JdCookie) QueryAsset() string {
 		go jingtie(cookie, jrjt)
 		go jdsy(cookie, sysp)
 		go cwwjf(cookie, wwjf)
-		msgs = append(msgs, fmt.Sprintf("京享值：%v", <-jxz))
+		// msgs = append(msgs, fmt.Sprintf("京享值：%v", <-jxz))
 		today := time.Now().Local().Format("2006-01-02")
 		yestoday := time.Now().Local().Add(-time.Hour * 24).Format("2006-01-02")
 		page := 1
