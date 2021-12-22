@@ -1872,3 +1872,22 @@ func jdsy(cookie string, desc chan string) {
 	}
 	desc <- rt
 }
+
+func cwwjf(cookie string, desc chan int) {
+	req := httplib.Post("https://api.m.jd.com/api?appid=jdchoujiang_h5&functionId=giftGetBeanConfigs&body={%22reqSource%22:%22h5%22}")
+	req.Header("Host", "api.m.jd.com")
+	// req.Header("Content-Type", "application/x-www-form-urlencoded")
+	req.Header("Origin", "https://h5.m.jd.com")
+	// req.Header("Accept-Encoding", "gzip, deflate, br")
+	req.Header("Cookie", cookie)
+	// req.Header("Connection", "keep-alive")
+	req.Header("Accept", "application/json, text/plain, */*")
+	req.Header("User-Agent", ua())
+	// req.Header("Referer", "https://prodev.m.jd.com/mall/active/2Y2YgUu1Xbbv8AfN7TAHhNqfQrAV/index.html?tttparams=eliIVi1eyJncHNfYXJlYSI6IjEyXzkzOV8yMzY4M181NjE4NCIsInByc3RhdGUiOiIwIiwidW5fYXJlYSI6IjEyXzkzOV8yMzY4M181NjE4NCIsIm1vZGVsIjoiaVBob25lMTAsMiIsImdMYXQiOiIzMy4yOTQ5MyIsImdMbmciOiIxMjAuMTQ4MjMyIiwibG5nIjoiMTIwLjE1MDMyMyIsImxhdCI6IjMzLjI5NTUzNi7J9&sid=a2e1c9b3b215a2337517cd01f2e04cbw&un_area=12_939_23683_56184")
+	// req.Header("Content-Length", "332")
+	// req.Header("Accept-Language", "zh-cn")
+	// req.Body(`appid=newtry&functionId=try_MyTrials&uuid=3345ad3d16ab2153c69f8ca91cd3e931b06a3bb8&clientVersion=10.2.7&client=wh5&osVersion=14.7.1&area=12_939_23683_56184&networkType=wifi&body=%7B%22geo%22%3A%7B%22lng%22%3A121.15326252577907%2C%22lat%22%3A34.295611038697575%7D%2C%22page%22%3A1%2C%22selected%22%3A1%2C%22previewTime%22%3A%22%22%7D`)
+	data, _ := req.Bytes()
+	coin, _ := jsonparser.GetInt(data, "data", "petCoin")
+	desc <- int(coin)
+}

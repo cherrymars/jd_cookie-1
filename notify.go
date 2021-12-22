@@ -388,6 +388,7 @@ func (ck *JdCookie) QueryAsset() string {
 		var jxz = make(chan string)
 		var jrjt = make(chan string)
 		var sysp = make(chan string)
+		var wwjf = make(chan int)
 		go jingxiangzhi(cookie, jxz)
 		go queryuserjingdoudetail(cookie, xdm)
 		go dream(cookie, dm)
@@ -401,6 +402,7 @@ func (ck *JdCookie) QueryAsset() string {
 		go jdzz(cookie, zjb)
 		go jingtie(cookie, jrjt)
 		go jdsy(cookie, sysp)
+		go cwwjf(cookie, wwjf)
 		msgs = append(msgs, fmt.Sprintf("京享值：%v", <-jxz))
 		today := time.Now().Local().Format("2006-01-02")
 		yestoday := time.Now().Local().Add(-time.Hour * 24).Format("2006-01-02")
@@ -577,6 +579,8 @@ func (ck *JdCookie) QueryAsset() string {
 		// } else {
 		// msgs = append(msgs, fmt.Sprintf("京东秒杀：暂无数据"))
 		// }
+
+		msgs = append(msgs, fmt.Sprintf("宠汪汪：%d积分", <-wwjf))
 		msgs = append(msgs, fmt.Sprintf("京喜工厂：%s", <-dm))
 		if tyt := <-tyt; tyt != "" {
 			msgs = append(msgs, fmt.Sprintf("推一推券：%s", tyt))
