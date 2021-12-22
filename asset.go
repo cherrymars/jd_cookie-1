@@ -1840,7 +1840,7 @@ func jdsy(cookie string, desc chan string) {
 	for _, v := range a.Data.List {
 		if len(v.TryButtonList) == 2 {
 			if v.TryButtonList[0].ID <= 2 {
-				rt = "你有一个商品待领取，详情：" + v.TrialName + "⚠️"
+				rt = "你有一个商品待领取，详情：" + v.TrialName + "👆"
 				break
 			}
 		}
