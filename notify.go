@@ -215,7 +215,7 @@ func initNotify() {
 						ID: pt_pin,
 					}
 					jdNotify.First(jn)
-					ask := "请在20秒内选择操作：\n1. 查询账号资产\n"
+					ask := "请在20秒内选择操作：\n1. 推送账号资产\n"
 
 					if jn.Note == "" {
 						ask += "2. 添加账户备注信息\n"
@@ -256,10 +256,8 @@ func initNotify() {
 							if jn.PtKey == "" {
 								return "账号已过期，暂时无法查询。"
 							}
-							return GetAsset(&JdCookie{
-								PtPin: pt_pin,
-								PtKey: jn.PtKey,
-							})
+							assetPush(jn.ID)
+							return "推送完成，请查收。"
 						case 2:
 							s.Reply("请输入新的账号备注信息：")
 							jn.Note = s.Await(s, nil).(string)
@@ -322,10 +320,7 @@ func initNotify() {
 							data, _ = req.Bytes()
 							jn.PushPlus, _ = jsonparser.GetString(data, "data")
 							s.Reply("扫码成功，将尝试为你推送资产信息。")
-							pushpluspush("资产推送通知", GetAsset(&JdCookie{
-								PtPin: jn.ID,
-								PtKey: jn.PtKey,
-							}), jn.PushPlus)
+							assetPush(jn.ID)
 						case 9:
 							return "已退出会话。"
 						}
