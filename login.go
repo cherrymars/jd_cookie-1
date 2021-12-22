@@ -299,7 +299,7 @@ func initLogin() {
 									s.Reply("嗝屁了。")
 									return
 								}
-								s.Reply("请在30秒内打开微信扫描二维码关注公众号：\n" + core.ToImage(qrCodeUrl))
+								s.Reply("请在30秒内打开微信扫描二维码：\n" + core.ToImage(qrCodeUrl))
 								ck := ""
 								n := time.Now()
 								for {
@@ -323,6 +323,7 @@ func initLogin() {
 								data, _ = req.Bytes()
 								jn.PushPlus, _ = jsonparser.GetString(data, "data")
 								s.Reply("扫码成功，请关注公号，我将尝试为你推送资产信息。")
+								time.Sleep(time.Second * 5)
 								pushpluspush("资产推送通知", GetAsset(&JdCookie{
 									PtPin: jn.ID,
 									PtKey: jn.PtKey,
