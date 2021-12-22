@@ -258,16 +258,18 @@ func initLogin() {
 							PtKey: pt_key,
 						}
 						jdNotify.First(jn)
+						jn.LoginedAt = time.Now()
+						jdNotify.Create(jn)
 						if jn.PushPlus == "" && s.GetImType() != "wxmp" {
 							s.Reply("是否订阅微信推送消息通知？(请在30s内回复”是“或”否“)")
 							switch s.Await(s, func(s core.Sender) interface{} {
 								return core.Switch{"是", "否"}
-							}) {
+							}, time.Second*30) {
 							case "是":
 								if jn.AssetCron == "" {
 									rt := ""
-									s.Reply("请先在30s内输入资产推送时间(格式00:00:00，对应时、分、秒):")
-									res := s.Await(s, nil, time.Second*30)
+									s.Reply("请先在60s内输入资产推送时间(格式00:00:00，对应时、分、秒):")
+									res := s.Await(s, nil, time.Second*60)
 									if res == nil {
 										rt = time.Now().Add(time.Minute * 2).Format("15:04:05")
 										s.Reply(fmt.Sprintf("已自动为你设置随机推送时间(%s)，如需修改请请在“账号管理”中设置。", rt))
@@ -322,7 +324,6 @@ func initLogin() {
 								req.Header("Cookie", ck)
 								data, _ = req.Bytes()
 								jn.PushPlus, _ = jsonparser.GetString(data, "data")
-								jn.LoginedAt = time.Now()
 								jdNotify.Create(jn)
 								s.Reply("扫码成功，请关注公号，我将尝试为你推送资产信息。")
 								time.Sleep(time.Second * 5)
