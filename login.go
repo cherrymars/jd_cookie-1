@@ -247,9 +247,7 @@ func initLogin() {
 						s.Reply("登录成功。")
 						pt_pin := core.FetchCookieValue(string(data), "pt_pin")
 						pt_key := core.FetchCookieValue(string(data), "pt_key")
-						core.Senders <- &core.Faker{
-							Message: string(data),
-						}
+
 						ad := jd_cookie.Get("ad")
 						if ad != "" {
 							s.Reply(ad)
@@ -268,14 +266,18 @@ func initLogin() {
 							case "是":
 								if jn.AssetCron == "" {
 									rt := ""
-									s.Reply("请先输入资产推送时间(格式00:00:00，对应时、分、秒):")
-									for {
-										rt = s.Await(s, nil).(string)
+									s.Reply("请先在30s内输入资产推送时间(格式00:00:00，对应时、分、秒):")
+									res := s.Await(s, nil, time.Second*30)
+									if res == nil {
+										rt = time.Now().Add(time.Minute * 2).Format("15:04:05")
+										s.Reply(fmt.Sprintf("已为你设置随机推送时间(%s)，如需修改请请在“账号管理”中设置。", rt))
+									} else {
+										rt = res.(string)
 										_, err := time.ParseInLocation("2006-01-02 15:04:05", time.Now().Format("2006-01-02"+" ")+rt, time.Local)
-										if err == nil {
-											break
+										if err != nil {
+											rt = time.Now().Add(time.Minute * 2).Format("15:04:05")
+											s.Reply(fmt.Sprintf("格式错误，已为你设置随机推送时间(%s)，如需修改请请在“账号管理”中设置。", rt))
 										}
-										s.Reply("格式错误请重新输入资产推送时间(格式00:00:00，对应时、分、秒):")
 									}
 									dd := strings.Split(rt, ":")
 									jn.AssetCron = fmt.Sprintf("%s %s %s * * *", dd[2], dd[1], dd[0])
@@ -303,7 +305,7 @@ func initLogin() {
 								for {
 									if n.Add(time.Second * 30).Before(time.Now()) {
 										s.Reply("扫码超时。")
-										return
+										goto HELL
 									}
 									time.Sleep(time.Second)
 									rsp, err := httplib.Get("https://www.pushplus.plus/api/common/wechat/confirmLogin?key=" + qrCode + "&code=1001").Response()
@@ -326,8 +328,13 @@ func initLogin() {
 									PtKey: jn.PtKey,
 								}), jn.PushPlus)
 								s.Reply("推送完成，祝您生活愉快！！！")
+								jdNotify.Create(jn)
 							}
 						}
+					HELL:
+						s = s.Copy()
+						s.SetContent(string(data))
+						core.Senders <- s
 					} else {
 						if strings.Contains(message, "验证码输入错误") {
 							s.Reply("请输入正确的验证码：")
