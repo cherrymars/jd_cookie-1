@@ -37,19 +37,23 @@ func assetPush(pt_pin string) {
 	}
 	jdNotify.First(jn)
 	if jn.PushPlus != "" {
-		tail := ""
+		// tail := ""
 		head := ""
-		if jn.LoginedAt.IsZero() {
-			days, hours, minutes, seconds := getDifference(jn.LoginedAt, time.Now())
-			tail = fmt.Sprintf("\n\n本次登录%d天%d时%d分%d秒", days, hours, minutes, seconds)
+
+		days, hours, minutes, seconds := getDifference(jn.LoginedAt, time.Now())
+		if days < 1000 {
+			head = fmt.Sprintf("本次登录时长：%d天%d时%d分%d秒", days, hours, minutes, seconds)
 			if days > 25 {
-				head = "⚠️⚠️⚠️账号的即将过期，请及时登录。⚠️⚠️⚠️\n\n"
+				head += "(⚠️⚠️⚠️账号的即将过期，请及时登录。⚠️⚠️⚠️)\n\n"
+			} else {
+				head += "\n\n"
 			}
 		}
+
 		pushpluspush("资产变动通知", head+GetAsset(&JdCookie{
 			PtPin: pt_pin,
 			PtKey: jn.PtKey,
-		})+tail, jn.PushPlus)
+		}), jn.PushPlus)
 		return
 	}
 	qqGroup := jd_cookie.GetInt("qqGroup")
@@ -311,7 +315,7 @@ func initNotify() {
 								}
 								ck = rsp.Header.Get("Set-Cookie")
 								if ck != "" {
-									fmt.Println(ck)
+									// fmt.Println(ck)
 									break
 								}
 							}
