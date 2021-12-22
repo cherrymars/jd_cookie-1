@@ -1050,7 +1050,7 @@ func jxncEgg(cookie string, state chan int64) {
 	req.Header("Accept", "*/*")
 	req.Header("Connection", "keep-alive")
 	req.Header("Accept-Language", "zh-cn")
-	req.Header("Accept-Encoding", "gzip, deflate, br")
+	// req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://st.jingxi.com/pingou/jxmc/index.html?nativeConfig=%7B%22immersion%22%3A1%2C%22toColor%22%3A%22%23e62e0f%22%7D&;__mcwvt=sjcp&ptag=7155.9.95")
 
 	req.Header("Cookie", cookie)
