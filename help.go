@@ -137,7 +137,7 @@ func initHelp() {
 						req.Header("Cookie", envs[i].Value)
 						req.Header("Accept", "*/*")
 						req.Header("Connection", "keep-alive")
-						req.Header("Accept-Encoding", "gzip, deflate, br")
+						// req.Header("Accept-Encoding", "gzip, deflate, br")
 						req.Header("Host", "api.m.jd.com")
 						req.Header("Origin", "https://wbbny.m.jd.com")
 						data, _ := req.String()

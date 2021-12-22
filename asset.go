@@ -1223,7 +1223,7 @@ func (ck *JdCookie) Available() bool {
 	req := httplib.Get("https://me-api.jd.com/user_new/info/GetJDUserInfoUnion?orgFlag=JD_PinGou_New&callSource=mainorder&channel=4&isHomewhite=0&sceneval=2&_=" + fmt.Sprint(time.Now().Unix()) + "&sceneval=2&g_login_type=1&g_ty=ls")
 	req.Header("Cookie", cookie)
 	req.Header("authority", "me-api.jd.com")
-	req.Header("accept", "*/*")
+	// req.Header("accept", "*/*")
 	req.Header("sec-fetch-site", "same-site")
 	req.Header("sec-fetch-mode", "no-cors")
 	req.Header("sec-fetch-dest", "script")
