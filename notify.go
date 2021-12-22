@@ -42,7 +42,7 @@ func assetPush(pt_pin string) {
 
 		days, hours, minutes, seconds := getDifference(jn.LoginedAt, time.Now())
 		if days < 1000 {
-			head = fmt.Sprintf("本次登录时长：%d天%d时%d分%d秒", days, hours, minutes, seconds)
+			head = fmt.Sprintf("登录时长：%d天%d时%d分%d秒", days, hours, minutes, seconds)
 			if days > 25 {
 				head += "\n⚠️⚠️⚠️账号的即将过期，请登录。\n\n"
 			} else {
