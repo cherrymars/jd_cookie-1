@@ -44,7 +44,7 @@ func assetPush(pt_pin string) {
 		if days < 1000 {
 			head = fmt.Sprintf("本次登录时长：%d天%d时%d分%d秒", days, hours, minutes, seconds)
 			if days > 25 {
-				head += "\n(⚠️⚠️⚠️账号的即将过期，请及时登录。⚠️⚠️⚠️)\n\n"
+				head += "\n⚠️⚠️⚠️账号的即将过期，请登录。\n\n"
 			} else {
 				head += "\n\n"
 			}
