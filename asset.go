@@ -1593,7 +1593,7 @@ func queryuserjingdoudetail(cookie string, e下水道 chan []int) {
 	req.Header("User-Agent", ua())
 	req.Header("Cookie", cookie)
 	req.Header("authority", "m.jingxi.com")
-	// req.Header("accept", "*/*")
+	req.Header("accept", "*/*")
 	req.Header("sec-fetch-site", "same-site")
 	req.Header("sec-fetch-mode", "no-cors")
 	req.Header("sec-fetch-dest", "script")
