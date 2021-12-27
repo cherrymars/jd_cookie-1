@@ -92,7 +92,7 @@ func initLogin() {
 				ke := core.Bucket("wxmp").GetBool("isKe?", false)
 				if v == "" {
 					// goto ADONG
-					return "快递员没有诺兰的地址。"
+					return jd_cookie.Get("tip", "快递员没有诺兰的地址。")
 				}
 				for _, addr = range addrs {
 					addr = regexp.MustCompile(`^(https?://[-\.\w]+:?\d*)`).FindString(addr)
