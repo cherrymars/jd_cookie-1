@@ -1342,7 +1342,6 @@ func av2(ck *JdCookie) bool {
 	req.Header("Accept", "*/*")
 	req.Header("Connection", "keep-alive")
 	req.Header("Accept-Language", "zh-cn")
-	// req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://st.jingxi.com/my/userinfo.html?&ptag=7205.12.4")
 	req.Header("Cookie", "pt_key="+ck.PtKey+";pt_pin="+ck.PtPin+";")
 
