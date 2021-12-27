@@ -1360,7 +1360,6 @@ func av3(ck *JdCookie) bool {
 	req.Header("Accept", "*/*")
 	req.Header("Connection", "keep-alive")
 	req.Header("Accept-Language", "zh-cn")
-	req.Header("Accept-Encoding", "gzip, deflate, br")
 	req.Header("Referer", "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&")
 
 	req.Header("Cookie", "pt_key="+ck.PtKey+";pt_pin="+ck.PtPin+";")
