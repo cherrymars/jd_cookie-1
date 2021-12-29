@@ -22,7 +22,7 @@ func initTyt() {
 					return err
 				}
 				for _, cron := range crons {
-					if strings.Contains(cron.Name, "推推赚大钱-快速") {
+					if strings.Contains(cron.Name, "推一推") {
 						if cron.Status == 0 { //修复错误
 							return "推一推已在运行中。"
 						}
