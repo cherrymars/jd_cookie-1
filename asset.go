@@ -154,7 +154,6 @@ func initAsset() {
 				if s.GetImType() == "tg" {
 					s.Disappear(time.Second * 40)
 				}
-
 				a := s.Get()
 				if a == "300" {
 					a = "3"
