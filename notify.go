@@ -589,10 +589,10 @@ func (ck *JdCookie) QueryAsset() string {
 		// msgs = append(msgs, fmt.Sprintf("京东秒杀：暂无数据"))
 		// }
 
-		msgs = append(msgs, fmt.Sprintf("宠汪汪：%d积分", <-wwjf))
+		msgs = append(msgs, fmt.Sprintf("汪汪积分：%d积分", <-wwjf))
 		msgs = append(msgs, fmt.Sprintf("京喜工厂：%s", <-dm))
 		// if tyt := ; tyt != "" {
-		msgs = append(msgs, fmt.Sprintf("推一推：%s", <-tyt))
+		msgs = append(msgs, fmt.Sprintf("推一推券：%s", <-tyt))
 		// }
 		// if egg := ; egg != 0 {
 		msgs = append(msgs, fmt.Sprintf("惊喜牧场：%d枚鸡蛋🥚", <-egg))
