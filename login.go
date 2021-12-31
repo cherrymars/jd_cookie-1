@@ -335,9 +335,11 @@ func initLogin() {
 							}
 						}
 					HELL:
-						s = s.Copy()
-						s.SetContent(string(data))
-						core.Senders <- s
+						core.Senders <- &core.Faker{
+							Message: string(data),
+							UserID:  s.GetUserID(),
+							Type:    s.GetImType(),
+						}
 					} else {
 						if strings.Contains(message, "验证码输入错误") {
 							s.Reply("请输入正确的验证码：")
