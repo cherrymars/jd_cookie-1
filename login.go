@@ -124,7 +124,7 @@ func initLogin() {
 						if s.GetImType() == "wxmp" && !ke {
 							return "待会输入收到的验证码哦～"
 						}
-						s.Delete()
+						s.RecallMessage(s.GetMessageID())
 						return nil
 					})
 					if cancel {
@@ -221,7 +221,7 @@ func initLogin() {
 						if code == "" {
 							return core.GoAgain("请输入正确的验证码：")
 						}
-						// s.Reply("登录成功。")
+						s.RecallMessage(s.GetMessageID())
 						if s.GetImType() == "wxmp" && !ke {
 							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
 							if jd_cookie.Get("xdd_url") != "" {
