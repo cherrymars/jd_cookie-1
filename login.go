@@ -79,10 +79,8 @@ func initLogin() {
 					logs.Info("跳过登录。")
 					return nil
 				}
-				addr := ""
 				var tabcount int64
-				v := jd_cookie.Get("nolan_addr")
-				addrs := strings.Split(v, "&")
+				addr := jd_cookie.Get("nolan_addr")
 				var haha func()
 				var successLogin bool
 
@@ -90,24 +88,14 @@ func initLogin() {
 				phone := ""
 				hasNolan := false
 				ke := core.Bucket("wxmp").GetBool("isKe?", false)
-				if v == "" {
-					// goto ADONG
-					return jd_cookie.Get("tip", "快递员没有诺兰的地址。")
-				}
-				for _, addr = range addrs {
-					addr = regexp.MustCompile(`^(https?://[-\.\w]+:?\d*)`).FindString(addr)
-					if addr != "" {
-						data, _ := httplib.Get(addr + "/api/Config").Bytes()
-						tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
-						if tabcount != 0 {
-							hasNolan = true
-							break
-						}
-					}
+				data, _ := httplib.Get(addr + "/api/Config").Bytes()
+				tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
+				if tabcount != 0 {
+					hasNolan = true
 				}
 				if !hasNolan == true {
 					// goto ADONG
-					return "诺兰无法为您服务。"
+					return jd_cookie.Get("tip", "诺兰无法为您服务。")
 				}
 				s.Reply(jd_cookie.Get("nolan_first", "若兰为您服务，请输入11位手机号：(输入“q”随时退出会话。)"))
 				haha = func() {
