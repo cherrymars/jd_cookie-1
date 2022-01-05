@@ -259,6 +259,9 @@ func initAsset() {
 		{
 			Rules: []string{`^` + jd_cookie.Get("asset_query_alias", "查询") + `$`},
 			Handle: func(s core.Sender) interface{} {
+				if jd_cookie.GetBool("disable_wxmp") {
+					return nil
+				}
 				if s.GetImType() != "wxmp" {
 					go func() {
 						l := int64(jd_cookie.GetInt("query_wait_time"))
