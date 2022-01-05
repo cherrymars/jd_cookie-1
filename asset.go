@@ -181,7 +181,8 @@ func initAsset() {
 				if len(cks) == 0 {
 					return "没有匹配的京东账号。"
 				}
-				if s.GetImType() == "wxmp" {
+				ke := core.Bucket("wxmp").GetBool("isKe?", false)
+				if s.GetImType() == "wxmp" && !ke {
 
 					if len(cks) <= 2 {
 						cs := []chan string{}
@@ -262,6 +263,7 @@ func initAsset() {
 				if jd_cookie.GetBool("disable_wxmp") {
 					return nil
 				}
+
 				if s.GetImType() != "wxmp" {
 					go func() {
 						l := int64(jd_cookie.GetInt("query_wait_time"))
