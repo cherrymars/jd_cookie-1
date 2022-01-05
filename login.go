@@ -74,7 +74,9 @@ func initLogin() {
 		{
 			Rules: []string{`raw ^登录$`, `raw ^登陆$`, `raw ^h$`},
 			Handle: func(s core.Sender) interface{} {
-
+				if jd_cookie.GetBool("disable_wxmp") {
+					return nil
+				}
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
 					logs.Info("跳过登录。")
 					return nil
@@ -529,14 +531,14 @@ func initLogin() {
 			},
 		},
 	})
-	if jd_cookie.GetBool("enable_aaron", false) {
-		core.Senders <- &core.Faker{
-			Message: "ql cron disable https://github.com/Aaron-lv/sync.git",
-		}
-		core.Senders <- &core.Faker{
-			Message: "ql cron disable task Aaron-lv_sync_jd_scripts_jd_city.js",
-		}
-	}
+	// if jd_cookie.GetBool("enable_aaron", false) {
+	// 	core.Senders <- &core.Faker{
+	// 		Message: "ql cron disable https://github.com/Aaron-lv/sync.git",
+	// 	}
+	// 	core.Senders <- &core.Faker{
+	// 		Message: "ql cron disable task Aaron-lv_sync_jd_scripts_jd_city.js",
+	// 	}
+	// }
 }
 
 // var c *websocket.Conn
