@@ -172,7 +172,7 @@ func initSubmit() {
 			Rules:   []string{`raw pt_key=([^;=\s]+);\s*pt_pin=([^;=\s]+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
-				if jd_cookie.GetBool("disable_wxmp") {
+				if s.GetImType() == "wxsv" {
 					return nil
 				}
 				s.RecallMessage(s.GetMessageID())
