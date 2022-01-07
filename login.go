@@ -89,7 +89,7 @@ func initLogin() {
 				cancel := false
 				phone := ""
 				hasNolan := false
-				ke := core.Bucket("wxmp").GetBool("isKe?", false)
+				// ke := core.Bucket("wxmp").GetBool("isKe?", false)
 				data, _ := httplib.Get(addr + "/api/Config").Bytes()
 				tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
 				if tabcount != 0 {
@@ -111,7 +111,7 @@ func initLogin() {
 						if phone == "" {
 							return core.GoAgain("请输入正确的手机号：")
 						}
-						if s.GetImType() == "wxmp" && !ke {
+						if s.GetImType() == "wxmp" {
 							return "待会输入收到的验证码哦～"
 						}
 						s.RecallMessage(s.GetMessageID())
@@ -212,7 +212,7 @@ func initLogin() {
 							return core.GoAgain("请输入正确的验证码：")
 						}
 						s.RecallMessage(s.GetMessageID())
-						if s.GetImType() == "wxmp" && !ke {
+						if s.GetImType() == "wxmp" {
 							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
 							if jd_cookie.Get("xdd_url") != "" {
 								rt += "此外，你可以在30秒内输入QQ号："
@@ -343,7 +343,7 @@ func initLogin() {
 						// }
 					}
 				}
-				if s.GetImType() == "wxmp" && !ke {
+				if s.GetImType() == "wxmp" {
 					go haha()
 				} else {
 					haha()
