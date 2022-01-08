@@ -172,7 +172,7 @@ func initSubmit() {
 			Rules:   []string{`raw pt_key=([^;=\s]+);\s*pt_pin=([^;=\s]+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
-				if s.GetImType() == "wxsv" {
+				if s.GetImType() == "wxsv" && !s.IsAdmin() {
 					return nil
 				}
 				s.RecallMessage(s.GetMessageID())
@@ -194,17 +194,6 @@ func initSubmit() {
 					}
 
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
-					if jd_cookie.Get("xdd_url") != "" {
-						if s.GetImType() == "qq" {
-							xdd(value, fmt.Sprint(s.GetUserID()))
-						} else {
-							s.Reply("请在30秒内输入QQ号：")
-							s.Await(s, func(s core.Sender) interface{} {
-								xdd(value, s.GetContent())
-								return "OK"
-							}, `^\d+$`, time.Second*30)
-						}
-					}
 					envs, err := qinglong.GetEnvs("JD_COOKIE")
 					if err != nil {
 						s.Reply(err)
