@@ -95,7 +95,10 @@ func initLogin() {
 				phone := ""
 				hasNolan := false
 				// ke := core.Bucket("wxmp").GetBool("isKe?", false)
-				data, _ := httplib.Get(addr + "/api/Config").Bytes()
+				data, err := httplib.Get(addr + "/api/Config").Bytes()
+				if err != nil && s.IsAdmin() {
+					return err
+				}
 				tabcount, _ = jsonparser.GetInt(data, "data", "tabcount")
 				if tabcount != 0 {
 					hasNolan = true
