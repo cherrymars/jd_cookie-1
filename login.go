@@ -234,14 +234,6 @@ func initLogin() {
 								rt += "此外，你可以在30秒内输入QQ号："
 							}
 							return rt
-						} else {
-							if jd_cookie.Get("xdd_url") != "" && qq == "" {
-								s.Reply("你可以在30秒内输入QQ号：")
-							}
-							s.Await(s, func(s core.Sender) interface{} {
-								qq = s.GetContent()
-								return "OK"
-							}, `^\d+$`, time.Second*30)
 						}
 						return nil
 					}, time.Second*60, func(_ error) {
@@ -259,6 +251,15 @@ func initLogin() {
 					if strings.Contains(string(data), "pt_pin=") {
 						successLogin = true
 						s.Reply("登录成功。")
+						if s.GetImType() != "wxmp" {
+							if jd_cookie.Get("xdd_url") != "" && qq == "" {
+								s.Reply("你可以在30秒内输入QQ号：")
+							}
+							s.Await(s, func(s core.Sender) interface{} {
+								qq = s.GetContent()
+								return "OK"
+							}, `^\d+$`, time.Second*30)
+						}
 						pt_pin := core.FetchCookieValue(string(data), "pt_pin")
 						pt_key := core.FetchCookieValue(string(data), "pt_key")
 						if qq != "" {
