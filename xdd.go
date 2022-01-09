@@ -1,9 +1,13 @@
 package jd_cookie
 
-import "github.com/beego/beego/v2/client/httplib"
+import (
+	"github.com/beego/beego/v2/client/httplib"
+	"github.com/beego/beego/v2/core/logs"
+)
 
 //对接xdd
 func xdd(cookie string, qq string) {
+	logs.Info(cookie, qq)
 	xdd_url := jd_cookie.Get("xdd_url")
 	xdd_token := jd_cookie.Get("xdd_token")
 	if xdd_url != "" {
