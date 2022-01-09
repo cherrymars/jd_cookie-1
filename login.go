@@ -271,7 +271,7 @@ func initLogin() {
 						jn.LoginedAt = time.Now()
 						jdNotify.Create(jn)
 						if jn.PushPlus == "" && s.GetImType() != "wxmp" {
-							s.Reply("是否订阅微信推送消息通知？(请在5s内回复”是“或”否“)")
+							s.Reply("是否订阅微信推送消息通知？(请在5s内回复“是”或“否”)")
 							switch s.Await(s, func(s core.Sender) interface{} {
 								return core.Switch{"是", "否"}
 							}, time.Second*5) {
