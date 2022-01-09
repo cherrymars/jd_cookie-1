@@ -84,6 +84,7 @@ func initLogin() {
 				}
 				var tabcount int64
 				addr := jd_cookie.Get("nolan_addr")
+				addr = regexp.MustCompile(`https?://[\.\w]+:?\d*`).FindString(addr)
 				var haha func()
 				var successLogin bool
 				var qq = ""
