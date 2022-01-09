@@ -193,7 +193,24 @@ func initSubmit() {
 						s.Reply("请修改昵称！")
 					}
 
+					qq := ""
+
+					if s.GetImType() == "qq" {
+						qq = s.GetUserID()
+					}
+
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
+					if jd_cookie.Get("xdd_url") != "" && s.GetImType() != "fake" {
+						if qq == "" {
+							s.Reply("请在30秒内输入QQ号：")
+							s.Await(s, func(s core.Sender) interface{} {
+								qq = s.GetContent()
+								return "OK"
+							}, `^\d+$`, time.Second*30)
+						}
+						xdd(value, qq)
+					}
+
 					envs, err := qinglong.GetEnvs("JD_COOKIE")
 					if err != nil {
 						s.Reply(err)
