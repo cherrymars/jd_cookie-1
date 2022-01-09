@@ -96,6 +96,7 @@ func initLogin() {
 				hasNolan := false
 				// ke := core.Bucket("wxmp").GetBool("isKe?", false)
 				data, err := httplib.Get(addr + "/api/Config").Bytes()
+				logs.Info(string(data))
 				if err != nil && s.IsAdmin() {
 					return err
 				}
