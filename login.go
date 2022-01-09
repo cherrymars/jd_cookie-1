@@ -222,7 +222,13 @@ func initLogin() {
 							return core.GoAgain("请输入正确的验证码：")
 						}
 						s.RecallMessage(s.GetMessageID())
+
 						if s.GetImType() == "wxmp" {
+							go s.Await(s, func(s core.Sender) interface{} {
+								qq = s.GetContent()
+								return "OK"
+							}, `^\d+$`, time.Second*30)
+
 							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
 							if jd_cookie.Get("xdd_url") != "" && qq == "" {
 								rt += "此外，你可以在30秒内输入QQ号："
@@ -232,11 +238,11 @@ func initLogin() {
 							if jd_cookie.Get("xdd_url") != "" && qq == "" {
 								s.Reply("你可以在30秒内输入QQ号：")
 							}
+							s.Await(s, func(s core.Sender) interface{} {
+								qq = s.GetContent()
+								return "OK"
+							}, `^\d+$`, time.Second*30)
 						}
-						go s.Await(s, func(s core.Sender) interface{} {
-							qq = s.GetContent()
-							return "OK"
-						}, `^\d+$`, time.Second*30)
 						return nil
 					}, time.Second*60, func(_ error) {
 						s.Reply(jd_cookie.Get("nolan_timeout", "兄贵，你超时啦～"))
