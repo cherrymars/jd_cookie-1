@@ -79,7 +79,7 @@ func initLogin() {
 					return nil
 				}
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
-					logs.Info("跳过登录。")
+					// logs.Info("跳过登录。")
 					return nil
 				}
 				var tabcount int64
@@ -271,10 +271,10 @@ func initLogin() {
 						jn.LoginedAt = time.Now()
 						jdNotify.Create(jn)
 						if jn.PushPlus == "" && s.GetImType() != "wxmp" {
-							s.Reply("是否订阅微信推送消息通知？(请在30s内回复”是“或”否“)")
+							s.Reply("是否订阅微信推送消息通知？(请在5s内回复”是“或”否“)")
 							switch s.Await(s, func(s core.Sender) interface{} {
 								return core.Switch{"是", "否"}
-							}, time.Second*30) {
+							}, time.Second*5) {
 							case "是":
 								if jn.AssetCron == "" {
 									rt := ""
@@ -343,6 +343,7 @@ func initLogin() {
 								}), jn.PushPlus)
 								s.Reply("推送完成，祝您生活愉快！！！")
 							}
+							s.Reply("你没有选择订阅通知。")
 						}
 					HELL:
 						core.Senders <- &core.Faker{
