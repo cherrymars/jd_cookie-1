@@ -86,10 +86,10 @@ func initLogin() {
 				addr = regexp.MustCompile(`https?://[\.\w]+:?\d*`).FindString(addr)
 				var haha func()
 				var successLogin bool
-				// var qq = ""
-				// if s.GetImType() == "qq" {
-				// 	qq = s.GetUserID()
-				// }
+				var qq = ""
+				if s.GetImType() == "qq" {
+					qq = s.GetUserID()
+				}
 
 				cancel := false
 				phone := ""
@@ -223,15 +223,15 @@ func initLogin() {
 						s.RecallMessage(s.GetMessageID())
 
 						if s.GetImType() == "wxmp" {
-							// go s.Await(s, func(s core.Sender) interface{} {
-							// 	qq = s.GetContent()
-							// 	return "OK"
-							// }, `^\d+$`, time.Second*30)
+							go s.Await(s, func(s core.Sender) interface{} {
+								qq = s.GetContent()
+								return "OK"
+							}, `^\d+$`, time.Second*30)
 
 							rt := "八九不离十登录成功啦，10秒后对我说“查询”以确认登录成功。"
-							// if jd_cookie.Get("xdd_url") != "" && qq == "" {
-							// 	rt += "此外，你可以在30秒内输入QQ号："
-							// }
+							if jd_cookie.Get("xdd_url") != "" && qq == "" {
+								rt += "此外，你可以在30秒内输入QQ号："
+							}
 							return rt
 						}
 						return nil
@@ -251,19 +251,19 @@ func initLogin() {
 						successLogin = true
 						s.Reply("登录成功。")
 						if s.GetImType() != "wxmp" {
-							// if jd_cookie.Get("xdd_url") != "" && qq == "" {
-							// 	s.Reply("你可以在30秒内输入QQ号：")
-							// }
+							if jd_cookie.Get("xdd_url") != "" && qq == "" {
+								s.Reply("你可以在30秒内输入QQ号：")
+							}
 							s.Await(s, func(s core.Sender) interface{} {
-								// qq = s.GetContent()
+								qq = s.GetContent()
 								return "OK"
 							}, `^\d+$`, time.Second*30)
 						}
 						pt_pin := core.FetchCookieValue(string(data), "pt_pin")
 						pt_key := core.FetchCookieValue(string(data), "pt_key")
-						// if qq != "" {
-						// 	xdd(fmt.Sprintf("pt_key=%s;pt_pin=%s;", pt_key, pt_pin), qq)
-						// }
+						if qq != "" {
+							xdd(fmt.Sprintf("pt_key=%s;pt_pin=%s;", pt_key, pt_pin), qq)
+						}
 						ad := jd_cookie.Get("ad")
 						if ad != "" {
 							s.Reply(ad)
