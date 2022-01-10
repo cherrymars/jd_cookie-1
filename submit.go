@@ -173,9 +173,9 @@ func initSubmit() {
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
 				imType := s.GetImType()
-				fake := false
+				// fake := false
 				if strings.HasPrefix(imType, "_") {
-					fake = true
+					// fake = true
 					imType = strings.Replace(imType, "_", "", -1)
 				}
 				if imType == "wxsv" && !s.IsAdmin() {
@@ -199,23 +199,23 @@ func initSubmit() {
 						s.Reply("请修改昵称！")
 					}
 
-					qq := ""
+					// qq := ""
 
-					if imType == "qq" {
-						qq = s.GetUserID()
-					}
+					// if imType == "qq" {
+					// 	qq = s.GetUserID()
+					// }
 
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
-					if jd_cookie.Get("xdd_url") != "" && !fake {
-						if qq == "" {
-							s.Reply("请在30秒内输入QQ号：")
-							s.Await(s, func(s core.Sender) interface{} {
-								qq = s.GetContent()
-								return "OK"
-							}, `^\d+$`, time.Second*30)
-						}
-						xdd(value, qq)
-					}
+					// if jd_cookie.Get("xdd_url") != "" && !fake {
+					// 	if qq == "" {
+					// 		s.Reply("请在30秒内输入QQ号：")
+					// 		s.Await(s, func(s core.Sender) interface{} {
+					// 			qq = s.GetContent()
+					// 			return "OK"
+					// 		}, `^\d+$`, time.Second*30)
+					// 	}
+					// 	xdd(value, qq)
+					// }
 
 					envs, err := qinglong.GetEnvs("JD_COOKIE")
 					if err != nil {
