@@ -355,6 +355,7 @@ func initLogin() {
 						core.Senders <- &core.Faker{
 							Message: string(data),
 							UserID:  s.GetUserID(),
+							Type:    "_" + s.GetImType(),
 						}
 					} else {
 						if strings.Contains(message, "验证码输入错误") {

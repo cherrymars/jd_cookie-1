@@ -172,7 +172,13 @@ func initSubmit() {
 			Rules:   []string{`raw pt_key=([^;=\s]+);\s*pt_pin=([^;=\s]+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
-				if s.GetImType() == "wxsv" && !s.IsAdmin() {
+				imType := s.GetImType()
+				fake := false
+				if strings.HasPrefix(imType, "_") {
+					fake = true
+					imType = strings.Replace(imType, "_", "", -1)
+				}
+				if imType == "wxsv" && !s.IsAdmin() {
 					return nil
 				}
 				s.RecallMessage(s.GetMessageID())
@@ -195,12 +201,12 @@ func initSubmit() {
 
 					qq := ""
 
-					if s.GetImType() == "qq" {
+					if imType == "qq" {
 						qq = s.GetUserID()
 					}
 
 					value := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
-					if jd_cookie.Get("xdd_url") != "" && s.GetImType() != "fake" {
+					if jd_cookie.Get("xdd_url") != "" && !fake {
 						if qq == "" {
 							s.Reply("请在30秒内输入QQ号：")
 							s.Await(s, func(s core.Sender) interface{} {
@@ -224,7 +230,7 @@ func initSubmit() {
 							break
 						}
 					}
-					pin(s.GetImType()).Set(ck.PtPin, s.GetUserID())
+					pin(imType).Set(ck.PtPin, s.GetUserID())
 					if !find {
 						if err := qinglong.AddEnv(qinglong.Env{
 							Name:  "JD_COOKIE",
