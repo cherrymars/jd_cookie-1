@@ -278,7 +278,8 @@ func initSubmit() {
 					pt_key, err := getKey(value)
 					if err == nil {
 						if strings.Contains(pt_key, "fake") {
-							return "无效的wskey，请重试。"
+							s.Reply("无效的wskey，请重试。")
+							continue
 						}
 					} else {
 						s.Reply(err)
@@ -290,7 +291,9 @@ func initSubmit() {
 					ck.Available()
 					envs, err := qinglong.GetEnvs("pin=")
 					if err != nil {
-						return err
+						s.Reply(err)
+						continue
+
 					}
 					pin(s.GetImType()).Set(ck.PtPin, s.GetUserID())
 					var envCK *qinglong.Env
@@ -312,7 +315,8 @@ func initSubmit() {
 						if envCK.Status != 0 {
 							envCK.Value = value2
 							if err := qinglong.UdpEnv(*envCK); err != nil {
-								return err
+								s.Reply(err)
+								continue
 							}
 						}
 					}
@@ -321,21 +325,26 @@ func initSubmit() {
 							Name:  "JD_WSCK",
 							Value: value,
 						}); err != nil {
-							return err
+							s.Reply(err)
+							continue
 						}
 						return ck.Nickname + ",添加成功。"
 					} else {
 						envWsCK.Value = value
 						if envWsCK.Status != 0 {
 							if err := qinglong.Config.Req(qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+envWsCK.ID+`"]`)); err != nil {
-								return err
+								s.Reply(err)
+								continue
 							}
 						}
 						envWsCK.Status = 0
 						if err := qinglong.UdpEnv(*envWsCK); err != nil {
-							return err
+							s.Reply(err)
+							continue
 						}
-						return ck.Nickname + ",更新成功。"
+						s.Reply(ck.Nickname + ",更新成功。")
+						continue
+
 					}
 				}
 				return nil
