@@ -172,6 +172,9 @@ func initSubmit() {
 			Rules:   []string{`raw pt_key=([^;=\s]+);\s*pt_pin=([^;=\s]+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
+				if s.GetImType() == "wxsv" && !s.IsAdmin() && !jd_cookie.GetBool("ban_wxsv") {
+					return "不支持此功能。"
+				}
 				imType := s.GetImType()
 				fake := false
 				if strings.HasPrefix(imType, "_") {
@@ -271,6 +274,9 @@ func initSubmit() {
 			Rules:   []string{`raw pin=([^;=\s]+);\s*wskey=([^;=\s]+)`},
 			FindAll: true,
 			Handle: func(s core.Sender) interface{} {
+				if s.GetImType() == "wxsv" && !s.IsAdmin() && !jd_cookie.GetBool("ban_wxsv") {
+					return "不支持此功能。"
+				}
 				s.Reply(s.Delete())
 				s.Disappear(time.Second * 20)
 				for _, v := range s.GetAllMatch() {

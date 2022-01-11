@@ -75,7 +75,7 @@ func initLogin() {
 			Handle: func(s core.Sender) interface{} {
 
 				if s.GetImType() == "wxsv" && !s.IsAdmin() && !jd_cookie.GetBool("ban_wxsv") {
-					return nil
+					return "不支持此功能。"
 				}
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
 					// logs.Info("跳过登录。")
