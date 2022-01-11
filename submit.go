@@ -328,7 +328,8 @@ func initSubmit() {
 							s.Reply(err)
 							continue
 						}
-						return ck.Nickname + ",添加成功。"
+						s.Reply(ck.Nickname + ",添加成功。")
+						continue
 					} else {
 						envWsCK.Value = value
 						if envWsCK.Status != 0 {
