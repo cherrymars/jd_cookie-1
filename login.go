@@ -74,7 +74,7 @@ func initLogin() {
 			Rules: []string{`raw ^登录$`, `raw ^登陆$`, `raw ^h$`},
 			Handle: func(s core.Sender) interface{} {
 
-				if s.GetImType() == "wxsv" && !s.IsAdmin() {
+				if s.GetImType() == "wxsv" && !s.IsAdmin() && jd_cookie.GetBool("ban_wxsv") {
 					return nil
 				}
 				if groupCode := jd_cookie.Get("groupCode"); !s.IsAdmin() && groupCode != "" && s.GetChatID() != 0 && !strings.Contains(groupCode, fmt.Sprint(s.GetChatID())) {
