@@ -151,6 +151,9 @@ func initAsset() {
 			Rules: []string{`asset ?`, `raw ^` + jd_cookie.Get("asset_query_alias", "查询") + ` (\S+)$`},
 			Admin: true,
 			Handle: func(s core.Sender) interface{} {
+				if s.GetImType() == "wxsv" && !s.IsAdmin() && jd_cookie.GetBool("ban_wxsv") {
+					return "不支持此功能。"
+				}
 				if s.GetImType() == "tg" {
 					s.Disappear(time.Second * 40)
 				}
@@ -260,9 +263,9 @@ func initAsset() {
 		{
 			Rules: []string{`^` + jd_cookie.Get("asset_query_alias", "查询") + `$`},
 			Handle: func(s core.Sender) interface{} {
-				// if s.GetImType() == "wxsv" {
-				// 	return nil
-				// }
+				if s.GetImType() == "wxsv" && !s.IsAdmin() && jd_cookie.GetBool("ban_wxsv") {
+					return "不支持此功能。"
+				}
 				if s.GetImType() != "wxmp" {
 					go func() {
 						l := int64(jd_cookie.GetInt("query_wait_time"))
