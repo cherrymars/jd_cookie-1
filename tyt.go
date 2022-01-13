@@ -17,7 +17,11 @@ func initTyt() {
 				if s.GetImType() == "tg" {
 					return nil //文明用语
 				}
-				crons, err := qinglong.GetCrons("")
+				err, qls := qinglong.QinglongSC(s)
+				if err != nil {
+					return err
+				}
+				crons, err := qinglong.GetCrons(qls[0], "")
 				if err != nil {
 					return err
 				}
@@ -26,7 +30,7 @@ func initTyt() {
 						if cron.Status == 0 { //修复错误
 							return "推一推已在运行中。"
 						}
-						err := qinglong.SetConfigEnv(qinglong.Env{
+						err := qinglong.SetConfigEnv(qls[0], qinglong.Env{
 							Name:   "tytpacketId",
 							Value:  s.Get(),
 							Status: 3,
@@ -34,7 +38,7 @@ func initTyt() {
 						if err != nil {
 							return err
 						}
-						if err := qinglong.Req(s, qinglong.CRONS, qinglong.PUT, "/run", []byte(fmt.Sprintf(`["%s"]`, cron.ID))); err != nil {
+						if _, err := qinglong.Req(qls[0], qinglong.CRONS, qinglong.PUT, "/run", []byte(fmt.Sprintf(`["%s"]`, cron.ID))); err != nil {
 							return err
 						}
 						return "推一推起来啦。"

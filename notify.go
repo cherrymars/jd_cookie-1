@@ -104,25 +104,27 @@ func initNotify() {
 	})
 	go func() {
 		for {
-			envs, _ := qinglong.GetEnvs("JD_COOKIE")
-			for _, env := range envs {
-				if env.Status != 0 {
-					continue
-				}
-				pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
-				pt_key := core.FetchCookieValue(env.Value, "pt_key")
-				if pt_pin != "" && pt_key != "" {
-					jn := &JdNotify{
-						ID: pt_pin,
+			for _, ql := range qinglong.QLS {
+				envs, _ := qinglong.GetEnvs(ql, "JD_COOKIE")
+				for _, env := range envs {
+					if env.Status != 0 {
+						continue
 					}
-					jdNotify.First(jn)
-					if jn.PtKey != pt_key {
-						jn.PtKey = pt_key
-						jdNotify.Create(jn)
+					pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
+					pt_key := core.FetchCookieValue(env.Value, "pt_key")
+					if pt_pin != "" && pt_key != "" {
+						jn := &JdNotify{
+							ID: pt_pin,
+						}
+						jdNotify.First(jn)
+						if jn.PtKey != pt_key {
+							jn.PtKey = pt_key
+							jdNotify.Create(jn)
+						}
 					}
 				}
 			}
-			time.Sleep(time.Hour)
+			time.Sleep(time.Second * 30)
 		}
 	}()
 	core.AddCommand("", []core.Function{
@@ -131,12 +133,15 @@ func initNotify() {
 			Cron:  jd_cookie.Get("task_Notify", "2 7,13,19 * * *"),
 			Admin: true,
 			Handle: func(_ core.Sender) interface{} {
-				envs, _ := qinglong.GetEnvs("JD_COOKIE")
-				for _, env := range envs {
-					initPetTown(env.Value, nil)
-					initFarm(env.Value, nil)
-					dream(env.Value, nil)
+				for _, ql := range qinglong.QLS {
+					envs, _ := qinglong.GetEnvs(ql, "JD_COOKIE")
+					for _, env := range envs {
+						initPetTown(env.Value, nil)
+						initFarm(env.Value, nil)
+						dream(env.Value, nil)
+					}
 				}
+
 				return "推送完成"
 			},
 		},
