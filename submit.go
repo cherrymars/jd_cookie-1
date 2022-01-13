@@ -80,7 +80,7 @@ func initSubmit() {
 			env := envs[0]
 			env.Value = value
 			if env.Status != 0 {
-				if err := qinglong.Config.Req(qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
+				if err := qinglong.Req(nil, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
 					result.Message = err.Error()
 					c.JSON(200, result)
 					return
@@ -250,7 +250,7 @@ func initSubmit() {
 						env := envs[0]
 						env.Value = value
 						if env.Status != 0 {
-							if err := qinglong.Config.Req(qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
+							if err := qinglong.Req(s, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
 								s.Reply(err)
 								continue
 							}
@@ -339,7 +339,7 @@ func initSubmit() {
 					} else {
 						envWsCK.Value = value
 						if envWsCK.Status != 0 {
-							if err := qinglong.Config.Req(qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+envWsCK.ID+`"]`)); err != nil {
+							if err := qinglong.Req(s, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+envWsCK.ID+`"]`)); err != nil {
 								s.Reply(err)
 								continue
 							}

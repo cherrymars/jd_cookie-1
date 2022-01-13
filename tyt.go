@@ -34,7 +34,7 @@ func initTyt() {
 						if err != nil {
 							return err
 						}
-						if err := qinglong.Config.Req(qinglong.CRONS, qinglong.PUT, "/run", []byte(fmt.Sprintf(`["%s"]`, cron.ID))); err != nil {
+						if err := qinglong.Req(s, qinglong.CRONS, qinglong.PUT, "/run", []byte(fmt.Sprintf(`["%s"]`, cron.ID))); err != nil {
 							return err
 						}
 						return "推一推起来啦。"
