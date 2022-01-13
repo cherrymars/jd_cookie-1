@@ -25,6 +25,7 @@ type JdNotify struct {
 	AssetCron    string
 	PushPlus     string
 	LoginedAt    time.Time
+	ClientID     string
 }
 
 var cc *cron.Cron
@@ -117,8 +118,16 @@ func initNotify() {
 							ID: pt_pin,
 						}
 						jdNotify.First(jn)
+						tc := false
 						if jn.PtKey != pt_key {
 							jn.PtKey = pt_key
+							tc = true
+						}
+						if jn.ClientID != ql.ClientID {
+							jn.ClientID = ql.ClientID
+							tc = true
+						}
+						if tc {
 							jdNotify.Create(jn)
 						}
 					}
