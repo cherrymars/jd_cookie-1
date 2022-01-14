@@ -11,6 +11,7 @@ import (
 	"github.com/beego/beego/v2/client/httplib"
 	"github.com/buger/jsonparser"
 	"github.com/cdle/sillyGirl/core"
+	"github.com/cdle/sillyGirl/develop/qinglong"
 )
 
 var jd_cookie = core.NewBucket("jd_cookie")
@@ -247,8 +248,21 @@ func initLogin() {
 					req.SetTimeout(time.Second*60, time.Second*60)
 					message, _ = jsonparser.GetString(data, "message")
 					if strings.Contains(string(data), "pt_pin=") {
+						pt_pin := core.FetchCookieValue(string(data), "pt_pin")
+						pt_key := core.FetchCookieValue(string(data), "pt_key")
 						successLogin = true
-						s.Reply("登录成功。")
+						jn := &JdNotify{
+							ID:    pt_pin,
+							PtKey: pt_key,
+						}
+						jdNotify.First(jn)
+						err, ql := qinglong.GetQinglongByClientID(jn.ClientID)
+						if ql == nil {
+							s.Reply(err)
+							return
+						}
+						tail := fmt.Sprintf("	——来自%s", ql.Name)
+						s.Reply("登录成功。" + tail)
 						if s.GetImType() != "wxmp" {
 							if jd_cookie.Get("xdd_url") != "" && qq == "" {
 								s.Reply("你可以在30秒内输入QQ号：")
@@ -258,8 +272,6 @@ func initLogin() {
 								return "OK"
 							}, `^\d+$`, time.Second*30)
 						}
-						pt_pin := core.FetchCookieValue(string(data), "pt_pin")
-						pt_key := core.FetchCookieValue(string(data), "pt_key")
 						if qq != "" {
 							xdd(fmt.Sprintf("pt_key=%s;pt_pin=%s;", pt_key, pt_pin), qq)
 						}
@@ -268,10 +280,6 @@ func initLogin() {
 							s.Reply(ad)
 						}
 						time.Sleep(time.Second)
-						jn := &JdNotify{
-							ID:    pt_pin,
-							PtKey: pt_key,
-						}
 						jdNotify.First(jn)
 						jn.LoginedAt = time.Now()
 						jdNotify.Create(jn)
