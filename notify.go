@@ -152,7 +152,6 @@ func initNotify() {
 					}
 					return nil
 				})
-
 				return "推送完成"
 			},
 		},
