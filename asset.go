@@ -280,14 +280,14 @@ func initAsset() {
 				s.Reply(fmt.Sprintf("已为你找到%d条结果，请在60秒内回复“n”，将以此为你展示。", len(cookies)))
 				var ids = []string{}
 				for i := range cookies {
-					if len(ids) > 0 {
-						s.RecallMessage(ids)
-					}
 					if s.Await(s, func(s core.Sender) interface{} {
 						s.RecallMessage(s.GetMessageID())
 						return nil
 					}, time.Second*60) != "n" {
 						return "操作中断。"
+					}
+					if len(ids) > 0 {
+						s.RecallMessage(ids)
 					}
 					ids, _ = s.Reply(cookies[i])
 				}
