@@ -106,11 +106,14 @@ func initNotify() {
 	go func() {
 		for {
 			for _, ql := range qinglong.QLS {
+				as := 0
 				envs, _ := qinglong.GetEnvs(ql, "JD_COOKIE")
 				for _, env := range envs {
+
 					if env.Status != 0 {
 						continue
 					}
+					as++
 					pt_pin := core.FetchCookieValue(env.Value, "pt_pin")
 					pt_key := core.FetchCookieValue(env.Value, "pt_key")
 					if pt_pin != "" && pt_key != "" {
@@ -132,6 +135,7 @@ func initNotify() {
 						}
 					}
 				}
+				ql.SetNumber(as)
 			}
 			time.Sleep(time.Second * 30)
 		}
