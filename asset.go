@@ -286,7 +286,7 @@ func initAsset() {
 					if s.Await(s, func(s core.Sender) interface{} {
 						s.RecallMessage(s.GetMessageID())
 						return nil
-					}, time.Second) != "n" {
+					}, time.Second*60) != "n" {
 						return "操作中断。"
 					}
 					ids, _ = s.Reply(cookies[i])
