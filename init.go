@@ -8,6 +8,7 @@ import (
 
 	"github.com/beego/beego/v2/core/logs"
 	"github.com/cdle/sillyGirl/core"
+	"github.com/cdle/sillyGirl/develop/qinglong"
 	"golang.org/x/net/proxy"
 )
 
@@ -75,4 +76,20 @@ func buildHttpTransportWithProxy() {
 			Dial: dialer.Dial,
 		}
 	}
+}
+
+func GetEnvs(ql *qinglong.QingLong, s string) ([]qinglong.Env, error) {
+	envs, err := qinglong.GetEnvs(ql, s)
+	if err != nil {
+		if s == "JD_COOKIE" {
+			i := 0
+			for _, env := range envs {
+				if env.Status == 0 {
+					i++
+				}
+			}
+			ql.SetNumber(i)
+		}
+	}
+	return envs, err
 }
