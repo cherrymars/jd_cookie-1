@@ -46,7 +46,7 @@ func initSubmit() {
 	// 	}
 	// 	value := fmt.Sprintf(`pt_key=%s;\s*?pt_pin=%s;`, ck.PtKey, ck.PtPin)
 
-	// 	envs, err := qinglong.GetEnvs(qls[0], "JD_COOKIE")
+	// 	envs, err := GetEnvs(qls[0], "JD_COOKIE")
 	// 	if err != nil {
 	// 		result.Message = err.Error()
 	// 		c.JSON(200, result)
@@ -106,7 +106,7 @@ func initSubmit() {
 		// 	Admin: true,
 		// 	Handle: func(s core.Sender) interface{} {
 		// 		s.Disappear(time.Second * 40)
-		// 		envs, err := qinglong.GetEnvs("JD_COOKIE")
+		// 		envs, err := GetEnvs("JD_COOKIE")
 		// 		if err != nil {
 		// 			return err
 		// 		}
@@ -237,7 +237,10 @@ func initSubmit() {
 
 					for _, ql := range qls {
 						tail := fmt.Sprintf("	——来自%s", ql.Name)
-						envs, err := qinglong.GetEnvs(ql, "JD_COOKIE")
+						if len(qinglong.QLS) < 2 {
+							tail = ""
+						}
+						envs, err := GetEnvs(ql, "JD_COOKIE")
 						if err != nil {
 							s.Reply(err.Error() + tail)
 							continue
@@ -330,7 +333,10 @@ func initSubmit() {
 					}
 					for _, ql := range qls {
 						tail := fmt.Sprintf("	——来自%s", ql.Name)
-						envs, err := qinglong.GetEnvs(ql, "pin=")
+						if len(qinglong.QLS) < 2 {
+							tail = ""
+						}
+						envs, err := GetEnvs(ql, "pin=")
 						if err != nil {
 							s.Reply(err.Error() + tail)
 							continue

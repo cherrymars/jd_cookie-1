@@ -262,6 +262,9 @@ func initLogin() {
 							return
 						}
 						tail := fmt.Sprintf("	——来自%s", ql.Name)
+						if len(qinglong.QLS) < 2 {
+							tail = ""
+						}
 						s.Reply("登录成功。" + tail)
 						if s.GetImType() != "wxmp" {
 							if jd_cookie.Get("xdd_url") != "" && qq == "" {
