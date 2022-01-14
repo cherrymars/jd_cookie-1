@@ -307,7 +307,7 @@ func initSubmit() {
 					jn := &JdNotify{
 						ID: ck.PtPin,
 					}
-					jdNotify.First(ck.PtPin)
+					jdNotify.First(jn)
 					err, ql := qinglong.GetQinglongByClientID(jn.ClientID)
 					if ql == nil {
 						return err
