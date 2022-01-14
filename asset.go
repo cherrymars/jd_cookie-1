@@ -260,7 +260,7 @@ func initAsset() {
 			},
 		},
 		{
-			Rules: []string{`jd myCookie`},
+			Rules: []string{`myCookie`},
 			Cron:  jd_cookie.Get("asset_push"),
 			Handle: func(s core.Sender) interface{} {
 				cookies := []string{}
