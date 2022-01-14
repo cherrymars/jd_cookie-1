@@ -142,14 +142,16 @@ func initNotify() {
 			Cron:  jd_cookie.Get("task_Notify", "2 7,13,19 * * *"),
 			Admin: true,
 			Handle: func(_ core.Sender) interface{} {
-				for _, ql := range qinglong.QLS {
-					envs, _ := qinglong.GetEnvs(ql, "JD_COOKIE")
-					for _, env := range envs {
-						initPetTown(env.Value, nil)
-						initFarm(env.Value, nil)
-						dream(env.Value, nil)
+				jdNotify.Foreach(func(_, v []byte) error {
+					aa := &JdNotify{}
+					if json.Unmarshal(v, aa) == nil {
+						ck := fmt.Sprintf("pt_key=%s;pt_pin=%s;", aa.PtKey, aa.ID)
+						initPetTown(ck, nil)
+						initFarm(ck, nil)
+						dream(ck, nil)
 					}
-				}
+					return nil
+				})
 
 				return "推送完成"
 			},
