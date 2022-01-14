@@ -265,9 +265,10 @@ func initAsset() {
 			Handle: func(s core.Sender) interface{} {
 				cookies := []string{}
 				tp := s.GetImType()
+				uid := s.GetUserID()
 
 				core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
-					if string(k) != "" {
+					if string(k) != "" && string(v) == uid {
 						jn := &JdNotify{
 							ID: string(k),
 						}
