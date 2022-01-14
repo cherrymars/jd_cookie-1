@@ -260,6 +260,44 @@ func initAsset() {
 			},
 		},
 		{
+			Rules: []string{`jd myCookie`},
+			Cron:  jd_cookie.Get("asset_push"),
+			Handle: func(s core.Sender) interface{} {
+				cookies := []string{}
+				tp := s.GetImType()
+
+				core.Bucket("pin" + strings.ToUpper(tp)).Foreach(func(k, v []byte) error {
+					if string(k) != "" {
+						jn := &JdNotify{
+							ID: string(k),
+						}
+						jdNotify.First(jn)
+						cookies = append(cookies, fmt.Sprintf("pt_key=%s;pt_pin=%s;", jn.PtKey, jn.ID))
+					}
+					return nil
+				})
+
+				s.Reply(fmt.Sprintf("已为你找到%d条结果，请在60秒内回复“n”，将以此为你展示。", len(cookies)))
+				var ids = []string{}
+				for i := range cookies {
+					if len(ids) > 0 {
+						s.RecallMessage(ids)
+					}
+					if s.Await(s, func(s core.Sender) interface{} {
+						s.RecallMessage(s.GetMessageID())
+						return nil
+					}, time.Second) != "n" {
+						return "操作中断。"
+					}
+					ids, _ = s.Reply(cookies[i])
+				}
+				if len(ids) > 0 {
+					s.RecallMessage(ids)
+				}
+				return "操作完成。"
+			},
+		},
+		{
 			Rules: []string{`^` + jd_cookie.Get("asset_query_alias", "查询") + `$`},
 			Handle: func(s core.Sender) interface{} {
 				if s.GetImType() == "wxsv" && !s.IsAdmin() && jd_cookie.GetBool("ban_wxsv") {
