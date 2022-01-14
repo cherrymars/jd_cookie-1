@@ -104,6 +104,7 @@ func initNotify() {
 		return nil
 	})
 	go func() {
+		time.Sleep(time.Second)
 		for {
 			for _, ql := range qinglong.QLS {
 				as := 0
