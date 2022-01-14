@@ -226,11 +226,12 @@ func initSubmit() {
 					jdNotify.First(jn)
 					err, ql := qinglong.GetQinglongByClientID(jn.ClientID)
 					if ql == nil {
-						return err
+						return err.Error()
 					}
+					tail := fmt.Sprintf("	--来自%s。", ql.Name)
 					envs, err := qinglong.GetEnvs(ql, "JD_COOKIE")
 					if err != nil {
-						s.Reply(err)
+						s.Reply(err.Error() + tail)
 						continue
 					}
 					find := false
@@ -247,31 +248,31 @@ func initSubmit() {
 							Name:  "JD_COOKIE",
 							Value: value,
 						}); err != nil {
-							s.Reply(err)
+							s.Reply(err.Error() + tail)
 							continue
 						}
 						rt := ck.Nickname + "，添加成功。"
-						core.NotifyMasters(rt)
-						s.Reply(rt)
+						core.NotifyMasters(rt + tail)
+						s.Reply(rt + tail)
 						continue
 					} else {
 						env := envs[0]
 						env.Value = value
 						if env.Status != 0 {
 							if _, err := qinglong.Req(ql, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
-								s.Reply(err)
+								s.Reply(err.Error() + tail)
 								continue
 							}
 						}
 						env.Status = 0
 						if err := qinglong.UdpEnv(ql, env); err != nil {
-							s.Reply(err)
+							s.Reply(err.Error() + tail)
 							continue
 						}
 						assets.Delete(ck.PtPin)
 						rt := ck.Nickname + "，更新成功。"
-						core.NotifyMasters(rt)
-						s.Reply(rt)
+						core.NotifyMasters(rt + tail)
+						s.Reply(rt + tail)
 						continue
 					}
 				}
@@ -311,11 +312,11 @@ func initSubmit() {
 					if ql == nil {
 						return err
 					}
+					tail := fmt.Sprintf("	--来自%s。", ql.Name)
 					envs, err := qinglong.GetEnvs(ql, "pin=")
 					if err != nil {
-						s.Reply(err)
+						s.Reply(err.Error() + tail)
 						continue
-
 					}
 					pin(s.GetImType()).Set(ck.PtPin, s.GetUserID())
 					var envCK *qinglong.Env
@@ -337,7 +338,7 @@ func initSubmit() {
 						if envCK.Status != 0 {
 							envCK.Value = value2
 							if err := qinglong.UdpEnv(ql, *envCK); err != nil {
-								s.Reply(err)
+								s.Reply(err.Error() + tail)
 								continue
 							}
 						}
@@ -347,25 +348,25 @@ func initSubmit() {
 							Name:  "JD_WSCK",
 							Value: value,
 						}); err != nil {
-							s.Reply(err)
+							s.Reply(err.Error() + tail)
 							continue
 						}
-						s.Reply(ck.Nickname + ",添加成功。")
+						s.Reply(ck.Nickname + ",添加成功。" + tail)
 						continue
 					} else {
 						envWsCK.Value = value
 						if envWsCK.Status != 0 {
 							if _, err := qinglong.Req(ql, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+envWsCK.ID+`"]`)); err != nil {
-								s.Reply(err)
+								s.Reply(err.Error() + tail)
 								continue
 							}
 						}
 						envWsCK.Status = 0
 						if err := qinglong.UdpEnv(ql, *envWsCK); err != nil {
-							s.Reply(err)
+							s.Reply(err.Error() + tail)
 							continue
 						}
-						s.Reply(ck.Nickname + ",更新成功。")
+						s.Reply(ck.Nickname + ",更新成功。" + tail)
 						continue
 
 					}
