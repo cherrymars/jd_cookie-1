@@ -79,7 +79,7 @@ func buildHttpTransportWithProxy() {
 }
 
 func GetEnvs(ql *qinglong.QingLong, s string) ([]qinglong.Env, error) {
-	envs, err := qinglong.GetEnvs(ql, s)
+	envs, err := GetEnvs(ql, s)
 	if err != nil {
 		if s == "JD_COOKIE" {
 			i := 0

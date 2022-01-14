@@ -165,7 +165,7 @@ func initAsset() {
 				if err != nil {
 					return err
 				}
-				envs, err := qinglong.GetEnvs(qls[0], "JD_COOKIE")
+				envs, err := GetEnvs(qls[0], "JD_COOKIE")
 				if err != nil {
 					return err
 				}
@@ -341,17 +341,6 @@ func initAsset() {
 					}
 				}
 				s.Disappear(time.Second * 40)
-				err, qls := qinglong.QinglongSC(s)
-				if err != nil {
-					return err
-				}
-				envs, err := qinglong.GetEnvs(qls[0], "JD_COOKIE")
-				if err != nil {
-					return err
-				}
-				if len(envs) == 0 {
-					return "暂时无法查询。"
-				}
 				cks := []JdCookie{}
 				pin(s.GetImType()).Foreach(func(k, v []byte) error {
 					if string(v) == fmt.Sprint(s.GetUserID()) {
@@ -406,7 +395,7 @@ func initAsset() {
 		// 	Admin: true,
 		// 	Handle: func(s core.Sender) interface{} {
 		// 		a := s.Get()
-		// 		envs, err := qinglong.GetEnvs("JD_COOKIE")
+		// 		envs, err := GetEnvs("JD_COOKIE")
 		// 		if err != nil {
 		// 			return err
 		// 		}
@@ -447,7 +436,7 @@ func initAsset() {
 		// 	Admin: true,
 		// 	Handle: func(s core.Sender) interface{} {
 		// 		a := s.Get()
-		// 		envs, err := qinglong.GetEnvs("JD_COOKIE")
+		// 		envs, err := GetEnvs("JD_COOKIE")
 		// 		if err != nil {
 		// 			return err
 		// 		}
@@ -515,7 +504,7 @@ func initAsset() {
 		// 	Admin: true,
 		// 	Handle: func(s core.Sender) interface{} {
 		// 		a := s.Get()
-		// 		envs, err := qinglong.GetEnvs("JD_COOKIE")
+		// 		envs, err := GetEnvs("JD_COOKIE")
 		// 		if err != nil {
 		// 			return err
 		// 		}
