@@ -219,61 +219,71 @@ func initSubmit() {
 						}
 						xdd(value, qq)
 					}
-					// err, qls := qinglong.QinglongSC(s)
-					jn := &JdNotify{
-						ID: ck.PtPin,
-					}
-					jdNotify.First(jn)
-					err, ql := qinglong.GetQinglongByClientID(jn.ClientID)
-					if ql == nil {
-						return err.Error()
-					}
-					tail := fmt.Sprintf("	——来自%s", ql.Name)
-					envs, err := qinglong.GetEnvs(ql, "JD_COOKIE")
-					if err != nil {
-						s.Reply(err.Error() + tail)
-						continue
-					}
-					find := false
-					for _, env := range envs {
-						if strings.Contains(env.Value, fmt.Sprintf("pt_pin=%s;", ck.PtPin)) {
-							envs = []qinglong.Env{env}
-							find = true
-							break
+
+					qls := []*qinglong.QingLong{}
+
+					if strings.Contains(jd_cookie.Get("bus"), ck.PtPin) {
+						qls = qinglong.QLS
+					} else {
+						jn := &JdNotify{
+							ID: ck.PtPin,
 						}
+						jdNotify.First(jn)
+						err, ql := qinglong.GetQinglongByClientID(jn.ClientID)
+						if ql == nil {
+							return err.Error()
+						}
+						qls = []*qinglong.QingLong{ql}
 					}
-					pin(imType).Set(ck.PtPin, s.GetUserID())
-					if !find {
-						if err := qinglong.AddEnv(ql, qinglong.Env{
-							Name:  "JD_COOKIE",
-							Value: value,
-						}); err != nil {
+
+					for _, ql := range qls {
+						tail := fmt.Sprintf("	——来自%s", ql.Name)
+						envs, err := qinglong.GetEnvs(ql, "JD_COOKIE")
+						if err != nil {
 							s.Reply(err.Error() + tail)
 							continue
 						}
-						rt := ck.Nickname + "，添加成功。"
-						core.NotifyMasters(rt + tail)
-						s.Reply(rt + tail)
-						continue
-					} else {
-						env := envs[0]
-						env.Value = value
-						if env.Status != 0 {
-							if _, err := qinglong.Req(ql, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
+						find := false
+						for _, env := range envs {
+							if strings.Contains(env.Value, fmt.Sprintf("pt_pin=%s;", ck.PtPin)) {
+								envs = []qinglong.Env{env}
+								find = true
+								break
+							}
+						}
+						pin(imType).Set(ck.PtPin, s.GetUserID())
+						if !find {
+							if err := qinglong.AddEnv(ql, qinglong.Env{
+								Name:  "JD_COOKIE",
+								Value: value,
+							}); err != nil {
 								s.Reply(err.Error() + tail)
 								continue
 							}
-						}
-						env.Status = 0
-						if err := qinglong.UdpEnv(ql, env); err != nil {
-							s.Reply(err.Error() + tail)
+							rt := ck.Nickname + "，添加成功。"
+							core.NotifyMasters(rt + tail)
+							s.Reply(rt + tail)
+							continue
+						} else {
+							env := envs[0]
+							env.Value = value
+							if env.Status != 0 {
+								if _, err := qinglong.Req(ql, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
+									s.Reply(err.Error() + tail)
+									continue
+								}
+							}
+							env.Status = 0
+							if err := qinglong.UdpEnv(ql, env); err != nil {
+								s.Reply(err.Error() + tail)
+								continue
+							}
+							assets.Delete(ck.PtPin)
+							rt := ck.Nickname + "，更新成功。"
+							core.NotifyMasters(rt + tail)
+							s.Reply(rt + tail)
 							continue
 						}
-						assets.Delete(ck.PtPin)
-						rt := ck.Nickname + "，更新成功。"
-						core.NotifyMasters(rt + tail)
-						s.Reply(rt + tail)
-						continue
 					}
 				}
 				return nil
