@@ -318,23 +318,20 @@ func initAsset() {
 					return "暂时无法查询。"
 				}
 				cks := []JdCookie{}
-				for _, env := range envs {
-					pt_key := FetchJdCookieValue("pt_key", env.Value)
-					if env.Status != 0 {
-						pt_key = ""
-					}
-					pt_pin := FetchJdCookieValue("pt_pin", env.Value)
-					pin(s.GetImType()).Foreach(func(k, v []byte) error {
-						if string(k) == pt_pin && string(v) == fmt.Sprint(s.GetUserID()) {
-							cks = append(cks, JdCookie{
-								PtKey: pt_key,
-								PtPin: pt_pin,
-								Note:  env.Remarks,
-							})
+				pin(s.GetImType()).Foreach(func(k, v []byte) error {
+					if string(v) == fmt.Sprint(s.GetUserID()) {
+						jn := &JdNotify{
+							ID: string(k),
 						}
-						return nil
-					})
-				}
+						jdNotify.First(jn)
+						cks = append(cks, JdCookie{
+							PtKey: jn.PtKey,
+							PtPin: string(k),
+						})
+					}
+					return nil
+				})
+
 				if len(cks) == 0 {
 					return "你尚未绑定🐶东账号，请私聊我你的账号信息或者对我说“登录”。"
 				}
