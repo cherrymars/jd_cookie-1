@@ -221,7 +221,6 @@ func initSubmit() {
 					}
 
 					qls := []*qinglong.QingLong{}
-
 					if strings.Contains(jd_cookie.Get("bus"), ck.PtPin) {
 						qls = qinglong.QLS
 					} else {
