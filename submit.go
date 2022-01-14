@@ -228,7 +228,7 @@ func initSubmit() {
 					if ql == nil {
 						return err.Error()
 					}
-					tail := fmt.Sprintf("	--来自%s。", ql.Name)
+					tail := fmt.Sprintf("	——来自%s", ql.Name)
 					envs, err := qinglong.GetEnvs(ql, "JD_COOKIE")
 					if err != nil {
 						s.Reply(err.Error() + tail)
@@ -312,7 +312,7 @@ func initSubmit() {
 					if ql == nil {
 						return err
 					}
-					tail := fmt.Sprintf("	--来自%s。", ql.Name)
+					tail := fmt.Sprintf("	——来自%s", ql.Name)
 					envs, err := qinglong.GetEnvs(ql, "pin=")
 					if err != nil {
 						s.Reply(err.Error() + tail)
