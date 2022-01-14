@@ -222,7 +222,7 @@ func initSubmit() {
 
 					qls := []*qinglong.QingLong{}
 					if strings.Contains(jd_cookie.Get("bus"), ck.PtPin) {
-						qls = qinglong.QLS
+						qls = qinglong.GetQLS()
 					} else {
 						jn := &JdNotify{
 							ID: ck.PtPin,
@@ -237,7 +237,7 @@ func initSubmit() {
 
 					for _, ql := range qls {
 						tail := fmt.Sprintf("	——来自%s", ql.Name)
-						if len(qinglong.QLS) < 2 {
+						if qinglong.GetQLSLen() < 2 {
 							tail = ""
 						}
 						envs, err := GetEnvs(ql, "JD_COOKIE")
@@ -319,7 +319,7 @@ func initSubmit() {
 
 					qls := []*qinglong.QingLong{}
 					if strings.Contains(jd_cookie.Get("bus"), ck.PtPin) {
-						qls = qinglong.QLS
+						qls = qinglong.GetQLS()
 					} else {
 						jn := &JdNotify{
 							ID: ck.PtPin,
@@ -333,7 +333,7 @@ func initSubmit() {
 					}
 					for _, ql := range qls {
 						tail := fmt.Sprintf("	——来自%s", ql.Name)
-						if len(qinglong.QLS) < 2 {
+						if qinglong.GetQLSLen() < 2 {
 							tail = ""
 						}
 						envs, err := GetEnvs(ql, "pin=")

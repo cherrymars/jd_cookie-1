@@ -106,9 +106,9 @@ func initNotify() {
 	go func() {
 		time.Sleep(time.Second)
 		for {
-			for _, ql := range qinglong.QLS {
+			for _, ql := range qinglong.GetQLS() {
 				as := 0
-				envs, _ := qinglong.GetEnvs(ql, "JD_COOKIE")
+				envs, _ := GetEnvs(ql, "JD_COOKIE")
 				for _, env := range envs {
 
 					if env.Status != 0 {

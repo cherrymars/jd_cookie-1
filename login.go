@@ -262,7 +262,7 @@ func initLogin() {
 							return
 						}
 						tail := fmt.Sprintf("	——来自%s", ql.Name)
-						if len(qinglong.QLS) < 2 {
+						if qinglong.GetQLSLen() < 2 {
 							tail = ""
 						}
 						s.Reply("登录成功。" + tail)
