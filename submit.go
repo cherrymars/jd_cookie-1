@@ -219,11 +219,16 @@ func initSubmit() {
 						}
 						xdd(value, qq)
 					}
-					err, qls := qinglong.QinglongSC(s)
-					if err != nil {
+					// err, qls := qinglong.QinglongSC(s)
+					jn := &JdNotify{
+						ID: ck.PtPin,
+					}
+					jdNotify.First(jn)
+					err, ql := qinglong.GetQinglongByClientID(jn.ClientID)
+					if ql == nil {
 						return err
 					}
-					envs, err := qinglong.GetEnvs(qls[0], "JD_COOKIE")
+					envs, err := qinglong.GetEnvs(ql, "JD_COOKIE")
 					if err != nil {
 						s.Reply(err)
 						continue
@@ -238,7 +243,7 @@ func initSubmit() {
 					}
 					pin(imType).Set(ck.PtPin, s.GetUserID())
 					if !find {
-						if err := qinglong.AddEnv(qls[0], qinglong.Env{
+						if err := qinglong.AddEnv(ql, qinglong.Env{
 							Name:  "JD_COOKIE",
 							Value: value,
 						}); err != nil {
@@ -253,13 +258,13 @@ func initSubmit() {
 						env := envs[0]
 						env.Value = value
 						if env.Status != 0 {
-							if _, err := qinglong.Req(qls[0], qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
+							if _, err := qinglong.Req(ql, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+env.ID+`"]`)); err != nil {
 								s.Reply(err)
 								continue
 							}
 						}
 						env.Status = 0
-						if err := qinglong.UdpEnv(qls[0], env); err != nil {
+						if err := qinglong.UdpEnv(ql, env); err != nil {
 							s.Reply(err)
 							continue
 						}
@@ -298,11 +303,15 @@ func initSubmit() {
 						PtPin: v[0],
 					}
 					ck.Available()
-					err, qls := qinglong.QinglongSC(s)
-					if err != nil {
+					jn := &JdNotify{
+						ID: ck.PtPin,
+					}
+					jdNotify.First(ck.PtPin)
+					err, ql := qinglong.GetQinglongByClientID(jn.ClientID)
+					if ql == nil {
 						return err
 					}
-					envs, err := qinglong.GetEnvs(qls[0], "pin=")
+					envs, err := qinglong.GetEnvs(ql, "pin=")
 					if err != nil {
 						s.Reply(err)
 						continue
@@ -320,21 +329,21 @@ func initSubmit() {
 					}
 					value2 := fmt.Sprintf("pt_key=%s;pt_pin=%s;", ck.PtKey, ck.PtPin)
 					if envCK == nil {
-						qinglong.AddEnv(qls[0], qinglong.Env{
+						qinglong.AddEnv(ql, qinglong.Env{
 							Name:  "JD_COOKIE",
 							Value: value2,
 						})
 					} else {
 						if envCK.Status != 0 {
 							envCK.Value = value2
-							if err := qinglong.UdpEnv(qls[0], *envCK); err != nil {
+							if err := qinglong.UdpEnv(ql, *envCK); err != nil {
 								s.Reply(err)
 								continue
 							}
 						}
 					}
 					if envWsCK == nil {
-						if err := qinglong.AddEnv(qls[0], qinglong.Env{
+						if err := qinglong.AddEnv(ql, qinglong.Env{
 							Name:  "JD_WSCK",
 							Value: value,
 						}); err != nil {
@@ -346,13 +355,13 @@ func initSubmit() {
 					} else {
 						envWsCK.Value = value
 						if envWsCK.Status != 0 {
-							if _, err := qinglong.Req(qls[0], qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+envWsCK.ID+`"]`)); err != nil {
+							if _, err := qinglong.Req(ql, qinglong.PUT, qinglong.ENVS, "/enable", []byte(`["`+envWsCK.ID+`"]`)); err != nil {
 								s.Reply(err)
 								continue
 							}
 						}
 						envWsCK.Status = 0
-						if err := qinglong.UdpEnv(qls[0], *envWsCK); err != nil {
+						if err := qinglong.UdpEnv(ql, *envWsCK); err != nil {
 							s.Reply(err)
 							continue
 						}
