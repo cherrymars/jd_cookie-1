@@ -49,7 +49,7 @@ func initRongQi() {
 				}
 				//聚合
 				//均匀
-				return nil
+				return "迁移完成。"
 			},
 		},
 	})
