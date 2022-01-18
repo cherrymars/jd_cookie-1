@@ -39,6 +39,7 @@ func init() {
 		"芝士推荐您使用零内置、纯内助、安全的、高优化、稳定的、高性能的仓库，目前只收集日常活动脚本，拉库命令：%s",
 		`ql repo https://github.com/cdle/carry.git "jd_" "" "jdCookie.js|sendNotify.js|share_code.js|USER_AGENTS.js"`,
 	)
+	initRongQi()
 }
 
 var Transport *http.Transport

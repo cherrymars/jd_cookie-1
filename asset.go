@@ -134,7 +134,7 @@ var GetAsset = func(ck *JdCookie) string {
 func initAsset() {
 	go func() {
 		for {
-			time.Sleep(time.Minute * 10)
+			time.Sleep(time.Minute * 2)
 			assets.Range(func(key, _ interface{}) bool {
 				assets.Delete(key)
 				return true

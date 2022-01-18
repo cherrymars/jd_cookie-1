@@ -153,13 +153,10 @@ func initEnv() {
 				if err != nil {
 					return err
 				}
-				env.Remarks = s.Get(1)
-				env.Created = 0
-				env.Timestamp = ""
-				if _, err := qinglong.Req(qls[0], qinglong.PUT, qinglong.ENVS, *env); err != nil {
+				if err := qinglong.UdpEnv(qls[0], *env); err != nil {
 					return err
 				}
-				return "操作成功"
+				return "备注成功。"
 			},
 		},
 	})
