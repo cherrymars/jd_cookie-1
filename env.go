@@ -103,14 +103,13 @@ func initEnv() {
 				toe[1].Timestamp = ""
 				toe[0].Created = 0
 				toe[1].Created = 0
-
 				if _, err := qinglong.Req(qls[0], qinglong.PUT, qinglong.ENVS, toe[0]); err != nil {
 					return err
 				}
 				if _, err := qinglong.Req(qls[0], qinglong.PUT, qinglong.ENVS, toe[1]); err != nil {
 					return err
 				}
-				return "交换成功"
+				return "交换成功。"
 			},
 		},
 		{
